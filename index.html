@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primary 3 Math Mastery (100% Term 1 Curriculum)</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌟</text></svg>">
+</head>
+<body>
+
+  <!-- Self-contained Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Top Navigation Bar -->
+  <header class="top-navbar">
+    <div class="nav-container">
+      <div class="brand-section">
+        <div class="brand-icon">📐</div>
+        <div class="brand-text">
+          <h1>Primary 3 Math Mastery</h1>
+          <span>100% Term 1 Curriculum Verification</span>
+        </div>
+      </div>
+
+      <nav class="nav-tabs">
+        <button class="nav-tab-btn active" data-tab="roadmap">
+          🗺️ <span>Adventure Map</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="dashboard">
+          📊 <span>Parent Dashboard</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="exam">
+          📝 <span>Monthly Exam (امتحان الشهر)</span>
+        </button>
+      </nav>
+
+      <div class="user-quick-stats">
+        <div class="stat-chip" id="stat-stars">⭐ 0</div>
+        <div class="stat-chip" id="stat-mastery">🎯 0% Mastered</div>
+        <div class="stat-chip" style="cursor: pointer;" title="Click to edit name" id="user-name-tag">
+          👤 <span id="display-child-name">Champion</span> ✏️
+        </div>
+        <button class="btn-ask-emma-nav" id="btn-ask-emma-nav" onclick="app.openAiTutor()" title="Ask Miss Emma (المعلمة الذكية)">
+          👩‍🏫 <span>Ask Miss Emma ✨</span>
+        </button>
+        <button class="btn-icon-toggle" id="btn-sound-toggle">🔊 Sound On</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-main">
+
+    <!-- VIEW 1: Adventure Roadmap -->
+    <section class="tab-view active" id="view-roadmap">
+      <div class="hero-banner">
+        <div class="hero-content">
+          <h2>Welcome to the Grade 3 Math Quest! 🚀</h2>
+          <p>
+            Master all 10 chapters step-by-step from the official Primary 3 Term 1 curriculum. Complete all verification levels (Visual, Core, and Critical Thinking) to reach <strong>100% Mastery</strong> and earn your Official Math Honor Certificate!
+          </p>
+        </div>
+        <div class="hero-progress-box">
+          <div class="progress-header">
+            <span>Overall Curriculum Mastery</span>
+            <span id="overall-progress-label">0% Complete</span>
+          </div>
+          <div class="main-bar-track">
+            <div class="main-bar-fill" id="overall-progress-bar" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter Cards Grid -->
+      <div class="chapters-grid" id="roadmap-chapters-list">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- VIEW 2: Quiz / Practice Arena -->
+    <section class="tab-view" id="view-quiz">
+      <div class="quiz-wrapper">
+        <div class="quiz-header-bar">
+          <div class="quiz-context" id="quiz-context-title">
+            <!-- Chapter > Lesson Title -->
+          </div>
+          <div class="quiz-counter" id="quiz-counter-text">
+            Question 1 of 5
+          </div>
+        </div>
+
+        <div class="quiz-progress-track">
+          <div class="quiz-progress-bar" id="quiz-progress-fill" style="width: 0%;"></div>
+        </div>
+
+        <div id="quiz-question-container">
+          <!-- Question or Completed Screen rendered here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: Parent Diagnostic Dashboard -->
+    <section class="tab-view" id="view-dashboard">
+      <div class="parent-dash-grid">
+        <!-- Left Column: Circular Mastery Gauge -->
+        <div class="dash-gauge-card">
+          <h3>Total Curriculum Mastery</h3>
+          <p style="font-size: 13px; color: var(--gray); margin-top: 4px;">Primary 3 - Term 1 MOETE</p>
+
+          <div class="gauge-svg-wrap">
+            <svg class="gauge-svg" width="160" height="160" viewBox="0 0 120 120">
+              <circle class="gauge-bg" cx="60" cy="60" r="50"></circle>
+              <circle class="gauge-fill" id="dash-gauge-fill" cx="60" cy="60" r="50"></circle>
+            </svg>
+            <div class="gauge-center-text">
+              <span class="gauge-num" id="dash-gauge-text">0%</span>
+              <span class="gauge-label">MASTERED</span>
+            </div>
+          </div>
+
+          <div class="dash-summary-details">
+            <p>Target: <strong>100% Comprehensive Understanding</strong></p>
+            <p style="margin-top: 6px;">Evaluation across 6 Chapters, all official lessons, and multi-tier verification checks.</p>
+          </div>
+        </div>
+
+        <!-- Right Column: Weakness Diagnosis & Action Plan -->
+        <div class="dash-weakness-section">
+          <h3>🩺 Learning Diagnosis & Action Plan</h3>
+          <p style="font-size: 13px; color: var(--gray); margin-bottom: 16px;">
+            Identifies specific topics where the child made mistakes, with targeted teaching tips.
+          </p>
+
+          <div id="dash-weakness-list">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Curriculum Breakdown Table -->
+      <div class="curriculum-breakdown-card">
+        <h3 style="margin-bottom: 16px;">📋 Chapter-by-Chapter Mastery Breakdown</h3>
+        <table class="breakdown-table">
+          <thead>
+            <tr>
+              <th>Chapter</th>
+              <th>Lesson & Topic</th>
+              <th>Standards Checked</th>
+              <th>Current Mastery</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="dash-breakdown-body">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Official Certificate Card -->
+      <div class="cert-action-card cert-locked" id="cert-action-card">
+        <div class="cert-badge-preview">🎓</div>
+        <div class="cert-info">
+          <h3>Primary 3 Mathematics Honor Certificate</h3>
+          <p id="cert-status-msg">Reach 100% Overall Mastery to unlock the Official Grade 3 Math Honor Certificate!</p>
+        </div>
+        <button class="btn-cert" id="btn-view-cert" disabled onclick="app.showCertificate()">
+          🏆 View & Print Certificate
+        </button>
+      </div>
+
+      <div>
+        <button class="btn-reset-danger" onclick="app.resetAllProgress()">
+          ⚠️ Reset Child Progress (Start Over)
+        </button>
+      </div>
+    </section>
+
+    <!-- VIEW 4: School Monthly Exam Simulator -->
+    <section class="tab-view" id="view-exam">
+      <div class="exam-simulator-wrap">
+        <div class="exam-header-banner">
+          <div class="exam-badge-tag">🏫 Official School Model Exam</div>
+          <h2>Primary 3 Mathematics Monthly Assessment</h2>
+          <p>امتحان تجريبي مطابق تماماً لورقة الامتحان الشهري بمدارس اللغات (الدرجة الكلية: 20 درجة)</p>
+          <div class="exam-controls-bar">
+            <button class="btn-primary-action" style="width:auto; padding: 10px 24px;" onclick="app.generateNewSchoolExam()">
+              🎲 Generate New Exam (نموذج امتحان جديد)
+            </button>
+            <div class="exam-timer-chip" id="exam-timer-display">⏱️ Untimed Practice</div>
+          </div>
+        </div>
+
+        <div id="exam-questions-paper" class="exam-paper">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Certificate Modal Dialog -->
+  <div class="modal-overlay" id="cert-modal" style="display: none;">
+    <div class="cert-container">
+      <div class="cert-seal">🏅</div>
+      <div class="cert-title">CERTIFICATE OF EXCELLENCE</div>
+      <div class="cert-sub">PRIMARY 3 MATHEMATICS MASTERY (TERM 1)</div>
+
+      <div class="cert-presented-to">This certificate is proudly awarded to</div>
+      <div class="cert-name" id="cert-child-name">Champion</div>
+
+      <div class="cert-desc">
+        for demonstrating <strong>100% Comprehensive Mastery</strong> of all curriculum standards in Grade 3 Mathematics, including Patterns, Graphs & Lengths, Large Numbers & Place Value, Arrays & Multiplication, Telling Time & Division, Polygons, Area & Perimeter, and Liquid Capacity.
+      </div>
+
+      <div class="cert-signatures">
+        <div class="sig-box">
+          <div class="sig-line" id="cert-date">Date</div>
+          <div class="sig-label">Date Awarded</div>
+        </div>
+        <div class="sig-box">
+          <div class="sig-line">🌟 Master of Math</div>
+          <div class="sig-label">Curriculum Verification</div>
+        </div>
+      </div>
+
+      <div class="cert-modal-btns">
+        <button class="btn-primary-action" style="width: auto; padding: 10px 24px;" onclick="app.printCertificate()">
+          🖨️ Print / Save as PDF
+        </button>
+        <button class="btn-secondary-action" onclick="app.closeCertificate()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Tutor Modal Dialog (Miss Emma - Google Gemini) -->
+  <div class="modal-overlay" id="ai-tutor-modal" style="display: none;">
+    <div class="ai-tutor-container">
+      <div class="ai-tutor-header">
+        <div class="ai-tutor-profile">
+          <div class="ai-tutor-avatar-wrap">
+            <span class="ai-avatar-icon">👩‍🏫</span>
+            <span class="ai-online-dot" title="Online & Ready"></span>
+          </div>
+          <div class="ai-tutor-info">
+            <div class="ai-tutor-name-row">
+              <h3>Miss Emma (المعلمة الذكية)</h3>
+              <span class="ai-badge-gemini">Gemini AI ✨</span>
+            </div>
+            <p class="ai-tutor-subtitle">معلمتك الخصوصية - شرح هادئ خطوة بخطوة بدون حرق الإجابة</p>
+          </div>
+        </div>
+
+        <div class="ai-header-actions">
+          <button class="ai-voice-toggle-btn active" id="btn-ai-voice-toggle" onclick="app.toggleAiAutoVoice()" title="تشغيل / كتم صوت المعلمة التلقائي">
+            🔊 <span id="ai-voice-toggle-label">Voice: ON</span>
+          </button>
+          <div class="ai-key-pill" id="ai-key-pill" title="مفتاح الذكاء الاصطناعي النشط حالياً بالتناوب">
+            <span class="key-indicator-dot"></span>
+            <span id="ai-active-key-label">Key 1/3 Active</span>
+          </div>
+          <button class="ai-close-btn" onclick="app.closeAiTutor()" title="إغلاق النافذة">✕</button>
+        </div>
+      </div>
+
+      <!-- Active Speaking Banner -->
+      <div class="ai-speaking-bar" id="ai-speaking-bar" style="display: none;">
+        <span class="speaking-wave-icon">🎙️ <span></span><span></span><span></span></span>
+        <span class="speaking-text" id="ai-speaking-text">Miss Emma is speaking (المعلمة إيما تشرح بصوت الذكاء الاصطناعي ✨)...</span>
+        <button class="btn-stop-speech-mini" onclick="app.stopAiSpeech()" title="إيقاف الصوت">⏹️ Stop (إيقاف)</button>
+      </div>
+
+      <!-- Question Preview Banner inside modal -->
+      <div class="ai-current-q-box" id="ai-current-q-box">
+        <div class="ai-q-badge">📌 المسألة الحالية:</div>
+        <div class="ai-q-text-en" id="ai-modal-q-en">Question text...</div>
+        <div class="ai-q-text-ar" id="ai-modal-q-ar">ترجمة السؤال...</div>
+      </div>
+
+      <!-- Dialogue/Messages Area -->
+      <div class="ai-chat-body" id="ai-chat-body">
+        <!-- Messages rendered dynamically -->
+      </div>
+
+      <!-- Quick Action Prompt Chips -->
+      <div class="ai-quick-chips" id="ai-quick-chips">
+        <button class="ai-chip" onclick="app.askAiQuickAction('food_toys')">
+          🍎 بسطيهالي بمثال من الأكل أو اللعب
+        </button>
+        <button class="ai-chip" onclick="app.askAiQuickAction('step_by_step')">
+          👣 اديني أول خطوة فقط للحل
+        </button>
+        <button class="ai-chip" onclick="app.askAiQuickAction('math_words')">
+          🔤 اشرحيلي معنى الكلمات بالإنجليزي
+        </button>
+        <button class="ai-chip" onclick="app.askAiQuickAction('cheer')">
+          🌟 فهمت، شكراً يا مس!
+        </button>
+      </div>
+
+      <!-- Active Listening / Voice Recording Banner -->
+      <div class="ai-voice-recording-banner" id="ai-voice-recording-banner" style="display: none;">
+        <span class="voice-pulse-dot">🔴</span>
+        <span class="voice-status-text" id="voice-status-text">تحدث الآن، أسمعك بوضوح يا بطل... 🎙️</span>
+        <button type="button" class="btn-stop-mic" onclick="app.stopVoiceRecording()">تم ✔</button>
+      </div>
+
+      <!-- Chat Input Field with Mic Button -->
+      <div class="ai-chat-footer">
+        <div class="ai-input-wrap">
+          <button type="button" class="ai-btn-mic" id="ai-btn-mic" onclick="app.toggleVoiceRecording()" title="سجل سؤالك بصوتك (تحدث للمعلمة)">
+            <span class="mic-icon">🎙️</span>
+            <span class="mic-label">تحدث</span>
+          </button>
+          <input type="text" id="ai-user-query" class="ai-input-field" dir="auto" placeholder="اسأل المعلمة بصوتك أو اكتب هنا..." onkeydown="if(event.key==='Enter') app.sendAiUserQuery()">
+          <button class="ai-btn-send" id="ai-btn-send" onclick="app.sendAiUserQuery()" title="إرسال السؤال">
+            <span>إرسال</span> 🚀
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Official Textbook Page Viewer Modal -->
+  <div class="modal-overlay" id="book-page-modal" style="display: none;" onclick="if(event.target===this) app.closeBookPageModal()">
+    <div class="book-modal-container animate-pop">
+      <div class="book-modal-header">
+        <div class="book-modal-title-wrap">
+          <span class="book-header-icon">📖</span>
+          <div class="book-header-info">
+            <h3 id="book-modal-title">كتاب الوزارة الرسمي</h3>
+            <span class="book-modal-subtitle" id="book-modal-subtitle">الصفحة 2 - الفصل الأول</span>
+          </div>
+        </div>
+        <div class="book-modal-controls">
+          <!-- Page Nav Buttons -->
+          <div class="book-nav-group">
+            <button class="btn-book-nav" onclick="app.prevBookPage()" title="الصفحة السابقة (Previous Page)">
+              <span>◀</span> <span>السابق</span>
+            </button>
+            <span class="book-page-indicator" id="book-page-indicator">صـ 2</span>
+            <button class="btn-book-nav" onclick="app.nextBookPage()" title="الصفحة التالية (Next Page)">
+              <span>التالي</span> <span>▶</span>
+            </button>
+          </div>
+          
+          <!-- Zoom Controls -->
+          <div class="book-zoom-group">
+            <button class="btn-book-zoom" onclick="app.zoomBookPage(-0.2)" title="تصغير (Zoom Out)">🔍−</button>
+            <button class="btn-book-zoom" id="book-zoom-reset-btn" onclick="app.resetBookZoom()" title="إعادة الضبط (Reset Zoom)">100%</button>
+            <button class="btn-book-zoom" onclick="app.zoomBookPage(0.2)" title="تكبير (Zoom In)">🔍+</button>
+          </div>
+
+          <button class="book-close-btn" onclick="app.closeBookPageModal()" title="إغلاق النافذة">✕</button>
+        </div>
+      </div>
+
+      <!-- Modal Body with Scrollable/Zoomable Image -->
+      <div class="book-modal-body" id="book-modal-body">
+        <div class="book-image-canvas" id="book-image-canvas">
+          <img id="book-page-img" class="book-page-img" src="" alt="صفحة كتاب الوزارة الرسمي" />
+        </div>
+      </div>
+
+      <div class="book-modal-footer">
+        <span class="book-footer-note">🌟 كتاب وزارة التربية والتعليم الرسمي - الرياضيات للصف الثالث الابتدائي</span>
+        <span class="book-footer-tip">💡 يمكنك استخدام أزرار التكبير 🔍 أو التمرير باللمس لمطالعة التمارين بوضوح</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="audio_system.js"></script>
+  <script src="math_dictionary.js"></script>
+  <script src="question_visuals.js"></script>
+  <script src="gemini_tutor.js"></script>
+  <script src="curriculum_data.js"></script>
+  <script src="interactive_widgets.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
