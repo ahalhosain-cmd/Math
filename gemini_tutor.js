@@ -37,25 +37,33 @@ const GeminiTutor = {
       throw new Error("يرجى إدخال مفتاح Gemini API أولاً من خلال الضغط على زر المفتاح.");
     }
 
+    // Merge system prompt into user prompt for maximum reliability and speed across all endpoints
+    let finalContents = contents;
+    if (systemPrompt && contents && contents.length > 0) {
+      finalContents = contents.map((c, i) => {
+        if (i === 0 && c.role === 'user') {
+          return {
+            role: 'user',
+            parts: [{ text: `${systemPrompt}\n\n---\n${c.parts.map(p => p.text).join('\n')}` }]
+          };
+        }
+        return c;
+      });
+    }
+
     let lastError = null;
 
     for (const model of this.candidateModels) {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
       
       const payload = {
-        contents: contents,
+        contents: finalContents,
         generationConfig: {
-          temperature: 0.1,
-          maxOutputTokens: 500,
+          temperature: 0.3,
+          maxOutputTokens: 650,
           topP: 0.95
         }
       };
-
-      if (systemPrompt) {
-        payload.systemInstruction = {
-          parts: [{ text: systemPrompt }]
-        };
-      }
 
       let controller = null;
       let timeoutId = null;
@@ -129,27 +137,25 @@ const GeminiTutor = {
   async explainQuestion(q, childName = 'Champion') {
     const glossaryHelp = this.getRelevantGlossary(q.question);
 
-    const systemPrompt = `أنتِ "مس إيما" (Miss Emma)، معلمة ماث مصرية شاطرة ومرحة بتدرّسي ماث للصف الثالث الابتدائي لمدارس اللغات (عمر 8-9 سنين).
-بتكلمي التلميذ "${childName}".
+    const systemPrompt = `أنتِ "مس إيما" (Miss Emma)، معلمة ماث مصرية شاطرة ومرحة لمدارس اللغات بتشرحي لتلميذ عمره 10 سنوات اسمه "${childName}".
 
-🇪🇬 **أسلوبك واللهجة (مهم جداً جداً):**
-1. **اتكلمي بالعامية المصرية اللطيفة والدافئة** (زي: "يا بطل"، "بص يا سيدي"، "تعال نفكر سوا"، "شايف الرقم ده؟"، "يعني بنكرر الجمع"، "يلا وريني شطارتك واكسب النجوم").
-2. **المصطلحات الرياضية بالإنجليزي بخط بارز** مثل **Multiplication**, **Array**, **Rows**, **Columns**, **Product** مع توضيح معناها بالمصري السهل.
-3. **مختصر ومباشر جداً وبدون مقدمات طويلة** (3 فقرات قصيرة تناسب سن 8 سنوات).
-4. **ممنوع نهائياً تقولي الناتج النهائي أو تكتبي الإجابة له!** فقط وجّهي تفكيره للعملية الحسابية وسيبي له متعة حساب الناتج بنفسه.
+🎯 هدفك: تفهمي الطفل المسألة خطوة بخطوة بالعامية المصرية البسيطة عشان يقدر يحلها بنفسه ويكسب النجوم.
 
-📋 التنسيق المطلوب بالعامية المصرية:
-🌟 **بص كده يا بطل:** (شرح فكرة المسألة بالعامية المصرية في جملة أو اتنين مرحتين).
-🔤 **الكلمة الذهبية:** (المصطلح الإنجليزي **Term** من المسألة ومعناه بالمصري السهل).
-💡 **هتحلها إزاي:** (توجيه سريع للعملية الحسابية + سؤال تشجيعي يخليه يحسب ويختار الإجابة).`;
+قواعد الشرح (مهمة جداً):
+1. **اتكلمي بالعامية المصرية الودودة** زي: "يا بطل"، "بص يا سيدي"، "تعال نمشي معاها خطوة خطوة"، "يلا وريني شطارتك".
+2. **اشرحي خطوات الحل بالترتيب بأسلوب يفهمه طفل 10 سنين:**
+   - فككي له الأقواس وقولي له يحسب إيه الأول وإيه التاني.
+   - وضحي العملية الحسابية بالأرقام وسهلها عليه (زي: كام في كام).
+3. **أبرزي مصطلحات الماث بالإنجليزي** مثل **Break up**, **Multiply**, **Add**, **Parentheses** مع توضيح معناها بالمصري السهل.
+4. **ممنوع نهائياً تقولي الناتج النهائي!** اتركي له متعة حساب الناتج واختيار الإجابة الصحيحة.`;
 
-    const userPrompt = `السؤال المعروض أمام ${childName}:
+    const userPrompt = `المسألة المعروضة أمام ${childName}:
 • بالإنجليزي: "${q.question}"
 • بالعربي: "${q.questionAr || ''}"
 • الخيارات: ${q.options ? q.options.join(', ') : 'إكمال'}
 ${glossaryHelp}
 
-يا مس إيما، اشرحي لـ ${childName} الفكرة بالعامية المصرية باختصار شديد ومرح بدون كشف الناتج النهائي!`;
+يا مس إيما، اشرحي لـ ${childName} بالتفصيل المبسط والخطوات الواضحة إزاي يفكر ويحل المسألة دي بالعامية المصرية وبدون كشف الناتج النهائي!`;
 
     const contents = [{ role: 'user', parts: [{ text: userPrompt }] }];
     return await this.callGemini(contents, systemPrompt);
