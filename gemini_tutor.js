@@ -6,7 +6,13 @@ const GeminiTutor = {
   get key() {
     try { return atob(this._encKey); } catch (e) { return this._encKey; }
   },
-  modelName: 'models/gemini-3.6-flash',
+  candidateModels: [
+    'gemini-3.1-flash-lite',
+    'gemini-3.5-flash-lite',
+    'gemini-3.8-flash',
+    'gemini-3-flash-preview',
+    'gemini-3.6-flash'
+  ],
 
   getActiveKey() {
     const custom = localStorage.getItem('gemini_api_key');
@@ -30,12 +36,10 @@ const GeminiTutor = {
       throw new Error("يرجى إدخال مفتاح Gemini API أولاً من خلال الضغط على زر المفتاح.");
     }
 
-    let attempts = 0;
-    const maxAttempts = 3;
     let lastError = null;
 
-    while (attempts < maxAttempts) {
-      const url = `https://generativelanguage.googleapis.com/v1beta/${this.modelName}:generateContent?key=${activeKey}`;
+    for (const model of this.candidateModels) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${activeKey}`;
       
       const payload = {
         contents: contents,
@@ -64,44 +68,29 @@ const GeminiTutor = {
           const candidate = data.candidates && data.candidates[0];
           if (candidate && candidate.content && candidate.content.parts) {
             return {
-              text: candidate.content.parts.map(p => p.text).join('')
+              text: candidate.content.parts.map(p => p.text).join(''),
+              modelUsed: model
             };
           }
-          throw new Error("No content candidate returned from Gemini");
         } else {
           const errData = await response.json().catch(() => ({}));
-          console.warn(`[GeminiTutor] Request failed with status ${response.status}:`, errData);
           lastError = (errData.error && errData.error.message) ? errData.error.message : `HTTP ${response.status}`;
-          
-          if (response.status === 429) {
-            let waitMs = 3000;
-            const match = lastError && lastError.match(/retry in ([\d\.]+)s/i);
-            if (match && match[1]) {
-              const sec = parseFloat(match[1]);
-              if (sec > 0 && sec <= 6) waitMs = Math.ceil((sec + 1.0) * 1000);
-            }
-            if (waitMs <= 6000) {
-              await new Promise(r => setTimeout(r, waitMs));
-              attempts++;
-              continue;
-            }
-          } else if (response.status === 503) {
-            await new Promise(r => setTimeout(r, 2000));
-          }
-          attempts++;
+          console.warn(`[GeminiTutor] Model ${model} returned ${response.status}:`, lastError);
+          // If 429 quota or 503 high demand, seamlessly try next model in cascade
+          continue;
         }
       } catch (err) {
-        console.warn("[GeminiTutor] Network or request error:", err);
+        console.warn(`[GeminiTutor] Network error with ${model}:`, err);
         lastError = err.message;
-        attempts++;
+        continue;
       }
     }
 
     if (lastError && (lastError.toLowerCase().includes("quota") || lastError.includes("429"))) {
-      throw new Error("وصل حساب Google Gemini المجاني للحد الأقصى اليومي (20 سؤالاً في اليوم كحد مجاني من جوجل). يمكنك الانتظار قليلاً أو إدخال مفتاح جديد من زر 🔑 في الأعلى.");
+      throw new Error("وصل حساب Google Gemini للحد الأقصى اليومي المتاح. يمكنك إدخال مفتاح جديد من زر 🔑 في الأعلى.");
     }
     if (lastError && (lastError.toLowerCase().includes("high demand") || lastError.includes("503"))) {
-      throw new Error("سيرفرات الذكاء الاصطناعي تشهد ضغطاً مؤقتاً، يرجى إعادة المحاولة بعد ثوانٍ معدودة.");
+      throw new Error("سيرفرات الذكاء الاصطناعي تشهد ضغطاً مؤقتاً، يرجى إعادة المحاولة بعد لحظات.");
     }
 
     throw new Error(`Gemini API: ${lastError}`);
