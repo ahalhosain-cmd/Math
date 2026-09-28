@@ -85,11 +85,11 @@ class SoundManager {
             if (!this.arabicVoice) {
                 this.arabicVoice = voices.find(v => v.lang === 'ar-EG') 
                                 || voices.find(v => v.lang && v.lang.startsWith('ar')) 
-                                || this.selectedVoice;
+                                || null;
             }
 
             console.log("[SoundManager] English Teacher Voice:", this.selectedVoice ? this.selectedVoice.name : "Default");
-            console.log("[SoundManager] Arabic Teacher Voice:", this.arabicVoice ? this.arabicVoice.name : "Default");
+            console.log("[SoundManager] Arabic Teacher Voice:", this.arabicVoice ? this.arabicVoice.name : "Browser Default Arabic");
         };
 
         pickVoices();
@@ -299,26 +299,38 @@ class SoundManager {
             this._currentUtterances.push(utt);
 
             if (seg.isArabic) {
-                utt.voice = this.arabicVoice || this.selectedVoice;
-                utt.lang = (this.arabicVoice && this.arabicVoice.lang) || 'ar-EG';
+                if (this.arabicVoice) {
+                    utt.voice = this.arabicVoice;
+                    utt.lang = this.arabicVoice.lang || 'ar-EG';
+                } else {
+                    utt.lang = 'ar-EG';
+                }
                 utt.rate = 0.95;
                 utt.pitch = 1.05;
             } else {
-                utt.voice = this.selectedVoice;
-                utt.lang = (this.selectedVoice && this.selectedVoice.lang) || 'en-US';
+                if (this.selectedVoice) {
+                    utt.voice = this.selectedVoice;
+                    utt.lang = this.selectedVoice.lang || 'en-US';
+                } else {
+                    utt.lang = 'en-US';
+                }
                 utt.rate = this.speechRate;
                 utt.pitch = this.speechPitch;
             }
 
             utt.onend = () => {
-                setTimeout(playNextSegment, 100);
+                setTimeout(playNextSegment, 80);
             };
 
             utt.onerror = (e) => {
                 console.warn("[Speech] Segment error:", e);
+                if (e && e.error === 'interrupted') return;
                 setTimeout(playNextSegment, 50);
             };
 
+            if (window.speechSynthesis.paused) {
+                window.speechSynthesis.resume();
+            }
             window.speechSynthesis.speak(utt);
         };
 

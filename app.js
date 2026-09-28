@@ -1495,12 +1495,10 @@ class MasteryApp {
     }
   }
 
-  updateAiKeyBadge(keyNumber, totalKeys) {
+  updateAiKeyBadge() {
     const pill = document.getElementById('ai-active-key-label');
     if (!pill) return;
-    const total = totalKeys || (window.GeminiTutor ? window.GeminiTutor.getAllKeys().length : 2);
-    const currentNum = keyNumber || ((window.GeminiTutor ? window.GeminiTutor.currentKeyIdx : 0) + 1);
-    pill.textContent = `مفتاح ${currentNum}/${total} نشط ⚡ (تناوب تلقائي)`;
+    pill.textContent = `Gemini AI ✨ (متصل)`;
   }
 
   async fetchInitialAiExplanation(q) {
@@ -1526,10 +1524,9 @@ class MasteryApp {
       const res = await window.GeminiTutor.explainQuestion(q, this.state.childName);
       this.aiChatHistories[q.id].push({
         role: 'teacher',
-        text: res.text,
-        keyUsed: res.keyUsed
+        text: res.text
       });
-      this.updateAiKeyBadge(res.keyUsed, res.totalKeys);
+      this.updateAiKeyBadge();
       this.renderAiChatMessages(q.id);
       window.soundManager.starEarned();
       if (this.aiAutoVoiceEnabled) {
@@ -1605,10 +1602,9 @@ class MasteryApp {
 
       this.aiChatHistories[q.id].push({
         role: 'teacher',
-        text: res.text,
-        keyUsed: res.keyUsed
+        text: res.text
       });
-      this.updateAiKeyBadge(res.keyUsed, res.totalKeys);
+      this.updateAiKeyBadge();
       this.renderAiChatMessages(q.id);
       window.soundManager.click();
       if (this.aiAutoVoiceEnabled) {
@@ -1669,10 +1665,9 @@ class MasteryApp {
 
       this.aiChatHistories[q.id].push({
         role: 'teacher',
-        text: res.text,
-        keyUsed: res.keyUsed
+        text: res.text
       });
-      this.updateAiKeyBadge(res.keyUsed, res.totalKeys);
+      this.updateAiKeyBadge();
       this.renderAiChatMessages(q.id);
       window.soundManager.click();
       if (this.aiAutoVoiceEnabled) {
@@ -1743,7 +1738,6 @@ class MasteryApp {
                   <button class="ai-speak-bubble-btn" onclick="app.speakAiMessage('${qId}', ${idx})" title="Listen to Miss Emma's explanation (استمع لشرح المعلمة)">
                     🔊 اسمع الشرح بصوت المعلمة
                   </button>
-                  ${msg.keyUsed ? `<span style="font-size: 10px; color: #94A3B8;">(Key #${msg.keyUsed})</span>` : ''}
                 </div>
               ` : ''}
             </div>
