@@ -1495,11 +1495,12 @@ class MasteryApp {
     }
   }
 
-  updateAiKeyBadge(keyNumber) {
+  updateAiKeyBadge(keyNumber, totalKeys) {
     const pill = document.getElementById('ai-active-key-label');
     if (!pill) return;
+    const total = totalKeys || (window.GeminiTutor ? window.GeminiTutor.getAllKeys().length : 2);
     const currentNum = keyNumber || ((window.GeminiTutor ? window.GeminiTutor.currentKeyIdx : 0) + 1);
-    pill.textContent = `Key ${currentNum}/3 Active (تناوب تلقائي)`;
+    pill.textContent = `مفتاح ${currentNum}/${total} نشط ⚡ (تناوب تلقائي)`;
   }
 
   async fetchInitialAiExplanation(q) {
@@ -1528,7 +1529,7 @@ class MasteryApp {
         text: res.text,
         keyUsed: res.keyUsed
       });
-      this.updateAiKeyBadge(res.keyUsed);
+      this.updateAiKeyBadge(res.keyUsed, res.totalKeys);
       this.renderAiChatMessages(q.id);
       window.soundManager.starEarned();
       if (this.aiAutoVoiceEnabled) {
@@ -1556,14 +1557,20 @@ class MasteryApp {
 
   promptApiKey() {
     const current = localStorage.getItem('gemini_api_key') || '';
-    const newKey = prompt('أدخل مفتاح Gemini API المجاني الخاص بك (يبدأ بـ AIza أو AQ):', current);
-    if (newKey !== null && newKey.trim().length > 5) {
-      if (window.GeminiTutor) {
-        window.GeminiTutor.setApiKey(newKey.trim());
-      } else {
-        localStorage.setItem('gemini_api_key', newKey.trim());
+    const newKey = prompt('أدخل مفتاح Gemini API إضافي لزيادة سرعة الشرح ومضاعفة الرصيد اليومي:', current);
+    if (newKey !== null) {
+      if (newKey.trim().length > 10) {
+        if (window.GeminiTutor) {
+          window.GeminiTutor.setApiKey(newKey.trim());
+        } else {
+          localStorage.setItem('gemini_api_key', newKey.trim());
+        }
+        alert('تم حفظ المفتاح بنجاح وتفعيله ضمن المفاتيح النشطة! 🌟');
+      } else if (newKey.trim() === '') {
+        localStorage.removeItem('gemini_api_key');
+        alert('تمت العودة للمفاتيح الافتراضية المدمجة.');
       }
-      alert('تم حفظ المفتاح بنجاح! جاري إعادة تجربة الشرح الآن... 🌟');
+      this.updateAiKeyBadge();
       const q = this.getCurrentQuestion();
       if (q) {
         this.fetchInitialAiExplanation(q);
@@ -1601,7 +1608,7 @@ class MasteryApp {
         text: res.text,
         keyUsed: res.keyUsed
       });
-      this.updateAiKeyBadge(res.keyUsed);
+      this.updateAiKeyBadge(res.keyUsed, res.totalKeys);
       this.renderAiChatMessages(q.id);
       window.soundManager.click();
       if (this.aiAutoVoiceEnabled) {
@@ -1665,7 +1672,7 @@ class MasteryApp {
         text: res.text,
         keyUsed: res.keyUsed
       });
-      this.updateAiKeyBadge(res.keyUsed);
+      this.updateAiKeyBadge(res.keyUsed, res.totalKeys);
       this.renderAiChatMessages(q.id);
       window.soundManager.click();
       if (this.aiAutoVoiceEnabled) {
