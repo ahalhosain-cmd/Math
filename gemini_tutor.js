@@ -6,7 +6,15 @@ const GeminiTutor = {
   get key() {
     try { return atob(this._encKey); } catch (e) { return this._encKey; }
   },
-  modelName: 'models/gemini-3.6-flash',
+  models: [
+    'models/gemini-3.6-flash',
+    'models/gemini-3.8-flash',
+    'models/gemini-3.5-flash'
+  ],
+  currentModelIdx: 0,
+  get modelName() {
+    return this.models[this.currentModelIdx % this.models.length];
+  },
 
   getActiveKey() {
     const saved = localStorage.getItem('gemini_api_key');
@@ -34,7 +42,8 @@ const GeminiTutor = {
     let lastError = null;
 
     while (attempts < maxAttempts) {
-      const url = `https://generativelanguage.googleapis.com/v1beta/${this.modelName}:generateContent?key=${activeKey}`;
+      const currentModel = this.models[this.currentModelIdx % this.models.length];
+      const url = `https://generativelanguage.googleapis.com/v1beta/${currentModel}:generateContent?key=${activeKey}`;
       
       const payload = {
         contents: contents,
@@ -70,20 +79,39 @@ const GeminiTutor = {
           throw new Error("No content candidate returned from Gemini");
         } else {
           const errData = await response.json().catch(() => ({}));
-          console.warn(`[GeminiTutor] Request failed with status ${response.status}:`, errData);
+          console.warn(`[GeminiTutor] Model ${currentModel} failed with status ${response.status}:`, errData);
           lastError = (errData.error && errData.error.message) ? errData.error.message : `HTTP ${response.status}`;
           
           if (response.status === 429) {
-            console.log("[GeminiTutor] Rate limit reached. Automatically waiting 1.8s before retry...");
-            await new Promise(r => setTimeout(r, 1800));
+            let waitMs = 2500;
+            const match = lastError && lastError.match(/retry in ([\d\.]+)s/i);
+            if (match && match[1]) {
+              const sec = Math.ceil(parseFloat(match[1]));
+              if (sec > 0 && sec <= 15) {
+                waitMs = (sec + 1) * 1000;
+              }
+            }
+            console.log(`[GeminiTutor] Rate limit on ${currentModel}. Waiting ${waitMs/1000}s or switching model...`);
+            this.currentModelIdx = (this.currentModelIdx + 1) % this.models.length;
+            await new Promise(r => setTimeout(r, Math.min(waitMs, 2500)));
+          } else if (response.status === 503 || response.status === 404) {
+            this.currentModelIdx = (this.currentModelIdx + 1) % this.models.length;
           }
           attempts++;
         }
       } catch (err) {
         console.warn("[GeminiTutor] Network or request error:", err);
         lastError = err.message;
+        this.currentModelIdx = (this.currentModelIdx + 1) % this.models.length;
         attempts++;
       }
+    }
+
+    if (lastError && (lastError.toLowerCase().includes("quota") || lastError.includes("429"))) {
+      throw new Error("عذراً، تم الوصول للحد المؤقت لطلبات Gemini (يرجى الانتظار 30 ثانية لتجدد الرصيد، أو إدخال مفتاح إضافي من زر المفتاح 🔑 في الأعلى).");
+    }
+    if (lastError && (lastError.toLowerCase().includes("high demand") || lastError.includes("503"))) {
+      throw new Error("سيرفرات الذكاء الاصطناعي تشهد ضغطاً مؤقتاً، يرجى إعادة المحاولة بعد ثوانٍ معدودة.");
     }
 
     throw new Error(`Gemini API: ${lastError}`);
@@ -171,47 +199,9 @@ ${glossaryHelp}
     return await this.callGemini(contents, systemPrompt);
   },
 
-  ttsModelName: 'models/gemini-2.5-flash-preview-tts',
-
   async generateAiSpeech(text) {
-    const clean = String(text)
-      .replace(/\\rightarrow/g, ' to ')
-      .replace(/[\$\*\#\_\[\]\(\)\{\}]/g, ' ')
-      .replace(/[•\-\+]/g, ' ')
-      .replace(/[\u{1F300}-\u{1F9FF}]/gu, '')
-      .replace(/\s+/g, ' ')
-      .slice(0, 450)
-      .trim();
-
-    const activeKey = this.getActiveKey();
-    const url = `https://generativelanguage.googleapis.com/v1beta/${this.ttsModelName}:generateContent?key=${activeKey}`;
-    const payload = {
-      contents: [{ role: 'user', parts: [{ text: `Please read aloud this transcript clearly and naturally: "${clean}"` }] }],
-      generationConfig: { responseModalities: ['AUDIO'] }
-    };
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const candidate = data.candidates && data.candidates[0];
-        const part = candidate && candidate.content && candidate.content.parts && candidate.content.parts[0];
-        if (part && part.inlineData && part.inlineData.data) {
-          return {
-            audioData: part.inlineData.data,
-            mimeType: part.inlineData.mimeType,
-            sampleRate: 24000
-          };
-        }
-      }
-    } catch (err) {
-      console.warn("[generateAiSpeech] TTS error:", err);
-    }
+    // Cloud TTS is disabled to preserve 100% of the free Gemini API quota for mathematical explanations.
+    // Speech is handled instantly (< 0.05s) by the browser's built-in natural teacher voice.
     return null;
   }
 };
