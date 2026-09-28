@@ -12,7 +12,12 @@ const GeminiTutor = {
     });
   },
   currentKeyIdx: 0,
-  models: ['models/gemini-3.6-flash', 'models/gemini-3.8-flash', 'models/gemini-flash-latest'],
+  models: [
+    'models/gemini-3.1-flash-lite',
+    'models/gemini-3.5-flash-lite',
+    'models/gemini-3.6-flash',
+    'models/gemini-3.8-flash'
+  ],
   currentModelIdx: 0,
   get modelName() {
     return this.models[this.currentModelIdx % this.models.length];
