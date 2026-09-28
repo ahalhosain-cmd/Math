@@ -56,12 +56,21 @@ const GeminiTutor = {
         };
       }
 
+      let controller = null;
+      let timeoutId = null;
+
       try {
+        controller = new AbortController();
+        timeoutId = setTimeout(() => controller.abort(), 3500);
+
         const response = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(payload),
+          signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
 
         if (response.ok) {
           const data = await response.json();
@@ -76,12 +85,12 @@ const GeminiTutor = {
           const errData = await response.json().catch(() => ({}));
           lastError = (errData.error && errData.error.message) ? errData.error.message : `HTTP ${response.status}`;
           console.warn(`[GeminiTutor] Model ${model} returned ${response.status}:`, lastError);
-          // If 429 quota or 503 high demand, seamlessly try next model in cascade
           continue;
         }
       } catch (err) {
-        console.warn(`[GeminiTutor] Network error with ${model}:`, err);
-        lastError = err.message;
+        if (timeoutId) clearTimeout(timeoutId);
+        console.warn(`[GeminiTutor] Network or timeout error with ${model}:`, err);
+        lastError = err.name === 'AbortError' ? 'Timeout (استجابة بطيئة)' : err.message;
         continue;
       }
     }
