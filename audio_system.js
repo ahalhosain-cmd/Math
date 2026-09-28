@@ -64,15 +64,18 @@ class SoundManager {
 
             // 2. Prioritize natural Egyptian/Arabic female voices for native explanations
             const preferredArabicPatterns = [
-                "Microsoft سلمى Online (Natural)",
-                "Microsoft Hoda",
-                "Microsoft شاكر Online (Natural)",
-                "Microsoft فاطمة Online (Natural)",
-                "Microsoft ليلى Online (Natural)"
+                "Salma", "سلمى",
+                "Hoda", "هدى",
+                "Fatima", "فاطمة",
+                "Laila", "ليلى",
+                "Zeina", "زينة",
+                "Mariam", "مريم",
+                "Shakir", "شاكر",
+                "Arabic (Egypt)", "ar-EG"
             ];
 
             for (const pattern of preferredArabicPatterns) {
-                const found = voices.find(v => v.name.includes(pattern) || (v.lang === 'ar-EG' && v.name.includes(pattern)));
+                const found = voices.find(v => (v.name && v.name.includes(pattern)) || (v.lang === 'ar-EG' && v.name && v.name.includes(pattern)));
                 if (found) {
                     this.arabicVoice = found;
                     break;
@@ -81,7 +84,7 @@ class SoundManager {
 
             if (!this.arabicVoice) {
                 this.arabicVoice = voices.find(v => v.lang === 'ar-EG') 
-                                || voices.find(v => v.lang.startsWith('ar')) 
+                                || voices.find(v => v.lang && v.lang.startsWith('ar')) 
                                 || this.selectedVoice;
             }
 
@@ -222,21 +225,35 @@ class SoundManager {
         window.speechSynthesis.speak(utterance);
     }
 
+    speakTeacherExplanation(text, onStart = null, onEnd = null) {
+        this.speakBilingual(text, onStart, null, onEnd);
+    }
+
     speakBilingual(text, onStart = null, onSegment = null, onEnd = null) {
-        if (!this.speechEnabled || !('speechSynthesis' in window)) return;
+        if (!this.speechEnabled || !('speechSynthesis' in window)) {
+            if (onEnd) onEnd();
+            return;
+        }
+
         window.speechSynthesis.cancel();
+        if (window.speechSynthesis.paused) {
+            window.speechSynthesis.resume();
+        }
         this.isSpeaking = true;
 
         if (!this.selectedVoice || !this.arabicVoice) {
             this.initVoices();
         }
 
-        // Clean markdown, formulas, and emojis for smooth pronunciation
-        let cleaned = text
-            .replace(/\\rightarrow/g, ' to ')
-            .replace(/[\$\*\#\_\[\]\(\)\{\}]/g, ' ')
+        // Clean markdown symbols, LaTeX syntax, and decorative icons for clean pronunciation
+        let cleaned = String(text)
+            .replace(/\\times/g, ' في ')
+            .replace(/\\div/g, ' على ')
+            .replace(/\\rightarrow/g, ' يعني ')
+            .replace(/[\$\*\#\_\[\]\(\)\{\}\=]/g, ' ')
             .replace(/[•\-\+]/g, ' ')
             .replace(/[\u{1F300}-\u{1F9FF}]/gu, '')
+            .replace(/\s+/g, ' ')
             .trim();
 
         // Split into coherent sentence chunks
@@ -246,11 +263,10 @@ class SoundManager {
         rawLines.forEach(line => {
             const trimmed = line.trim();
             if (!trimmed) return;
-            // Split line by sentence punctuation
             const frags = trimmed.split(/([.!?;،؛]+)/);
             for (let i = 0; i < frags.length; i += 2) {
                 const part = (frags[i] + (frags[i + 1] || '')).trim();
-                if (part.length > 1) {
+                if (part.length > 0) {
                     const isAr = /[\u0600-\u06FF]/.test(part);
                     segments.push({ text: part, isArabic: isAr });
                 }
@@ -266,9 +282,12 @@ class SoundManager {
         if (onStart) onStart();
 
         let currentIdx = 0;
+        this._currentUtterances = [];
+
         const playNextSegment = () => {
             if (!this.isSpeaking || currentIdx >= segments.length) {
                 this.isSpeaking = false;
+                this._currentUtterances = [];
                 if (onEnd) onEnd();
                 return;
             }
@@ -277,10 +296,12 @@ class SoundManager {
             if (onSegment) onSegment(seg, currentIdx - 1, segments.length);
 
             const utt = new SpeechSynthesisUtterance(seg.text);
+            this._currentUtterances.push(utt);
+
             if (seg.isArabic) {
                 utt.voice = this.arabicVoice || this.selectedVoice;
                 utt.lang = (this.arabicVoice && this.arabicVoice.lang) || 'ar-EG';
-                utt.rate = 0.85;
+                utt.rate = 0.95;
                 utt.pitch = 1.05;
             } else {
                 utt.voice = this.selectedVoice;
@@ -290,11 +311,12 @@ class SoundManager {
             }
 
             utt.onend = () => {
-                setTimeout(playNextSegment, 140);
+                setTimeout(playNextSegment, 100);
             };
 
-            utt.onerror = () => {
-                setTimeout(playNextSegment, 60);
+            utt.onerror = (e) => {
+                console.warn("[Speech] Segment error:", e);
+                setTimeout(playNextSegment, 50);
             };
 
             window.speechSynthesis.speak(utt);
