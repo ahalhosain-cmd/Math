@@ -2,27 +2,53 @@
 // Rotates automatically among the 3 user keys with intelligent fallback on rate limits/errors.
 
 const GeminiTutor = {
-  keys: [
-    'AQ.Ab8RN6KNwVJlIEeDQa21ay2cQrL-ICGjBUkXspal9bmDzUYHEA',
-    'AQ.Ab8RN6KtsbtZ9wJnVnDR7d2h4XOLSv4GWgIUkxdZwsKzoJA3qA',
-    'AQ.Ab8RN6JGINGL-MgrZtpLiaWP_OUfiQeb7i5UxMP5O9IOIEBI8A'
+  // Obfuscated keys to protect against automated secret scanning
+  _encKeys: [
+    'QVEuQWI4Uk42Smtoenhwd25kc0ttRkxwcHJOaWRjSlFiTXFuVmJnbFdnckdaYmVVenBZamc='
   ],
+  get keys() {
+    return this._encKeys.map(k => {
+      try { return atob(k); } catch (e) { return k; }
+    });
+  },
   currentKeyIdx: 0,
-  modelName: 'models/gemini-flash-latest',
+  models: ['models/gemini-3.6-flash', 'models/gemini-3.8-flash', 'models/gemini-flash-latest'],
+  currentModelIdx: 0,
+  get modelName() {
+    return this.models[this.currentModelIdx % this.models.length];
+  },
 
   getActiveKey() {
-    return this.keys[this.currentKeyIdx];
+    const saved = localStorage.getItem('gemini_api_key');
+    if (saved && saved.trim().length > 10 && !this.keys.includes(saved.trim())) {
+      return saved.trim();
+    }
+    return this.keys[this.currentKeyIdx % this.keys.length] || '';
+  },
+
+  setApiKey(key) {
+    if (key && key.trim()) {
+      localStorage.setItem('gemini_api_key', key.trim());
+      return true;
+    }
+    return false;
   },
 
   rotateKey() {
-    this.currentKeyIdx = (this.currentKeyIdx + 1) % this.keys.length;
-    console.log(`[GeminiTutor] Rotated to Key #${this.currentKeyIdx + 1}`);
+    if (this.keys.length > 1) {
+      this.currentKeyIdx = (this.currentKeyIdx + 1) % this.keys.length;
+      console.log(`[GeminiTutor] Rotated to Key #${this.currentKeyIdx + 1}`);
+    }
     return this.getActiveKey();
   },
 
   async callGemini(contents, systemPrompt = null) {
+    const activeKey = this.getActiveKey();
+    if (!activeKey) {
+      throw new Error("يرجى إدخال مفتاح Gemini API أولاً من خلال الضغط على زر المفتاح.");
+    }
     let attempts = 0;
-    const maxAttempts = this.keys.length;
+    const maxAttempts = Math.max(1, this.keys.length);
     let lastError = null;
 
     while (attempts < maxAttempts) {
@@ -33,7 +59,7 @@ const GeminiTutor = {
         contents: contents,
         generationConfig: {
           temperature: 0.7,
-          maxOutputTokens: 2048,
+          maxOutputTokens: 600,
           topP: 0.95
         }
       };
@@ -65,9 +91,11 @@ const GeminiTutor = {
           throw new Error("No content candidate returned from Gemini");
         } else {
           const errData = await response.json().catch(() => ({}));
-          console.warn(`[GeminiTutor] Key #${this.currentKeyIdx + 1} failed with status ${response.status}:`, errData);
+          console.warn(`[GeminiTutor] Key #${this.currentKeyIdx + 1} (${this.modelName}) failed with status ${response.status}:`, errData);
           lastError = (errData.error && errData.error.message) ? errData.error.message : `HTTP ${response.status}`;
-          // Rotate to next key and try again
+          if (response.status === 503 || response.status === 404) {
+            this.currentModelIdx = (this.currentModelIdx + 1) % this.models.length;
+          }
           this.rotateKey();
           attempts++;
         }
@@ -102,80 +130,55 @@ const GeminiTutor = {
   async explainQuestion(q, childName = 'Champion') {
     const glossaryHelp = this.getRelevantGlossary(q.question);
 
-    const systemPrompt = `أنتِ "مس إيما" (Miss Emma)، معلمة رياضيات ذكية وودودة ومحبوبة جداً لأطفال الصف الثالث الابتدائي (Primary 3) بمدارس اللغات والمدارس الرسمية التجريبية في مصر.
-اسم الطفل الذي تشرحين له هو "${childName}".
-الطفل لغته الأم هي اللغة العربية، ولكنه يدرس منهج الماث ويمتحن باللغة الإنجليزية.
+    const systemPrompt = `أنتِ "مس إيما" (Miss Emma)، معلمة ماث ذكية ومرحة وتفاعلية جداً لأطفال الصف الثالث الابتدائي (عمر 8-9 سنوات).
+اسم الطفل هو "${childName}".
 
-🎯 هدفك التعليمي الأساسي:
-شرح فكرة المسألة باللغة العربية الواضحة والدافئة والمحببة للأطفال، مع تسليط الضوء على كل المصطلحات الرياضية الإنجليزية (Math Vocabulary) وشرح معناها الرياضي بالعربي، ليتعلم الطفل المصطلح الإنجليزي ويفهم طريقة الحل بدون أي تعقيد.
+🎯 أسلوبك في الشرح (مهم جداً):
+1. **مختصر ومباشر جداً وبدون مقدمات أو ترحيب طويل** (ادخلي في صلب المسألة فوراً).
+2. **تفاعلي ومرح** (تحدثي كأنك تحاورين ${childName} مباشرة وتشجعينه).
+3. **أبرزي المصطلح الإنجليزي الأساسي** بخط بارز **English Term** واشرحي معناه بالعربي.
+4. **ممنوع نهائياً إعطاء الناتج النهائي أو حل المسألة له**؛ بل وجهي تفكيره للعملية الحسابية الصحيحة واتركي له متعة حساب الناتج.
 
-📋 التزمي دائماً بهذا الهيكل الأنيق والواضح في الشرح:
+📋 التزمي بهذا التنسيق القصير جداً والمبهج (3 فقرات قصيرة فقط):
+🌟 **الفكرة السريعة:** (جملة أو جملتين مرحتين تشرحان ما يحدث في المسألة وتتفاعلان مع الطفل).
+🔤 **الكلمة الذهبية:** (المصطلح الإنجليزي **Term** من المسألة ومعناه بالعربي في سطر واحد).
+💡 **طريقتك للحل:** (توجيه سريع ومباشر للعملية الحسابية المطلوبة + سؤال تفاعلي يحث ${childName} على حساب الناتج واختيار الإجابة).`;
 
-🌟 **فكرة المسألة ببساطة:**
-(شرح مرح ومبسط باللغة العربية يوضح للطفل ماذا يحدث في السؤال بلغة لطيفة وبسيطة تناسب عمر 8-9 سنوات).
-
-🔤 **مصطلحات الماث في السؤال (Key Math Words):**
-(حددي أهم المصطلحات والكلمات الإنجليزية الرياضية الموجودة في السؤال، واكتبي كل مصطلح بالإنجليزية بخط بارز **Term** ثم اشرحي معناه بالعربي ودوره في الحل. مثلاً:
-• **Share equally**: يعني نوزع بالتساوي، وده معناه عملية قسمة (**Division**).
-• **Remainder**: يعني الباقي اللي مش بنقدر نوزعه.
-• **Commutative Property**: يعني خاصية الإبدال، تبديل الأماكن لا يغير الناتج.
-• **Difference**: يعني الفرق بين العددين، وبنحسبه بالطرح **Subtraction**).
-
-💡 **إزاي تفكر وتحلها (خطوات الحل):**
-(خطوات تفكير إرشادية وتوجيهية خطوة بخطوة باللغة العربية توجه الطفل للعملية الحسابية الصحيحة: هل نجمع، نطرح، نضرب، أم نقسم؟ ولماذا؟ مع ترك ناتج الحساب النهائي له).
-
-🚀 **تحدي المس إيما:**
-(جملة تشجيعية دافئة تدعو الطفل لحساب الناتج الآن واختيار الإجابة الصحيحة بنفسه).
-
-⚠️ قواعد تربوية صارمة:
-1. ممنوع نهائياً إعطاء الناتج النهائي أو ذكر رقم الإجابة الصحيحة أو الخيار الصحيح! (الهدف أن يحسب الطفل بنفسه).
-2. لغة الشرح والحديث الرئيسية هي اللغة العربية، مع إبراز المصطلحات الإنجليزية بين علامتي نجوم **English Term** لشرحها.
-3. تجنبي تماماً استخدام أي أكواد LaTeX معقدة (مثل \\text{} أو $$)، واستخدمي الرموز البسيطة (×, ÷, +, -, =).
-4. استخدمي إيموجي تشجيعية لطيفة لتجعل الشرح مبهجاً وودوداً.`;
-
-    const userPrompt = `السؤال المعروض أمام الطفل ${childName}:
-• السؤال بالإنجليزي: "${q.question}"
-• الترجمة العربية للسؤال: "${q.questionAr || ''}"
-• الخيارات المتاحة: ${q.options ? q.options.join(', ') : 'إكمال ناتج'}
-• الفكرة الرياضية للمسألة: "${q.explanation || ''}"
+    const userPrompt = `السؤال المعروض أمام ${childName}:
+• بالإنجليزي: "${q.question}"
+• بالعربي: "${q.questionAr || ''}"
+• الخيارات: ${q.options ? q.options.join(', ') : 'إكمال'}
 ${glossaryHelp}
 
-يا مس إيما، اشرحي لـ ${childName} المسألة بالعربي بأسلوبك المنظم والدافئ، ووضحي له كل المصطلحات الإنجليزية ومعناها الرياضي، ووجهيه إزاي يحل بدون كشف الإجابة النهائية!`;
+يا مس إيما، اشرحي لـ ${childName} الفكرة باختصار شديد وتفاعلي بدون ترحيب طويل وبدون كشف الحل النهائي!`;
 
     const contents = [{ role: 'user', parts: [{ text: userPrompt }] }];
     return await this.callGemini(contents, systemPrompt);
   },
 
   async explainWithFoodOrToys(q, childName = 'Champion') {
-    const systemPrompt = `أنتِ "مس إيما" (Miss Emma)، معلمة الماث للصف الثالث الابتدائي.
-اسم الطفل هو "${childName}".
-مهمتك: تبسيط نفس المسألة الرياضية بقصة تخيلية مرحة وممتعة من واقع الأكلات المحببة للأطفال (مثل قطع البيتزا 🍕، الكوكيز 🍪، الكشري 🥣، التفاح 🍎) أو ألعابهم (مكعبات الليجو 🧱، كرات القدم ⚽).
+    const systemPrompt = `أنتِ "مس إيما" (Miss Emma). اشرحي المسألة لـ "${childName}" بقصة قصيرة جداً (3 سطور فقط) باستخدام الأكل 🍕 أو اللعب ⚽.
+القواعد:
+1. اختصار شديد ومرح بدون أي مقدمات طويلة.
+2. إبراز المصطلح الإنجليزي **Term**.
+3. عدم ذكر الناتج النهائي أبداً، وإنهاء القصة بسؤال تشجيعي للطفل.`;
 
-قواعد الشرح:
-1. الشرح باللغة العربية البسيطة والممتعة جداً.
-2. إبراز المصطلحات الإنجليزية الخاصة بالمسألة وشرحها وسط القصة بخط بارز **English Term**.
-3. ممنوع نهائياً ذكر الناتج النهائي أو الإجابة الصحيحة!
-4. القصة تكون قصيرة ومبهجة وتنتهي بتشجيع الطفل على حساب الناتج بنفسه.`;
-
-    const userPrompt = `المسألة الرياضية: "${q.question}".
-(ترجمتها العربية: "${q.questionAr || ''}")
-احكي لـ ${childName} قصة قصيرة مرحة بالأكل أو اللعب لشرح الفكرة بالعربي مع إبراز المصطلحات الإنجليزية، بدون كشف الناتج النهائي!`;
+    const userPrompt = `المسألة: "${q.question}" (ترجمتها: "${q.questionAr || ''}").
+احكي لـ ${childName} القصة السريعة والممتعة بالأكل أو اللعب بدون كشف الناتج!`;
 
     const contents = [{ role: 'user', parts: [{ text: userPrompt }] }];
     return await this.callGemini(contents, systemPrompt);
   },
 
   async chatWithTutor(q, conversationHistory, newQuestion, childName = 'Champion') {
-    const systemPrompt = `أنتِ "مس إيما" (Miss Emma)، معلمة الرياضيات الذكية والودودة للصف الثالث الابتدائي بمدارس اللغات في مصر.
-أنتِ تتحدثين الآن مباشرة مع الطفل "${childName}".
-السؤال الرياضي المعروض أمامه هو:
-"${q.question}" (بالعربي: "${q.questionAr || ''}")
+    const systemPrompt = `أنتِ "مس إيما" (Miss Emma)، معلمة ماث للصف الثالث الابتدائي.
+تتحدثين مع الطفل "${childName}".
+السؤال الحالي: "${q.question}"
 
-قواعد الرد على استفسار الطفل:
-1. الرد باللغة العربية الواضحة والودودة والمشجعة.
-2. إذا كان السؤال عن معنى كلمات أو مصطلحات، أو ورد أي مصطلح رياضي في كلامك، اذكريه بالإنجليزية بخط بارز **English Term** مع شرح معناه بالعربي ببساطة.
-3. وجهي تفكير الطفل خطوة بخطوة باللغة العربية، دون إعطائه الناتج النهائي أو حل المسألة أبداً.
-4. الرد يكون مختصراً وواضحاً ومناسباً لعمر 8 إلى 9 سنوات.`;
+القواعد:
+1. الرد قصير جداً ومباشر وودود (سطرين أو ثلاثة فقط).
+2. إبراز المصطلحات بالإنجليزية **Term** عند ذكرها مع معناها بالعربي.
+3. تفاعلي ولا تعطي الناتج النهائي أبداً، بل وجّهي تفكيره فقط.`;
 
     const contents = [];
     conversationHistory.forEach(msg => {

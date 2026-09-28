@@ -3432,5 +3432,205 @@ body {
   font-weight: 800;
 }
 
+/* ============================================================
+   MOBILE RESPONSIVE & CLEAN UI OPTIMIZATIONS
+   ============================================================ */
+@media (max-width: 768px) {
+  .top-navbar {
+    padding: 8px 12px;
+  }
+
+  .nav-container {
+    gap: 8px;
+    justify-content: space-between;
+  }
+
+  .brand-section {
+    gap: 8px;
+  }
+
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+    border-radius: 10px;
+  }
+
+  .brand-text h1 {
+    font-size: 15px;
+  }
+
+  .brand-text span {
+    display: none; /* Hide lengthy subtitle on mobile to avoid clutter */
+  }
+
+  .nav-tabs {
+    width: 100%;
+    justify-content: space-around;
+    padding: 3px;
+    order: 3;
+    overflow-x: auto;
+  }
+
+  .nav-tab-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .user-quick-stats {
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .stat-chip {
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 14px;
+  }
+
+  .btn-ask-emma-nav {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .btn-icon-toggle {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+
+  .app-main {
+    margin: 10px auto;
+    padding: 0 8px;
+  }
+
+  /* Question Card Streamlining */
+  .question-card {
+    padding: 14px 12px;
+    border-radius: 16px;
+  }
+
+  .q-card-top-clean {
+    margin-bottom: 12px;
+    gap: 6px;
+    justify-content: space-between;
+  }
+
+  .q-progress-badge {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+
+  .q-quick-tools {
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .btn-q-tool {
+    padding: 4px 8px;
+    font-size: 11px;
+    gap: 4px;
+    border-radius: 12px;
+  }
+
+  .btn-q-tool .tool-icon {
+    font-size: 13px;
+  }
+
+  .q-text-en {
+    font-size: 18px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  .q-text-ar {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .btn-option {
+    padding: 12px 14px;
+    font-size: 15px;
+  }
+
+  /* Visual Diagrams */
+  .q-visual-wrapper {
+    margin: 8px auto;
+    padding: 6px;
+  }
+
+  .q-visual-svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .q-visual-caption {
+    font-size: 11px;
+    padding: 3px 8px;
+    margin-top: 4px;
+  }
+
+  /* AI Tutor Modal */
+  .ai-tutor-container {
+    width: 98%;
+    max-height: 92vh;
+    border-radius: 18px;
+  }
+
+  .ai-tutor-header {
+    padding: 10px 14px;
+  }
+
+  .ai-tutor-avatar-wrap {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+
+  .ai-tutor-info h3 {
+    font-size: 15px;
+  }
+
+  .ai-chat-body {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .ai-msg-row {
+    max-width: 96%;
+  }
+
+  .ai-bubble {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .top-navbar {
+    padding: 6px 8px;
+  }
+
+  .brand-text h1 {
+    font-size: 14px;
+  }
+
+  .nav-tab-btn span {
+    font-size: 11px;
+  }
+
+  #stat-mastery {
+    display: none; /* Keep header ultra slim by prioritizing stars and name */
+  }
+
+  .q-quick-tools {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
 
 

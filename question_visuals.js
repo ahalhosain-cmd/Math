@@ -3,8 +3,13 @@
 // Designed for authentic exam testing - NEVER reveals the answer or calculation in the visual!
 
 const QuestionVisuals = {
+  formatCaption(caption) {
+    if (!caption || !caption.trim()) return '';
+    return `<div class="q-visual-caption">${caption}</div>`;
+  },
+
   // 1. Analog Clock
-  renderClock(hour, minute, size = 180, caption = '') {
+  renderClock(hour, minute, size = 170, caption = '') {
     const minuteAngle = (minute % 60) * 6;
     const hourAngle = ((hour % 12) * 30) + ((minute / 60) * 30);
 
@@ -32,8 +37,6 @@ const QuestionVisuals = {
       ticksSvg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${strokeC}" stroke-width="${strokeW}" stroke-linecap="round" />`;
     }
 
-    const defaultCaption = caption || 'Look at the hour and minute hands (انظر لعقارب الساعة)';
-
     return `
       <div class="q-visual-wrapper">
         <svg viewBox="0 0 200 200" width="${size}" height="${size}" class="q-visual-svg">
@@ -50,100 +53,94 @@ const QuestionVisuals = {
           <circle cx="100" cy="100" r="6" fill="#0F172A"/>
           <circle cx="100" cy="100" r="2.5" fill="#FFFFFF"/>
         </svg>
-        <div class="q-visual-caption">🕒 ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
 
   // 1b. Dual Clock for Elapsed Time (e.g. Start 4:10 PM -> End 4:40 PM)
   renderDualClock(startHour = 4, startMin = 10, endHour = 4, endMin = 40, caption = '') {
-    const c1 = this.renderClock(startHour, startMin, 130, '');
-    const c2 = this.renderClock(endHour, endMin, 130, '');
-    const defaultCaption = caption || 'Elapsed Time: Start vs End (الوقت المنقضي: البداية والنهاية)';
+    const c1 = this.renderClock(startHour, startMin, 120, '');
+    const c2 = this.renderClock(endHour, endMin, 120, '');
 
     return `
       <div class="q-visual-wrapper">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
           <div style="text-align: center;">
-            <div style="font-size: 12px; font-weight: bold; color: #16A34A; margin-bottom: 3px;">⏰ Start Time (البداية)</div>
+            <div style="font-size: 11px; font-weight: bold; color: #16A34A; margin-bottom: 2px;">⏰ Start Time (البداية)</div>
             ${c1}
           </div>
-          <div style="font-size: 26px; font-weight: bold; color: #4F46E5; align-self: center;">➔</div>
+          <div style="font-size: 22px; font-weight: bold; color: #4F46E5; align-self: center;">➔</div>
           <div style="text-align: center;">
-            <div style="font-size: 12px; font-weight: bold; color: #DC2626; margin-bottom: 3px;">🏁 End Time (النهاية)</div>
+            <div style="font-size: 11px; font-weight: bold; color: #DC2626; margin-bottom: 2px;">🏁 End Time (النهاية)</div>
             ${c2}
           </div>
         </div>
-        <div class="q-visual-caption">⏱️ ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
 
   // 2. Array Grid
   renderArray(rows, cols, emoji = '⭐', caption = '') {
-    const defaultCaption = caption || 'Count the rows and columns (انظر للصفوف والأعمدة)';
     const maxCols = Math.min(cols, 10);
-    const cellSize = maxCols > 6 ? 32 : 38;
+    const cellSize = maxCols > 6 ? 30 : 36;
 
     return `
       <div class="q-visual-wrapper">
         <div class="q-array-grid" style="grid-template-columns: repeat(${cols}, ${cellSize}px);">
           ${Array.from({ length: rows * cols }).map(() => `<div class="q-array-cell" style="font-size: ${cellSize * 0.55}px;">${emoji}</div>`).join('')}
         </div>
-        <div class="q-visual-caption">📊 ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
 
   // 3. Split Array for Distributive Property (e.g. 5x8 split into 5x5 + 5x3)
   renderSplitArray(rows, cols1, cols2, emoji = '⭐', caption = '') {
-    const defaultCaption = caption || 'Splitting the array into two smaller parts (تفكيك المصفوفة)';
-
     return `
       <div class="q-visual-wrapper">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 14px; background: white; padding: 14px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border: 1px solid #E2E8F0;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 10px; background: white; padding: 10px 14px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border: 1px solid #E2E8F0;">
           <div style="text-align: center;">
-            <div style="font-size: 12px; font-weight: bold; color: #2563EB; margin-bottom: 4px;">Part 1 (${rows} × ${cols1})</div>
-            <div class="q-array-grid" style="grid-template-columns: repeat(${cols1}, 30px); background: #EFF6FF; border: 1px solid #BFDBFE;">
-              ${Array.from({ length: rows * cols1 }).map(() => `<div class="q-array-cell" style="font-size:16px;">${emoji}</div>`).join('')}
+            <div style="font-size: 11px; font-weight: bold; color: #2563EB; margin-bottom: 3px;">Part 1 (${rows} × ${cols1})</div>
+            <div class="q-array-grid" style="grid-template-columns: repeat(${cols1}, 28px); background: #EFF6FF; border: 1px solid #BFDBFE;">
+              ${Array.from({ length: rows * cols1 }).map(() => `<div class="q-array-cell" style="font-size:15px;">${emoji}</div>`).join('')}
             </div>
           </div>
-          <div style="font-size: 26px; font-weight: bold; color: #64748B;">+</div>
+          <div style="font-size: 22px; font-weight: bold; color: #64748B;">+</div>
           <div style="text-align: center;">
-            <div style="font-size: 12px; font-weight: bold; color: #7C3AED; margin-bottom: 4px;">Part 2 (${rows} × ${cols2})</div>
-            <div class="q-array-grid" style="grid-template-columns: repeat(${cols2}, 30px); background: #F5F3FF; border: 1px solid #DDD6FE;">
-              ${Array.from({ length: rows * cols2 }).map(() => `<div class="q-array-cell" style="font-size:16px;">${emoji}</div>`).join('')}
+            <div style="font-size: 11px; font-weight: bold; color: #7C3AED; margin-bottom: 3px;">Part 2 (${rows} × ${cols2})</div>
+            <div class="q-array-grid" style="grid-template-columns: repeat(${cols2}, 28px); background: #F5F3FF; border: 1px solid #DDD6FE;">
+              ${Array.from({ length: rows * cols2 }).map(() => `<div class="q-array-cell" style="font-size:15px;">${emoji}</div>`).join('')}
             </div>
           </div>
         </div>
-        <div class="q-visual-caption">✂️ ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
 
   // 4. Equal Groups Sharing (Division & Multiplication)
   renderEqualGroups(groupsCount, itemsPerGroup, emoji = '🍎', caption = '') {
-    const defaultCaption = caption || 'Look at the equal groups (انظر للمجموعات المتساوية)';
-
     return `
       <div class="q-visual-wrapper">
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 520px;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 500px;">
           ${Array.from({ length: groupsCount }).map((_, gIdx) => `
-            <div style="border: 2px dashed #3B82F6; background: #EFF6FF; border-radius: 16px; min-width: 80px; min-height: 80px; padding: 6px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-              <span style="font-size: 10px; font-weight: bold; color: #1E40AF; margin-bottom: 4px;">Group ${gIdx + 1}</span>
-              <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; max-width: 75px;">
-                ${Array.from({ length: itemsPerGroup }).map(() => `<span style="font-size: 17px;">${emoji}</span>`).join('')}
+            <div style="border: 2px dashed #3B82F6; background: #EFF6FF; border-radius: 14px; min-width: 75px; min-height: 75px; padding: 6px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+              <span style="font-size: 10px; font-weight: bold; color: #1E40AF; margin-bottom: 3px;">Group ${gIdx + 1}</span>
+              <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; max-width: 70px;">
+                ${Array.from({ length: itemsPerGroup }).map(() => `<span style="font-size: 16px;">${emoji}</span>`).join('')}
               </div>
             </div>
           `).join('')}
         </div>
-        <div class="q-visual-caption">🥣 ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
 
   // 5. Geometric Shapes (Quadrilaterals, Polygons, Circles)
-  renderShape(shapeType, size = 180, caption = '') {
+  renderShape(shapeType, size = 160, caption = '') {
     let shapeSvg = '';
     let label = caption;
 
@@ -154,9 +151,8 @@ const QuestionVisuals = {
         <line x1="15" y1="140" x2="185" y2="140" stroke="#DC2626" stroke-width="2" stroke-dasharray="3"/>
         <polygon points="98,37 106,40 98,43" fill="#DC2626"/>
         <polygon points="98,137 106,140 98,143" fill="#DC2626"/>
-        <text x="100" y="165" font-size="11" font-weight="bold" fill="#4F46E5" text-anchor="middle">Only 1 pair of parallel sides</text>
+        <text x="100" y="165" font-size="11" font-weight="bold" fill="#4F46E5" text-anchor="middle">1 pair of parallel sides</text>
       `;
-      if (!label) label = 'Trapezoid (شبه منحرف) - 1 pair of opposite parallel sides';
     } else if (shapeType === 'rhombus') {
       shapeSvg = `
         <polygon points="100,20 170,100 100,180 30,100" fill="#FEF3C7" stroke="#D97706" stroke-width="3.5"/>
@@ -166,7 +162,6 @@ const QuestionVisuals = {
         <line x1="63" y1="58" x2="67" y2="62" stroke="#B45309" stroke-width="3"/>
         <text x="100" y="105" font-size="12" font-weight="bold" fill="#B45309" text-anchor="middle">4 Equal Sides</text>
       `;
-      if (!label) label = 'Rhombus (معين) - 4 equal sides';
     } else if (shapeType === 'parallelogram') {
       shapeSvg = `
         <polygon points="60,40 180,40 140,140 20,140" fill="#D1FAE5" stroke="#059669" stroke-width="3.5"/>
@@ -174,7 +169,6 @@ const QuestionVisuals = {
         <polygon points="78,137 86,140 78,143" fill="#047857"/>
         <text x="100" y="165" font-size="11" font-weight="bold" fill="#059669" text-anchor="middle">2 pairs of parallel sides</text>
       `;
-      if (!label) label = 'Parallelogram (متوازي أضلاع) - 2 pairs of parallel sides';
     } else if (shapeType === 'rectangle') {
       shapeSvg = `
         <rect x="25" y="45" width="150" height="90" fill="#DBEAFE" stroke="#2563EB" stroke-width="3.5" rx="2"/>
@@ -182,9 +176,8 @@ const QuestionVisuals = {
         <path d="M175,60 L160,60 L160,45" fill="none" stroke="#2563EB" stroke-width="2"/>
         <path d="M25,120 L40,120 L40,135" fill="none" stroke="#2563EB" stroke-width="2"/>
         <path d="M175,120 L160,120 L160,135" fill="none" stroke="#2563EB" stroke-width="2"/>
-        <text x="100" y="95" font-size="13" font-weight="bold" fill="#1E40AF" text-anchor="middle">4 Right Angles (90°)</text>
+        <text x="100" y="95" font-size="12" font-weight="bold" fill="#1E40AF" text-anchor="middle">4 Right Angles (90°)</text>
       `;
-      if (!label) label = 'Rectangle (مستطيل) - 4 right angles';
     } else if (shapeType === 'square') {
       shapeSvg = `
         <rect x="45" y="35" width="110" height="110" fill="#FCE7F3" stroke="#DB2777" stroke-width="3.5" rx="2"/>
@@ -196,9 +189,8 @@ const QuestionVisuals = {
         <line x1="100" y1="140" x2="100" y2="150" stroke="#DB2777" stroke-width="2.5"/>
         <line x1="40" y1="90" x2="50" y2="90" stroke="#DB2777" stroke-width="2.5"/>
         <line x1="150" y1="90" x2="160" y2="90" stroke="#DB2777" stroke-width="2.5"/>
-        <text x="100" y="95" font-size="12" font-weight="bold" fill="#9D174D" text-anchor="middle">4 Equal Sides + 4 Right Angles</text>
+        <text x="100" y="95" font-size="11" font-weight="bold" fill="#9D174D" text-anchor="middle">4 Equal Sides + Right Angles</text>
       `;
-      if (!label) label = 'Square (مربع) - 4 equal sides and 4 right angles';
     } else if (shapeType === 'hexagon') {
       shapeSvg = `
         <polygon points="100,20 170,55 170,135 100,170 30,135 30,55" fill="#EDE9FE" stroke="#7C3AED" stroke-width="3.5"/>
@@ -208,17 +200,15 @@ const QuestionVisuals = {
         <circle cx="100" cy="170" r="4.5" fill="#4C1D95"/>
         <circle cx="30" cy="135" r="4.5" fill="#4C1D95"/>
         <circle cx="30" cy="55" r="4.5" fill="#4C1D95"/>
-        <text x="100" y="98" font-size="14" font-weight="bold" fill="#5B21B6" text-anchor="middle">Hexagon (سداسي)</text>
+        <text x="100" y="98" font-size="13" font-weight="bold" fill="#5B21B6" text-anchor="middle">Hexagon (سداسي)</text>
         <text x="100" y="118" font-size="11" font-weight="bold" fill="#6D28D9" text-anchor="middle">6 sides & 6 vertices</text>
       `;
-      if (!label) label = 'Hexagon: 6 sides and 6 vertices (الشكل السداسي)';
     } else if (shapeType === 'pentagon') {
       shapeSvg = `
         <polygon points="100,25 175,80 145,165 55,165 25,80" fill="#FEF9C3" stroke="#CA8A04" stroke-width="3.5"/>
-        <text x="100" y="105" font-size="14" font-weight="bold" fill="#854D0E" text-anchor="middle">Pentagon (خماسي)</text>
+        <text x="100" y="105" font-size="13" font-weight="bold" fill="#854D0E" text-anchor="middle">Pentagon (خماسي)</text>
         <text x="100" y="125" font-size="11" font-weight="bold" fill="#A16207" text-anchor="middle">5 sides & 5 vertices</text>
       `;
-      if (!label) label = 'Pentagon: 5 sides and 5 vertices (الشكل الخماسي)';
     } else if (shapeType === 'triangle') {
       shapeSvg = `
         <polygon points="100,28 175,155 25,155" fill="#CCFBF1" stroke="#0D9488" stroke-width="3.5"/>
@@ -227,20 +217,16 @@ const QuestionVisuals = {
         <circle cx="25" cy="155" r="4" fill="#115E59"/>
         <text x="100" y="115" font-size="13" font-weight="bold" fill="#0F766E" text-anchor="middle">Triangle (مثلث)</text>
       `;
-      if (!label) label = 'Triangle: Polygon with 3 straight sides (المثلث)';
     } else if (shapeType === 'circle_vs_polygon') {
       shapeSvg = `
         <circle cx="55" cy="90" r="42" fill="#FEE2E2" stroke="#EF4444" stroke-width="3"/>
-        <text x="55" y="93" font-size="11" font-weight="bold" fill="#B91C1C" text-anchor="middle">Curved side</text>
-        <text x="55" y="152" font-size="12" font-weight="bold" fill="#EF4444" text-anchor="middle">Circle (دائرة)</text>
-        <text x="55" y="167" font-size="10" font-weight="bold" fill="#991B1B" text-anchor="middle">NOT a polygon</text>
+        <text x="55" y="93" font-size="11" font-weight="bold" fill="#B91C1C" text-anchor="middle">Curved</text>
+        <text x="55" y="152" font-size="11" font-weight="bold" fill="#EF4444" text-anchor="middle">Circle (دائرة)</text>
 
         <polygon points="145,50 185,130 105,130" fill="#DCFCE7" stroke="#16A34A" stroke-width="3"/>
-        <text x="145" y="105" font-size="11" font-weight="bold" fill="#15803D" text-anchor="middle">Straight sides</text>
-        <text x="145" y="152" font-size="12" font-weight="bold" fill="#16A34A" text-anchor="middle">Triangle (مثلث)</text>
-        <text x="145" y="167" font-size="10" font-weight="bold" fill="#166534" text-anchor="middle">Polygon</text>
+        <text x="145" y="105" font-size="11" font-weight="bold" fill="#15803D" text-anchor="middle">Straight</text>
+        <text x="145" y="152" font-size="11" font-weight="bold" fill="#16A34A" text-anchor="middle">Polygon</text>
       `;
-      if (!label) label = 'Polygons must have STRAIGHT sides (المضلعات لها أضلاع مستقيمة)';
     }
 
     return `
@@ -248,7 +234,7 @@ const QuestionVisuals = {
         <svg viewBox="0 0 200 180" width="${size}" height="${size * 0.9}" class="q-visual-svg">
           ${shapeSvg}
         </svg>
-        <div class="q-visual-caption">📐 ${label}</div>
+        ${this.formatCaption(label)}
       </div>
     `;
   },
@@ -256,7 +242,6 @@ const QuestionVisuals = {
   // 6. Shapes with Dimensions (Perimeter and Area)
   renderDimensionedShape(type, dims = {}, unit = 'cm', caption = '') {
     let svgContent = '';
-    let defaultCaption = caption;
 
     if (type === 'rectangle') {
       const len = dims.length !== undefined ? dims.length : 7;
@@ -273,7 +258,6 @@ const QuestionVisuals = {
         <text x="16" y="85" font-size="13" font-weight="bold" fill="#1E40AF" text-anchor="middle" transform="rotate(-90 16 85)">${widLabel}</text>
         ${areaLabel}
       `;
-      if (!defaultCaption) defaultCaption = 'Rectangle with given dimensions (مستطيل بأبعاده)';
     } else if (type === 'square') {
       const side = dims.side !== undefined ? dims.side : 6;
       const sideText = side === '?' ? `Side = ? ${unit}` : `Side = ${side} ${unit}`;
@@ -285,7 +269,6 @@ const QuestionVisuals = {
         <text x="130" y="160" font-size="13" font-weight="bold" fill="#9D174D" text-anchor="middle">${sideText}</text>
         ${areaLabel}
       `;
-      if (!defaultCaption) defaultCaption = 'Square with given side length (مربع بطول ضلعه)';
     } else if (type === 'triangle') {
       const { a = 5, b = 6, c = 7 } = dims;
       svgContent = `
@@ -294,7 +277,6 @@ const QuestionVisuals = {
         <text x="180" y="75" font-size="12" font-weight="bold" fill="#0F766E" text-anchor="middle">${b} ${unit}</text>
         <text x="130" y="155" font-size="12" font-weight="bold" fill="#0F766E" text-anchor="middle">${c} ${unit}</text>
       `;
-      if (!defaultCaption) defaultCaption = 'Triangle with given side lengths (مثلث بأطوال أضلاعه)';
     } else if (type === 'polygon') {
       const sides = dims.sides || [3, 4, 3, 4];
       svgContent = `
@@ -304,12 +286,11 @@ const QuestionVisuals = {
         <text x="105" y="140" font-size="12" font-weight="bold" fill="#6D28D9" text-anchor="middle">${sides[2]} ${unit}</text>
         <text x="30" y="80" font-size="12" font-weight="bold" fill="#6D28D9" text-anchor="middle">${sides[3]} ${unit}</text>
       `;
-      if (!defaultCaption) defaultCaption = 'Polygon with given side lengths (مضلع بأطوال أضلاعه)';
     }
 
     return `
       <div class="q-visual-wrapper">
-        <svg viewBox="0 0 260 170" width="240" height="155" class="q-visual-svg">
+        <svg viewBox="0 0 260 170" width="230" height="150" class="q-visual-svg">
           <defs>
             <marker id="arr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
               <path d="M 0 0 L 10 5 L 0 10 z" fill="#1E40AF"/>
@@ -317,17 +298,16 @@ const QuestionVisuals = {
           </defs>
           ${svgContent}
         </svg>
-        <div class="q-visual-caption">📏 ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
 
   // 6b. Composite L-Shaped Figure (Decomposition into Rectangles A and B)
   renderLShape(dims = { a_area: 15, b_area: 10, unit: 'cm²' }, caption = '') {
-    const defaultCaption = caption || 'L-Shaped figure split into two rectangles (تفكيك الشكل لجزأين)';
     return `
       <div class="q-visual-wrapper">
-        <svg viewBox="0 0 240 180" width="220" height="165" class="q-visual-svg">
+        <svg viewBox="0 0 240 180" width="210" height="155" class="q-visual-svg">
           <!-- Part A (Top/Left) -->
           <rect x="40" y="20" width="70" height="130" fill="#DBEAFE" stroke="#2563EB" stroke-width="2.5"/>
           <text x="75" y="85" font-size="12" font-weight="bold" fill="#1E40AF" text-anchor="middle">Part A</text>
@@ -341,7 +321,7 @@ const QuestionVisuals = {
           <!-- Dividing dashed line -->
           <line x1="110" y1="80" x2="110" y2="150" stroke="#DC2626" stroke-width="2.5" stroke-dasharray="4"/>
         </svg>
-        <div class="q-visual-caption">🧩 ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
@@ -351,11 +331,10 @@ const QuestionVisuals = {
     const cellSize = 26;
     const totalW = cols * cellSize;
     const totalH = rows * cellSize;
-    const defaultCaption = caption || 'Count the shaded unit squares (احسب المساحة بعد المربعات)';
 
     return `
       <div class="q-visual-wrapper">
-        <div style="background: white; padding: 10px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+        <div style="background: white; padding: 8px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
           <svg width="${totalW + 2}" height="${totalH + 2}" viewBox="0 0 ${totalW + 2} ${totalH + 2}">
             ${Array.from({ length: rows }).map((_, r) => {
               return Array.from({ length: cols }).map((_, c) => {
@@ -368,22 +347,21 @@ const QuestionVisuals = {
             }).join('')}
           </svg>
         </div>
-        <div class="q-visual-caption">🟩 ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
 
   // 7b. Dual Grid Area (Comparing two rectangles with same area)
   renderDualGridArea(r1 = 3, c1 = 4, r2 = 2, c2 = 6, label1 = 'Rectangle A (3×4)', label2 = 'Rectangle B (2×6)', caption = '') {
-    const defaultCaption = caption || 'Same Area, Different Perimeters (نفس المساحة وأبعاد مختلفة)';
-    const cs = 20;
+    const cs = 18;
 
     return `
       <div class="q-visual-wrapper">
-        <div style="display: flex; gap: 20px; align-items: flex-end; justify-content: center; background: white; padding: 14px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border: 1px solid #E2E8F0;">
+        <div style="display: flex; gap: 16px; align-items: flex-end; justify-content: center; background: white; padding: 12px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border: 1px solid #E2E8F0;">
           <!-- Rect A -->
           <div style="text-align: center;">
-            <div style="font-size: 11px; font-weight: bold; color: #2563EB; margin-bottom: 6px;">${label1}</div>
+            <div style="font-size: 11px; font-weight: bold; color: #2563EB; margin-bottom: 4px;">${label1}</div>
             <svg width="${c1 * cs + 2}" height="${r1 * cs + 2}" viewBox="0 0 ${c1 * cs + 2} ${r1 * cs + 2}">
               ${Array.from({ length: r1 }).map((_, r) => Array.from({ length: c1 }).map((_, c) => `
                 <rect x="${c * cs + 1}" y="${r * cs + 1}" width="${cs}" height="${cs}" fill="#DBEAFE" stroke="#2563EB" stroke-width="1"/>
@@ -392,7 +370,7 @@ const QuestionVisuals = {
           </div>
           <!-- Rect B -->
           <div style="text-align: center;">
-            <div style="font-size: 11px; font-weight: bold; color: #7C3AED; margin-bottom: 6px;">${label2}</div>
+            <div style="font-size: 11px; font-weight: bold; color: #7C3AED; margin-bottom: 4px;">${label2}</div>
             <svg width="${c2 * cs + 2}" height="${r2 * cs + 2}" viewBox="0 0 ${c2 * cs + 2} ${r2 * cs + 2}">
               ${Array.from({ length: r2 }).map((_, r) => Array.from({ length: c2 }).map((_, c) => `
                 <rect x="${c * cs + 1}" y="${r * cs + 1}" width="${cs}" height="${cs}" fill="#EDE9FE" stroke="#7C3AED" stroke-width="1"/>
@@ -400,12 +378,12 @@ const QuestionVisuals = {
             </svg>
           </div>
         </div>
-        <div class="q-visual-caption">📐 ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
 
-  // 8. Metric Ruler with support for custom start position (e.g. starting at 2 cm up to 8 cm)
+  // 8. Metric Ruler
   renderRuler(objLengthCm, objName = 'Pencil', emoji = '✏️', isMm = false, startCm = 0) {
     const pxPerUnit = isMm ? 3.2 : 24;
     const startX = 16 + (startCm * pxPerUnit);
@@ -429,13 +407,13 @@ const QuestionVisuals = {
     }
 
     const captionText = startCm > 0
-      ? `Notice: The ${objName} starts at ${startCm} ${unitLabel} and ends at ${startCm + objLengthCm} ${unitLabel}!`
-      : `Read the number where the tip of the ${objName} ends`;
+      ? `Starts at ${startCm} ${unitLabel} and ends at ${startCm + objLengthCm} ${unitLabel}`
+      : '';
 
     return `
       <div class="q-visual-wrapper">
         <div class="q-ruler-stage" style="overflow-x: auto; max-width: 100%;">
-          <svg viewBox="0 0 ${totalW} 95" width="${Math.min(totalW, 400)}" height="95" class="q-ruler-svg">
+          <svg viewBox="0 0 ${totalW} 95" width="${Math.min(totalW, 380)}" height="95" class="q-ruler-svg">
             <!-- Object being measured -->
             <rect x="${startX}" y="6" width="${objWidth}" height="28" rx="5" fill="#EF4444" stroke="#B91C1C" stroke-width="1.5"/>
             <!-- Start & End indicator dotted lines -->
@@ -452,30 +430,29 @@ const QuestionVisuals = {
             </g>
           </svg>
         </div>
-        <div class="q-visual-caption">📏 ${captionText}</div>
+        ${this.formatCaption(captionText)}
       </div>
     `;
   },
 
   // 9. Line Plot with 'X' Marks and Key
-  renderLinePlot(title = 'Pencil Lengths in Centimeters', xValues = [1, 2, 3, 4, 5], counts = [2, 3, 1, 5, 2], xLabel = 'Number of Pencils', caption = '', keyText = '') {
+  renderLinePlot(title = 'Data Line Plot', xValues = [1, 2, 3, 4, 5], counts = [2, 3, 1, 5, 2], xLabel = '', caption = '', keyText = '') {
     const startX = 40;
-    const stepX = 55;
+    const stepX = 50;
     const baseY = 135;
-    const defaultCaption = caption || 'Examine the data marks on the number line (انظر لمخطط التمثيل بالنقاط)';
-    const displayKey = keyText || 'Key: Each ✗ = 1 child (المفتاح: كل ✗ تمثل عنصراً واحداً)';
+    const displayKey = keyText || 'Key: ✗ = 1';
 
     let pointsSvg = '';
     xValues.forEach((val, idx) => {
       const cx = startX + idx * stepX;
       pointsSvg += `<line x1="${cx}" y1="${baseY - 6}" x2="${cx}" y2="${baseY + 6}" stroke="#1E293B" stroke-width="2.5"/>`;
-      pointsSvg += `<text x="${cx}" y="${baseY + 22}" font-size="14" font-weight="bold" fill="#1E293B" text-anchor="middle">${val}</text>`;
+      pointsSvg += `<text x="${cx}" y="${baseY + 22}" font-size="13" font-weight="bold" fill="#1E293B" text-anchor="middle">${val}</text>`;
 
       const count = counts[idx] || 0;
       for (let k = 0; k < count; k++) {
         const y = baseY - 16 - (k * 22);
         pointsSvg += `
-          <text x="${cx}" y="${y}" font-size="18" font-weight="900" fill="#DC2626" text-anchor="middle">✗</text>
+          <text x="${cx}" y="${y}" font-size="17" font-weight="900" fill="#DC2626" text-anchor="middle">✗</text>
         `;
       }
     });
@@ -484,34 +461,33 @@ const QuestionVisuals = {
 
     return `
       <div class="q-visual-wrapper">
-        <div style="font-size:14px; font-weight:bold; color:#1E293B; margin-bottom:4px;">${title}</div>
-        <div style="font-size:12px; font-weight:bold; color:#4338CA; background:#EEF2FF; border:1px solid #C7D2FE; padding:4px 10px; border-radius:6px; margin-bottom:8px; display:inline-block;">
+        ${title ? `<div style="font-size:13px; font-weight:bold; color:#1E293B; margin-bottom:4px;">${title}</div>` : ''}
+        <div style="font-size:11px; font-weight:bold; color:#4338CA; background:#EEF2FF; border:1px solid #C7D2FE; padding:3px 8px; border-radius:6px; margin-bottom:6px; display:inline-block;">
           🔑 ${displayKey}
         </div>
-        <svg viewBox="0 0 ${totalW} 175" width="${Math.min(totalW, 420)}" height="165" class="q-visual-svg">
+        <svg viewBox="0 0 ${totalW} 175" width="${Math.min(totalW, 400)}" height="155" class="q-visual-svg">
           <line x1="15" y1="${baseY}" x2="${totalW - 15}" y2="${baseY}" stroke="#1E293B" stroke-width="3"/>
           <polygon points="10,${baseY} 18,${baseY - 5} 18,${baseY + 5}" fill="#1E293B"/>
           <polygon points="${totalW - 10},${baseY} ${totalW - 18},${baseY - 5} ${totalW - 18},${baseY + 5}" fill="#1E293B"/>
           ${pointsSvg}
-          <text x="${totalW / 2}" y="${baseY + 36}" font-size="12" font-weight="600" fill="#64748B" text-anchor="middle">${xLabel}</text>
+          ${xLabel ? `<text x="${totalW / 2}" y="${baseY + 36}" font-size="11" font-weight="600" fill="#64748B" text-anchor="middle">${xLabel}</text>` : ''}
         </svg>
-        <div class="q-visual-caption">📈 ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
 
   // 10. Authentic School-Grade SVG Bar Graph with Vertical Y-Axis Scale
-  renderBarGraph(data = [{ label: 'Reading', val: 7 }, { label: 'Math', val: 10 }, { label: 'Art', val: 4 }], title = 'Favorite School Activities', scale = 2, maxVal = null, caption = '', showValues = false) {
-    const defaultCaption = caption || 'Look at the height of each bar against the scale (اقرأ المقياس الرأسي)';
+  renderBarGraph(data = [{ label: 'Reading', val: 7 }, { label: 'Math', val: 10 }, { label: 'Art', val: 4 }], title = 'Bar Graph', scale = 2, maxVal = null, caption = '', showValues = false) {
     const highestVal = Math.max(...data.map(d => d.val));
     const axisMax = maxVal || (Math.ceil(highestVal / scale) * scale + scale);
 
-    const svgW = 360;
-    const svgH = 220;
-    const chartLeft = 45;
+    const svgW = 340;
+    const svgH = 200;
+    const chartLeft = 40;
     const chartRight = svgW - 20;
-    const chartTop = 30;
-    const chartBottom = svgH - 45;
+    const chartTop = 24;
+    const chartBottom = svgH - 40;
     const chartHeight = chartBottom - chartTop;
     const chartWidth = chartRight - chartLeft;
 
@@ -523,15 +499,14 @@ const QuestionVisuals = {
       const y = chartBottom - (val / axisMax) * chartHeight;
       yTicksSvg += `
         <line x1="${chartLeft - 4}" y1="${y}" x2="${chartRight}" stroke="${i === 0 ? '#334155' : '#E2E8F0'}" stroke-width="${i === 0 ? 2 : 1}" />
-        <text x="${chartLeft - 8}" y="${y + 4}" font-size="11" font-weight="bold" fill="#475569" text-anchor="end">${val}</text>
+        <text x="${chartLeft - 8}" y="${y + 4}" font-size="10" font-weight="bold" fill="#475569" text-anchor="end">${val}</text>
       `;
     }
 
     // Bars
-    const barWidth = Math.min(38, (chartWidth / data.length) * 0.55);
+    const barWidth = Math.min(36, (chartWidth / data.length) * 0.55);
     const colStep = chartWidth / data.length;
     let barsSvg = '';
-
     const colors = ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899'];
 
     data.forEach((d, idx) => {
@@ -544,21 +519,21 @@ const QuestionVisuals = {
       barsSvg += `
         <rect x="${x}" y="${y}" width="${barWidth}" height="${barH}" fill="${barColor}" rx="3" stroke="#1E293B" stroke-width="1.2"/>
         ${showValues ? `<text x="${cx}" y="${y - 4}" font-size="11" font-weight="bold" fill="#1E293B" text-anchor="middle">${d.val}</text>` : ''}
-        <text x="${cx}" y="${chartBottom + 16}" font-size="11" font-weight="bold" fill="#1E293B" text-anchor="middle">${d.label}</text>
+        <text x="${cx}" y="${chartBottom + 16}" font-size="10" font-weight="bold" fill="#1E293B" text-anchor="middle">${d.label}</text>
       `;
     });
 
     return `
       <div class="q-visual-wrapper">
-        <div style="font-size:14px; font-weight:bold; color:#1E293B; margin-bottom:4px;">${title}</div>
-        <div style="font-size:11px; font-weight:600; color:#6366F1; margin-bottom:6px;">Vertical Scale = ${scale} (المقياس = ${scale})</div>
-        <svg viewBox="0 0 ${svgW} ${svgH}" width="340" height="210" class="q-visual-svg" style="background:white; border-radius:10px; border:1px solid #E2E8F0; padding:4px;">
+        ${title ? `<div style="font-size:13px; font-weight:bold; color:#1E293B; margin-bottom:4px;">${title}</div>` : ''}
+        <div style="font-size:10px; font-weight:600; color:#6366F1; margin-bottom:4px;">Scale = ${scale}</div>
+        <svg viewBox="0 0 ${svgW} ${svgH}" width="320" height="190" class="q-visual-svg" style="background:white; border-radius:10px; border:1px solid #E2E8F0; padding:4px;">
           ${yTicksSvg}
-          <line x1="${chartLeft}" y1="${chartTop - 10}" x2="${chartLeft}" y2="${chartBottom}" stroke="#334155" stroke-width="2"/>
-          <polygon points="${chartLeft},${chartTop - 15} ${chartLeft - 4},${chartTop - 8} ${chartLeft + 4},${chartTop - 8}" fill="#334155"/>
+          <line x1="${chartLeft}" y1="${chartTop - 6}" x2="${chartLeft}" y2="${chartBottom}" stroke="#334155" stroke-width="2"/>
+          <polygon points="${chartLeft},${chartTop - 12} ${chartLeft - 4},${chartTop - 5} ${chartLeft + 4},${chartTop - 5}" fill="#334155"/>
           ${barsSvg}
         </svg>
-        <div class="q-visual-caption">📊 ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
@@ -566,15 +541,14 @@ const QuestionVisuals = {
   // 11. Graduated Liquid Beaker (Capacity: mL & Liters)
   renderBeaker(fillMl = 400, maxMl = 500, caption = '') {
     const fillRatio = Math.min(fillMl / maxMl, 1.0);
-    const liquidH = fillRatio * 130;
+    const liquidH = fillRatio * 125;
     const liquidY = 145 - liquidH;
-    const defaultCaption = caption || 'Read the liquid level on the scale (اقرأ مستوى السائل عند التدريج)';
 
     const numTicks = 5;
     let ticksSvg = '';
     for (let i = 1; i <= numTicks; i++) {
       const mlVal = (maxMl / numTicks) * i;
-      const y = 145 - (i / numTicks) * 130;
+      const y = 145 - (i / numTicks) * 125;
       ticksSvg += `
         <line x1="28" y1="${y}" x2="48" y2="${y}" stroke="#475569" stroke-width="1.8"/>
         <text x="24" y="${y + 4}" font-size="10" font-weight="bold" fill="#334155" text-anchor="end">${mlVal}</text>
@@ -583,7 +557,7 @@ const QuestionVisuals = {
 
     return `
       <div class="q-visual-wrapper">
-        <svg viewBox="0 0 170 175" width="160" height="165" class="q-visual-svg">
+        <svg viewBox="0 0 170 175" width="150" height="155" class="q-visual-svg">
           <rect x="30" y="${liquidY}" width="90" height="${liquidH}" fill="#38BDF8" opacity="0.8" rx="2"/>
           <ellipse cx="75" cy="${liquidY}" rx="45" ry="4" fill="#0284C7" opacity="0.7"/>
           <path d="M25,10 L30,145 A10,10 0 0,0 40,155 L110,155 A10,10 0 0,0 120,145 L125,10" fill="none" stroke="#334155" stroke-width="3" stroke-linecap="round"/>
@@ -591,7 +565,7 @@ const QuestionVisuals = {
           ${ticksSvg}
           <text x="132" y="152" font-size="11" font-weight="bold" fill="#0284C7">mL</text>
         </svg>
-        <div class="q-visual-caption">🧪 ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
@@ -604,8 +578,6 @@ const QuestionVisuals = {
     const allPosAr = ['آحاد', 'عشرات', 'مئات', 'ألوف', 'عشرات ألوف', 'مئات ألوف'];
     const posNames = allPosNames.slice(0, len).reverse();
     const posNamesAr = allPosAr.slice(0, len).reverse();
-
-    const defaultCaption = caption || 'Place Value Table (جدول القيمة المكانية)';
 
     return `
       <div class="q-visual-wrapper">
@@ -621,61 +593,58 @@ const QuestionVisuals = {
             `;
           }).join('')}
         </div>
-        <div class="q-visual-caption">🏠 ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
 
-  // 12b. Place Value Comparison Card (Comparing Two Numbers Side-by-Side)
+  // 12b. Place Value Comparison Card
   renderPlaceValueComparison(num1 = 3450, num2 = 3250, highlightPlace = '', caption = '') {
-    const defaultCaption = caption || 'Compare corresponding place value digits (قارن الخانات المتناظرة)';
     const card1 = this.renderPlaceValueCard(num1, null, '');
     const card2 = this.renderPlaceValueCard(num2, null, '');
 
     return `
       <div class="q-visual-wrapper">
-        <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; align-items: center; background: white; padding: 10px; border-radius: 12px; border: 1px solid #E2E8F0;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; align-items: center; background: white; padding: 10px; border-radius: 12px; border: 1px solid #E2E8F0;">
           <div style="text-align: center;">
-            <div style="font-size: 13px; font-weight: bold; color: #2563EB; margin-bottom: 4px;">Number A: ${num1}</div>
+            <div style="font-size: 12px; font-weight: bold; color: #2563EB; margin-bottom: 3px;">Number A: ${num1}</div>
             ${card1}
           </div>
-          <div style="font-size: 22px; font-weight: 900; color: #6366F1; align-self: center;">VS</div>
+          <div style="font-size: 20px; font-weight: 900; color: #6366F1; align-self: center;">VS</div>
           <div style="text-align: center;">
-            <div style="font-size: 13px; font-weight: bold; color: #7C3AED; margin-bottom: 4px;">Number B: ${num2}</div>
+            <div style="font-size: 12px; font-weight: bold; color: #7C3AED; margin-bottom: 3px;">Number B: ${num2}</div>
             ${card2}
           </div>
         </div>
-        <div class="q-visual-caption">⚖️ ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
 
   // 13. Sequential Pattern
-  renderPattern(items = ['30', '40', '50', '60', '❓', '❓'], caption = 'What number or shape completes the pattern?') {
+  renderPattern(items = ['30', '40', '50', '60', '❓', '❓'], caption = '') {
     return `
       <div class="q-visual-wrapper">
-        <div style="display: flex; gap: 8px; align-items: center; justify-content: center; flex-wrap: wrap; background: white; padding: 12px 18px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border: 1px solid #E2E8F0;">
+        <div style="display: flex; gap: 6px; align-items: center; justify-content: center; flex-wrap: wrap; background: white; padding: 10px 14px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); border: 1px solid #E2E8F0;">
           ${items.map(item => {
             const isMystery = item === '❓' || item === '?' || item === '__';
             return `
-              <div style="min-width: 46px; height: 46px; padding: 0 10px; display: flex; align-items: center; justify-content: center; font-size: ${isMystery ? '22px' : '17px'}; font-weight: bold; border-radius: 10px; background: ${isMystery ? '#FEF3C7' : '#F1F5F9'}; border: 2px ${isMystery ? 'dashed #D97706' : 'solid #CBD5E1'}; color: ${isMystery ? '#B45309' : '#1E293B'};">
+              <div style="min-width: 42px; height: 42px; padding: 0 8px; display: flex; align-items: center; justify-content: center; font-size: ${isMystery ? '20px' : '16px'}; font-weight: bold; border-radius: 10px; background: ${isMystery ? '#FEF3C7' : '#F1F5F9'}; border: 2px ${isMystery ? 'dashed #D97706' : 'solid #CBD5E1'}; color: ${isMystery ? '#B45309' : '#1E293B'};">
                 ${item}
               </div>
             `;
           }).join('')}
         </div>
-        <div class="q-visual-caption">🔄 ${caption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   },
 
   // 14. Fact Family Triangle
   renderFactFamilyTriangle(top = 35, left = 7, right = '❓', caption = '') {
-    const defaultCaption = caption || 'Fact Family Triangle (مثلث عائلة الحقائق)';
-
     return `
       <div class="q-visual-wrapper">
-        <svg viewBox="0 0 220 190" width="200" height="175" class="q-visual-svg">
+        <svg viewBox="0 0 220 190" width="180" height="160" class="q-visual-svg">
           <polygon points="110,25 200,165 20,165" fill="#EEF2FF" stroke="#4F46E5" stroke-width="3"/>
           <text x="55" y="90" font-size="14" font-weight="bold" fill="#6366F1" text-anchor="middle">÷</text>
           <text x="165" y="90" font-size="14" font-weight="bold" fill="#6366F1" text-anchor="middle">÷</text>
@@ -690,7 +659,7 @@ const QuestionVisuals = {
           <circle cx="182" cy="155" r="20" fill="${right === '❓' ? '#D97706' : '#7C3AED'}"/>
           <text x="182" y="161" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">${right}</text>
         </svg>
-        <div class="q-visual-caption">🔺 ${defaultCaption}</div>
+        ${this.formatCaption(caption)}
       </div>
     `;
   }

@@ -1541,13 +1541,33 @@ class MasteryApp {
           <div class="ai-msg-avatar">👩‍🏫</div>
           <div class="ai-bubble" style="border-color: #EF4444; background: #FEF2F2;">
             <p><strong>Miss Emma:</strong> Oops! I had trouble connecting to the math library right now.</p>
-            <p style="font-size: 12px; color: #DC2626;">Error: ${err.message}</p>
-            <button class="btn-primary-action" style="width: auto; padding: 6px 14px; margin-top: 8px;" onclick="app.fetchInitialAiExplanation(app.getCurrentQuestion())">Retry 🔄</button>
+            <p style="font-size: 12px; color: #DC2626; margin-bottom: 8px;">Error: ${err.message}</p>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <button class="btn-primary-action" style="width: auto; padding: 6px 14px;" onclick="app.fetchInitialAiExplanation(app.getCurrentQuestion())">Retry 🔄</button>
+              <button class="btn-primary-action" style="width: auto; padding: 6px 14px; background: #4F46E5;" onclick="app.promptApiKey()">🔑 تغيير المفتاح (API Key)</button>
+            </div>
           </div>
         </div>
       `;
     } finally {
       this.isAiGenerating = false;
+    }
+  }
+
+  promptApiKey() {
+    const current = localStorage.getItem('gemini_api_key') || '';
+    const newKey = prompt('أدخل مفتاح Gemini API المجاني الخاص بك (يبدأ بـ AIza أو AQ):', current);
+    if (newKey !== null && newKey.trim().length > 5) {
+      if (window.GeminiTutor) {
+        window.GeminiTutor.setApiKey(newKey.trim());
+      } else {
+        localStorage.setItem('gemini_api_key', newKey.trim());
+      }
+      alert('تم حفظ المفتاح بنجاح! جاري إعادة تجربة الشرح الآن... 🌟');
+      const q = this.getCurrentQuestion();
+      if (q) {
+        this.fetchInitialAiExplanation(q);
+      }
     }
   }
 
@@ -1810,13 +1830,15 @@ class MasteryApp {
 
   async speakAiText(rawText) {
     if (!rawText) return;
-    this.showAiSpeechLoading("✨ المعلمة الذكية تجهز الصوت بالذكاء الاصطناعي (Google Gemini)...");
+    this.showAiSpeechLoading("✨ المعلمة تتحدث الآن...");
 
-    // Strictly Google Gemini Neural Audio (No robot bot voices)
+    // Try Gemini Neural Audio with a short 3-second timeout, then fallback to instant Natural Voice
     if (window.GeminiTutor && typeof window.GeminiTutor.generateAiSpeech === 'function') {
       try {
-        const result = await window.GeminiTutor.generateAiSpeech(rawText);
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Audio timeout")), 3000));
+        const result = await Promise.race([window.GeminiTutor.generateAiSpeech(rawText), timeoutPromise]);
         if (result && result.audioData) {
+          this.hideAiSpeechLoading();
           window.soundManager.playPcmAudio(
             result.audioData,
             () => this.onAiSpeechStart(),
@@ -1825,12 +1847,21 @@ class MasteryApp {
           return;
         }
       } catch (err) {
-        console.warn("[speakAiText] Gemini direct audio failed:", err);
+        console.warn("[speakAiText] Gemini direct audio taking too long or failed, switching to instant voice:", err);
       }
     }
 
+    // Instant fallback to natural teacher voice (Speaks in 0.1s!)
     this.hideAiSpeechLoading();
-    this.onAiSpeechEnd();
+    if (window.soundManager && typeof window.soundManager.speakTeacherExplanation === 'function') {
+      window.soundManager.speakTeacherExplanation(
+        rawText,
+        () => this.onAiSpeechStart(),
+        () => this.onAiSpeechEnd()
+      );
+    } else {
+      this.onAiSpeechEnd();
+    }
   }
 
   // --- Feature: Official Ministry Textbook Page Viewer ---
