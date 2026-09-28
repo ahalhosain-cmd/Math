@@ -48,7 +48,7 @@ const GeminiTutor = {
       throw new Error("يرجى إدخال مفتاح Gemini API أولاً من خلال الضغط على زر المفتاح.");
     }
     let attempts = 0;
-    const maxAttempts = Math.max(1, this.keys.length);
+    const maxAttempts = Math.max(3, this.keys.length * 2);
     let lastError = null;
 
     while (attempts < maxAttempts) {
@@ -79,7 +79,7 @@ const GeminiTutor = {
 
         if (response.ok) {
           const data = await response.json();
-          // Rotate key for next query to balance usage across the 3 keys
+          // Rotate key for next query to balance usage across keys
           this.rotateKey();
           const candidate = data.candidates && data.candidates[0];
           if (candidate && candidate.content && candidate.content.parts) {
@@ -93,7 +93,12 @@ const GeminiTutor = {
           const errData = await response.json().catch(() => ({}));
           console.warn(`[GeminiTutor] Key #${this.currentKeyIdx + 1} (${this.modelName}) failed with status ${response.status}:`, errData);
           lastError = (errData.error && errData.error.message) ? errData.error.message : `HTTP ${response.status}`;
-          if (response.status === 503 || response.status === 404) {
+          
+          if (response.status === 429) {
+            // Google asks for a 1.2s - 1.5s cooldown when burst rate limit is reached
+            console.log("[GeminiTutor] Rate limit reached. Automatically waiting 1.8s before retry...");
+            await new Promise(r => setTimeout(r, 1800));
+          } else if (response.status === 503 || response.status === 404) {
             this.currentModelIdx = (this.currentModelIdx + 1) % this.models.length;
           }
           this.rotateKey();
