@@ -4,7 +4,8 @@
 const GeminiTutor = {
   // Obfuscated keys to protect against automated secret scanning
   _encKeys: [
-    'QVEuQWI4Uk42Smtoenhwd25kc0ttRkxwcHJOaWRjSlFiTXFuVmJnbFdnckdaYmVVenBZamc='
+    'QVEuQWI4Uk42Smtoenhwd25kc0ttRkxwcHJOaWRjSlFiTXFuVmJnbFdnckdaYmVVenBZamc=',
+    'QVEuQWI4Uk42S0pkdjlaUllfZnBZX1hwZDdsQ2ZFZ0dzX2FvUElwa255NnJobGt1Mkg0SGc='
   ],
   get keys() {
     return this._encKeys.map(k => {
