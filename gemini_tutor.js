@@ -9,6 +9,8 @@ const GeminiTutor = {
   candidateModels: [
     'gemini-3.1-flash-lite',
     'gemini-3.5-flash-lite',
+    'gemini-3.7-flash',
+    'gemini-flash-lite-latest',
     'gemini-3.8-flash',
     'gemini-3-flash-preview',
     'gemini-3.6-flash'
@@ -39,13 +41,13 @@ const GeminiTutor = {
     let lastError = null;
 
     for (const model of this.candidateModels) {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${activeKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
       
       const payload = {
         contents: contents,
         generationConfig: {
-          temperature: 0.7,
-          maxOutputTokens: 600,
+          temperature: 0.1,
+          maxOutputTokens: 500,
           topP: 0.95
         }
       };
@@ -61,11 +63,14 @@ const GeminiTutor = {
 
       try {
         controller = new AbortController();
-        timeoutId = setTimeout(() => controller.abort(), 3500);
+        timeoutId = setTimeout(() => controller.abort(), 4000);
 
         const response = await fetch(url, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'x-goog-api-key': activeKey
+          },
           body: JSON.stringify(payload),
           signal: controller.signal
         });
