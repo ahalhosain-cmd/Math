@@ -6,15 +6,7 @@ const GeminiTutor = {
   get key() {
     try { return atob(this._encKey); } catch (e) { return this._encKey; }
   },
-  models: [
-    'models/gemini-3.6-flash',
-    'models/gemini-3.8-flash',
-    'models/gemini-3.5-flash'
-  ],
-  currentModelIdx: 0,
-  get modelName() {
-    return this.models[this.currentModelIdx % this.models.length];
-  },
+  modelName: 'models/gemini-3.6-flash',
 
   getActiveKey() {
     const saved = localStorage.getItem('gemini_api_key');
@@ -38,12 +30,11 @@ const GeminiTutor = {
       throw new Error("يرجى إدخال مفتاح Gemini API أولاً من خلال الضغط على زر المفتاح.");
     }
     let attempts = 0;
-    const maxAttempts = 3;
+    const maxAttempts = 4;
     let lastError = null;
 
     while (attempts < maxAttempts) {
-      const currentModel = this.models[this.currentModelIdx % this.models.length];
-      const url = `https://generativelanguage.googleapis.com/v1beta/${currentModel}:generateContent?key=${activeKey}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/${this.modelName}:generateContent?key=${activeKey}`;
       
       const payload = {
         contents: contents,
@@ -79,36 +70,38 @@ const GeminiTutor = {
           throw new Error("No content candidate returned from Gemini");
         } else {
           const errData = await response.json().catch(() => ({}));
-          console.warn(`[GeminiTutor] Model ${currentModel} failed with status ${response.status}:`, errData);
+          console.warn(`[GeminiTutor] Request failed with status ${response.status}:`, errData);
           lastError = (errData.error && errData.error.message) ? errData.error.message : `HTTP ${response.status}`;
           
           if (response.status === 429) {
-            let waitMs = 2500;
+            // Rate limit (RPM 5 limit on Free Tier)
+            let waitMs = 3000;
             const match = lastError && lastError.match(/retry in ([\d\.]+)s/i);
             if (match && match[1]) {
-              const sec = Math.ceil(parseFloat(match[1]));
-              if (sec > 0 && sec <= 15) {
-                waitMs = (sec + 1) * 1000;
-              }
+              const sec = parseFloat(match[1]);
+              waitMs = Math.ceil((sec + 1.0) * 1000);
             }
-            console.log(`[GeminiTutor] Rate limit on ${currentModel}. Waiting ${waitMs/1000}s or switching model...`);
-            this.currentModelIdx = (this.currentModelIdx + 1) % this.models.length;
-            await new Promise(r => setTimeout(r, Math.min(waitMs, 2500)));
-          } else if (response.status === 503 || response.status === 404) {
-            this.currentModelIdx = (this.currentModelIdx + 1) % this.models.length;
+            if (waitMs <= 10000) {
+              console.log(`[GeminiTutor] Google RPM burst limit. Waiting ${waitMs/1000}s before automatic retry...`);
+              await new Promise(r => setTimeout(r, waitMs));
+              attempts++;
+              continue; // Retry same working model after the cooldown
+            }
+          } else if (response.status === 503) {
+            console.log("[GeminiTutor] High demand on server. Waiting 2s before retry...");
+            await new Promise(r => setTimeout(r, 2000));
           }
           attempts++;
         }
       } catch (err) {
         console.warn("[GeminiTutor] Network or request error:", err);
         lastError = err.message;
-        this.currentModelIdx = (this.currentModelIdx + 1) % this.models.length;
         attempts++;
       }
     }
 
     if (lastError && (lastError.toLowerCase().includes("quota") || lastError.includes("429"))) {
-      throw new Error("عذراً، تم الوصول للحد المؤقت لطلبات Gemini (يرجى الانتظار 30 ثانية لتجدد الرصيد، أو إدخال مفتاح إضافي من زر المفتاح 🔑 في الأعلى).");
+      throw new Error("عذراً يا بطل! تم استهلاك الحد المجاني اليومي لمفتاح Gemini من جوجل (20 طلباً في اليوم). يمكنك الانتظار قليلاً أو إضافة مفتاح إضافي بالضغط على زر المفتاح 🔑 في الأعلى.");
     }
     if (lastError && (lastError.toLowerCase().includes("high demand") || lastError.includes("503"))) {
       throw new Error("سيرفرات الذكاء الاصطناعي تشهد ضغطاً مؤقتاً، يرجى إعادة المحاولة بعد ثوانٍ معدودة.");
