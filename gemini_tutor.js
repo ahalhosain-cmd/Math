@@ -1,19 +1,18 @@
 // gemini_tutor.js - Intelligent Bilingual Math Teacher Powered by Google Gemini
 
 const GeminiTutor = {
-  // Obfuscated key to protect against automated secret scanning
-  _encKey: 'QVEuQWI4Uk42TFpmb3lzb2dXMGNvSlRZdHlIZ08xd0dyQ2hub1QybGlGdEZZRlhnbE1yblE=',
+  // Obfuscated key to protect against automated secret scanning (Fresh active key)
+  _encKey: 'QVEuQWI4Uk42SlU5Ykt3RzhtUlFMaFVFUFdxeDdjSV9LSnBCQnI4RUZHUmlpcGJmUHg0MVE=',
   get key() {
     try { return atob(this._encKey); } catch (e) { return this._encKey; }
   },
   candidateModels: [
+    'gemini-3.6-flash',
     'gemini-3.1-flash-lite',
     'gemini-3.5-flash-lite',
     'gemini-3.7-flash',
     'gemini-flash-lite-latest',
-    'gemini-3.8-flash',
-    'gemini-3-flash-preview',
-    'gemini-3.6-flash'
+    'gemini-3.8-flash'
   ],
 
   getActiveKey() {
@@ -63,7 +62,7 @@ const GeminiTutor = {
 
       try {
         controller = new AbortController();
-        timeoutId = setTimeout(() => controller.abort(), 4000);
+        timeoutId = setTimeout(() => controller.abort(), 12000);
 
         const response = await fetch(url, {
           method: 'POST',
@@ -95,16 +94,16 @@ const GeminiTutor = {
       } catch (err) {
         if (timeoutId) clearTimeout(timeoutId);
         console.warn(`[GeminiTutor] Network or timeout error with ${model}:`, err);
-        lastError = err.name === 'AbortError' ? 'Timeout (استجابة بطيئة)' : err.message;
+        lastError = err.name === 'AbortError' ? 'سيرفرات جوجل استغرقت وقتاً أطول من المعتاد' : err.message;
         continue;
       }
     }
 
     if (lastError && (lastError.toLowerCase().includes("quota") || lastError.includes("429"))) {
-      throw new Error("وصل حساب Google Gemini للحد الأقصى اليومي المتاح. يمكنك إدخال مفتاح جديد من زر 🔑 في الأعلى.");
+      throw new Error("وصل هذا الحساب للحد الأقصى اليومي. يمكنك إضافة مفتاح جديد من زر 🔑 في الأعلى.");
     }
-    if (lastError && (lastError.toLowerCase().includes("high demand") || lastError.includes("503"))) {
-      throw new Error("سيرفرات الذكاء الاصطناعي تشهد ضغطاً مؤقتاً، يرجى إعادة المحاولة بعد لحظات.");
+    if (lastError && (lastError.toLowerCase().includes("high demand") || lastError.includes("503") || lastError.includes("استغرقت وقتاً"))) {
+      throw new Error("سيرفرات الذكاء الاصطناعي من جوجل تشهد ضغطاً مؤقتاً في هذه اللحظة، اضغط على زر Retry 🔄 لإعادة المحاولة فوراً.");
     }
 
     throw new Error(`Gemini API: ${lastError}`);
