@@ -3081,6 +3081,11 @@ const CURRICULUM_DATA = [
   }
 ];
 
+if (typeof window !== 'undefined') {
+  window.CURRICULUM_P3 = CURRICULUM_DATA;
+  window.CURRICULUM_DATA = CURRICULUM_DATA;
+}
+
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { CURRICULUM_DATA };
+  module.exports = { CURRICULUM_DATA, CURRICULUM_P3: CURRICULUM_DATA };
 }

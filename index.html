@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Primary 3 Math Mastery (100% Term 1 Curriculum)</title>
-  <link rel="stylesheet" href="styles.css?v=2027_15">
+  <link rel="stylesheet" href="styles.css?v=2027_16">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌟</text></svg>">
 </head>
 <body>
@@ -38,6 +38,9 @@
       <div class="user-quick-stats">
         <div class="stat-chip" id="stat-stars">⭐ 0</div>
         <div class="stat-chip" id="stat-mastery">🎯 0% Mastered</div>
+        <button class="stat-chip btn-grade-chip grade-p1" id="btn-grade-toggle" onclick="app.toggleGradeSelector()" title="تبديل الصف الدراسي (Switch Grade)">
+          🎒 <span>Primary 1 (أولى)</span> ▾
+        </button>
         <button class="stat-chip btn-profile-chip" id="user-name-tag" onclick="app.openProfilesModal()" title="تبديل أو تعديل البطل (Switch or Edit Champion)">
           <span id="display-child-avatar">🚀</span>
           <span id="display-child-name">Champion</span>
@@ -58,9 +61,9 @@
     <section class="tab-view active" id="view-roadmap">
       <div class="hero-banner">
         <div class="hero-content">
-          <h2>Welcome to the Grade 3 Math Quest! 🚀</h2>
-          <p>
-            Master all 10 chapters step-by-step from the official Primary 3 Term 1 curriculum. Complete all verification levels (Visual, Core, and Critical Thinking) to reach <strong>100% Mastery</strong> and earn your Official Math Honor Certificate!
+          <h2 id="hero-title">مرحباً بك في رحلة الرياضيات الممتعة! 🚀</h2>
+          <p id="hero-desc">
+            تعلم واكتشف مهارات الرياضيات الرائعة خطوة بخطوة بالصور التفاعلية والأنشطة المشوقة!
           </p>
         </div>
         <div class="hero-progress-box">
@@ -384,7 +387,7 @@
     <div class="profile-modal-container welcome-card animate-pop">
       <div class="welcome-badge-icon">🌟</div>
       <h2>أهلاً بك يا بطل في عالم الرياضيات!</h2>
-      <p class="welcome-sub">Welcome to Primary 3 Math Quest!</p>
+      <p class="welcome-sub">Welcome to the Math Adventure Quest! 🌟</p>
       <p class="welcome-intro">اكتب اسمك واختر شخصيتك لحفظ دروسك وإنجازاتك والبدء في المغامرة 🚀</p>
       
       <form onsubmit="event.preventDefault(); app.submitWelcomeProfile();">
@@ -392,6 +395,26 @@
           <label class="form-label" for="welcome-input-name">ما هو اسمك يا بطل؟ (Your Name)</label>
           <div class="input-name-wrap">
             <input type="text" id="welcome-input-name" class="profile-text-input" placeholder="اكتب اسمك هنا (مثال: عمر، مريم، يوسف...)" maxlength="25" autocomplete="off" required>
+          </div>
+        </div>
+
+        <div class="profile-form-group">
+          <label class="form-label">اختر الصف الدراسي (Choose Grade):</label>
+          <div class="grade-picker-grid" id="welcome-grade-picker">
+            <button type="button" class="grade-opt active" data-grade="p1" onclick="app.selectWelcomeGrade('p1')">
+              <span class="grade-icon">🎒</span>
+              <div class="grade-info">
+                <strong>Primary 1 (أولى ابتدائي)</strong>
+                <small>عد ورسومات وألعاب ممتعة لسن 6 سنوات 🎨</small>
+              </div>
+            </button>
+            <button type="button" class="grade-opt" data-grade="p3" onclick="app.selectWelcomeGrade('p3')">
+              <span class="grade-icon">📐</span>
+              <div class="grade-info">
+                <strong>Primary 3 (ثالثة ابتدائي)</strong>
+                <small>ضرب وقسمة ومحيط ومساحة 🏆</small>
+              </div>
+            </button>
           </div>
         </div>
 
@@ -447,6 +470,25 @@
             <input type="text" id="manage-profile-input-name" class="profile-text-input" placeholder="اسم البطل (مثال: عمر، مريم...)" maxlength="25">
           </div>
           <div class="profile-form-group">
+            <label class="form-label">الصف الدراسي (Grade):</label>
+            <div class="grade-picker-grid" id="manage-grade-picker">
+              <button type="button" class="grade-opt active" data-grade="p1" onclick="app.selectManageGrade('p1')">
+                <span class="grade-icon">🎒</span>
+                <div class="grade-info">
+                  <strong>Primary 1 (أولى ابتدائي)</strong>
+                  <small>سن 6 سنوات 🎨</small>
+                </div>
+              </button>
+              <button type="button" class="grade-opt" data-grade="p3" onclick="app.selectManageGrade('p3')">
+                <span class="grade-icon">📐</span>
+                <div class="grade-info">
+                  <strong>Primary 3 (ثالثة ابتدائي)</strong>
+                  <small>ضرب وقسمة 🏆</small>
+                </div>
+              </button>
+            </div>
+          </div>
+          <div class="profile-form-group">
             <label class="form-label">اختر الشخصية:</label>
             <div class="avatar-picker-grid" id="manage-avatar-picker">
               <button type="button" class="avatar-opt active" data-avatar="🚀" onclick="app.selectManageAvatar(this, '🚀')"><span class="avatar-emoji">🚀</span></button>
@@ -478,12 +520,13 @@
   </div>
 
   <!-- Scripts -->
-  <script src="audio_system.js?v=2027_15"></script>
-  <script src="math_dictionary.js?v=2027_15"></script>
-  <script src="question_visuals.js?v=2027_15"></script>
-  <script src="gemini_tutor.js?v=2027_15"></script>
-  <script src="curriculum_data.js?v=2027_15"></script>
-  <script src="interactive_widgets.js?v=2027_15"></script>
-  <script src="app.js?v=2027_15"></script>
+  <script src="audio_system.js?v=2027_16"></script>
+  <script src="math_dictionary.js?v=2027_16"></script>
+  <script src="question_visuals.js?v=2027_16"></script>
+  <script src="gemini_tutor.js?v=2027_16"></script>
+  <script src="curriculum_p1.js?v=2027_16"></script>
+  <script src="curriculum_data.js?v=2027_16"></script>
+  <script src="interactive_widgets.js?v=2027_16"></script>
+  <script src="app.js?v=2027_16"></script>
 </body>
 </html>

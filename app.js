@@ -80,8 +80,11 @@ class MasteryApp {
     this.profilesStorageKey = 'primary3_math_profiles_v2';
     this.storageKey = 'primary3_math_mastery_v1'; // legacy fallback
     this.selectedWelcomeAvatar = '🚀';
+    this.selectedWelcomeGrade = 'p1';
     this.selectedManageAvatar = '🚀';
+    this.selectedManageGrade = 'p1';
     this.state = this.loadState();
+    this.currentGrade = this.state.grade || 'p1';
     this.currentChapter = null;
     this.currentLesson = null;
     this.activeQuestionList = [];
@@ -102,12 +105,13 @@ class MasteryApp {
   }
 
   // --- Multi-Profile State Engine ---
-  createEmptyProfileState(name = "Champion", avatar = "🚀") {
+  createEmptyProfileState(name = "Champion", avatar = "🚀", grade = "p1") {
     return {
       id: 'prof_' + Date.now(),
       name: name,
       childName: name,
       avatar: avatar,
+      grade: grade, // 'p1' | 'p3'
       stars: 0,
       streak: 0,
       answers: {}, // { [qId]: { correct: bool, attempts: int, wrongCount: int } }
@@ -127,6 +131,7 @@ class MasteryApp {
       name: name,
       childName: name,
       avatar: p.avatar || '🚀',
+      grade: p.grade || 'p1',
       stars: typeof p.stars === 'number' ? p.stars : 0,
       streak: typeof p.streak === 'number' ? p.streak : 0,
       answers: p.answers || {},
@@ -209,9 +214,11 @@ class MasteryApp {
         data.activeProfileId = active.id;
         this.saveProfilesData(data);
       }
-      return this.ensureStateSchema(active);
+      const validated = this.ensureStateSchema(active);
+      this.currentGrade = validated.grade || 'p1';
+      return validated;
     }
-    return this.createEmptyProfileState("Champion", "🚀");
+    return this.createEmptyProfileState("Champion", "🚀", "p1");
   }
 
   saveState() {
@@ -235,6 +242,31 @@ class MasteryApp {
     } catch (e) {}
 
     this.updateHeaderStats();
+  }
+
+  // --- Dual-Grade (Primary 1 vs Primary 3) System ---
+  getActiveCurriculum(grade = null) {
+    const g = grade || this.currentGrade || (this.state && this.state.grade) || 'p1';
+    if (g === 'p3') {
+      return window.CURRICULUM_P3 || window.CURRICULUM_DATA || [];
+    }
+    return window.CURRICULUM_P1 || [];
+  }
+
+  switchGrade(newGrade) {
+    if (newGrade !== 'p1' && newGrade !== 'p3') return;
+    this.currentGrade = newGrade;
+    this.state.grade = newGrade;
+    this.saveState();
+    this.updateHeaderStats();
+    this.renderRoadmap();
+    this.renderParentDashboard();
+    if (window.soundManager) window.soundManager.click();
+  }
+
+  toggleGradeSelector() {
+    const nextGrade = this.currentGrade === 'p1' ? 'p3' : 'p1';
+    this.switchGrade(nextGrade);
   }
 
   init() {
@@ -261,6 +293,14 @@ class MasteryApp {
     const modal = document.getElementById('welcome-profile-modal');
     if (!modal) return;
     this.selectedWelcomeAvatar = '🚀';
+    this.selectedWelcomeGrade = 'p1';
+
+    const gradePicker = document.getElementById('welcome-grade-picker');
+    if (gradePicker) {
+      gradePicker.querySelectorAll('.grade-opt').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-grade') === 'p1');
+      });
+    }
 
     const picker = document.getElementById('welcome-avatar-picker');
     if (picker) {
@@ -276,6 +316,17 @@ class MasteryApp {
     }
 
     modal.style.display = 'flex';
+  }
+
+  selectWelcomeGrade(grade) {
+    this.selectedWelcomeGrade = grade;
+    const picker = document.getElementById('welcome-grade-picker');
+    if (picker) {
+      picker.querySelectorAll('.grade-opt').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-grade') === grade);
+      });
+    }
+    if (window.soundManager) window.soundManager.click();
   }
 
   selectWelcomeAvatar(btn, avatar) {
@@ -304,6 +355,7 @@ class MasteryApp {
       name: name,
       childName: name,
       avatar: this.selectedWelcomeAvatar || '🚀',
+      grade: this.selectedWelcomeGrade || 'p1',
       stars: 0,
       streak: 0,
       answers: {},
@@ -321,6 +373,7 @@ class MasteryApp {
     this.saveProfilesData(data);
 
     this.state = this.ensureStateSchema(newProfile);
+    this.currentGrade = this.state.grade || 'p1';
     this.saveState();
 
     const modal = document.getElementById('welcome-profile-modal');
@@ -387,11 +440,13 @@ class MasteryApp {
                 ${isActive ? '<span class="badge-active-tag">🌟 البطل الحالي</span>' : ''}
               </h4>
               <div class="profile-card-stats">
+                <span style="color:#2563EB; font-weight:800;">${p.grade === 'p3' ? '📐 Primary 3' : '🎒 Primary 1'}</span>
+                <span>•</span>
                 <span>⭐ ${p.stars || 0} نجمة</span>
                 <span>•</span>
                 <span>🎯 ${masteryPct}% إتقان</span>
                 <span>•</span>
-                <span>📚 ${completedLessonsCount} دروس مكتملة</span>
+                <span>📚 ${completedLessonsCount} دروس</span>
               </div>
             </div>
           </div>
@@ -423,6 +478,7 @@ class MasteryApp {
     data.activeProfileId = target.id;
     this.saveProfilesData(data);
     this.state = this.ensureStateSchema(target);
+    this.currentGrade = this.state.grade || 'p1';
 
     this.closeProfilesModal();
     this.updateHeaderStats();
@@ -458,6 +514,7 @@ class MasteryApp {
             setTimeout(() => nameInput.focus(), 150);
           }
           this.selectedManageAvatar = existing.avatar || '🚀';
+          this.selectedManageGrade = existing.grade || 'p1';
         }
       } else {
         if (formTitle) formTitle.textContent = '➕ إضافة بطل جديد (Add New Champion)';
@@ -467,6 +524,14 @@ class MasteryApp {
           setTimeout(() => nameInput.focus(), 150);
         }
         this.selectedManageAvatar = '🚀';
+        this.selectedManageGrade = this.currentGrade || 'p1';
+      }
+
+      const gradePicker = document.getElementById('manage-grade-picker');
+      if (gradePicker) {
+        gradePicker.querySelectorAll('.grade-opt').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-grade') === this.selectedManageGrade);
+        });
       }
 
       if (picker) {
@@ -480,6 +545,17 @@ class MasteryApp {
       if (idInput) idInput.value = '';
       if (nameInput) nameInput.value = '';
     }
+  }
+
+  selectManageGrade(grade) {
+    this.selectedManageGrade = grade;
+    const picker = document.getElementById('manage-grade-picker');
+    if (picker) {
+      picker.querySelectorAll('.grade-opt').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-grade') === grade);
+      });
+    }
+    if (window.soundManager) window.soundManager.click();
   }
 
   selectManageAvatar(btn, avatar) {
@@ -509,17 +585,22 @@ class MasteryApp {
     const data = this.getProfilesData();
     const avatar = this.selectedManageAvatar || '🚀';
 
+    const grade = this.selectedManageGrade || 'p1';
+
     if (editingId) {
       const target = data.profiles.find(p => p.id === editingId);
       if (target) {
         target.name = name;
         target.childName = name;
         target.avatar = avatar;
+        target.grade = grade;
         target.lastActive = new Date().toISOString();
         if (this.state.id === editingId) {
           this.state.name = name;
           this.state.childName = name;
           this.state.avatar = avatar;
+          this.state.grade = grade;
+          this.currentGrade = grade;
         }
       }
     } else {
@@ -528,6 +609,7 @@ class MasteryApp {
         name: name,
         childName: name,
         avatar: avatar,
+        grade: grade,
         stars: 0,
         streak: 0,
         answers: {},
@@ -541,6 +623,7 @@ class MasteryApp {
       data.profiles.push(newProf);
       data.activeProfileId = newProf.id;
       this.state = this.ensureStateSchema(newProf);
+      this.currentGrade = this.state.grade || 'p1';
     }
 
     this.saveProfilesData(data);
@@ -589,7 +672,7 @@ class MasteryApp {
       return '';
     }
 
-    const ch = CURRICULUM_DATA.find(c => c.id === this.state.lastLesson.chapterId);
+    const ch = this.getActiveCurriculum().find(c => c.id === this.state.lastLesson.chapterId);
     if (!ch) return '';
     const lesson = ch.lessons.find(l => l.id === this.state.lastLesson.lessonId);
     if (!lesson) return '';
@@ -662,7 +745,7 @@ class MasteryApp {
   getOverallMastery() {
     let totalQ = 0;
     let correctQ = 0;
-    CURRICULUM_DATA.forEach(ch => {
+    this.getActiveCurriculum().forEach(ch => {
       ch.lessons.forEach(l => {
         const qs = this.getLessonQuestions(l);
         totalQ += qs.length;
@@ -676,7 +759,7 @@ class MasteryApp {
 
   getWeakQuestions() {
     const weakList = [];
-    CURRICULUM_DATA.forEach(ch => {
+    this.getActiveCurriculum().forEach(ch => {
       ch.lessons.forEach(l => {
         const qs = this.getLessonQuestions(l);
         qs.forEach(q => {
@@ -739,10 +822,22 @@ class MasteryApp {
     const masteryEl = document.getElementById('stat-mastery');
     const nameEl = document.getElementById('display-child-name');
     const avatarEl = document.getElementById('display-child-avatar');
+    const gradeBtn = document.getElementById('btn-grade-toggle');
+
     if (starEl) starEl.textContent = `⭐ ${this.state.stars}`;
     if (masteryEl) masteryEl.textContent = `🎯 ${this.getOverallMastery()}% Mastered`;
     if (nameEl) nameEl.textContent = this.state.name || this.state.childName || "Champion";
     if (avatarEl) avatarEl.textContent = this.state.avatar || "🚀";
+
+    if (gradeBtn) {
+      if (this.currentGrade === 'p1') {
+        gradeBtn.innerHTML = `🎒 <span>Primary 1 (أولى)</span> ▾`;
+        gradeBtn.className = 'stat-chip btn-grade-chip grade-p1';
+      } else {
+        gradeBtn.innerHTML = `📐 <span>Primary 3 (ثالثة)</span> ▾`;
+        gradeBtn.className = 'stat-chip btn-grade-chip grade-p3';
+      }
+    }
   }
 
   // --- View: Adventure Roadmap ---
@@ -760,7 +855,19 @@ class MasteryApp {
     document.getElementById('overall-progress-bar').style.width = `${overall}%`;
     document.getElementById('overall-progress-label').textContent = `${overall}% Complete`;
 
-    container.innerHTML = CURRICULUM_DATA.map(ch => {
+    // Dynamic hero banner title & description per grade
+    const heroTitleEl = document.getElementById('hero-title');
+    const heroDescEl = document.getElementById('hero-desc');
+    if (this.currentGrade === 'p1') {
+      if (heroTitleEl) heroTitleEl.innerHTML = `مغامرة أبطال الرياضيات (الصف الأول الابتدائي) 🎒🎨`;
+      if (heroDescEl) heroDescEl.innerHTML = `استكشف الأعداد حتى 10، الجمع والطرح، ومقارنة الأطوال بالرسومات والألوان التفاعلية المصممة خصيصاً لعمر 6 سنوات! 🐱🐶`;
+    } else {
+      if (heroTitleEl) heroTitleEl.innerHTML = `Welcome to the Grade 3 Math Quest! 🚀`;
+      if (heroDescEl) heroDescEl.innerHTML = `Master all 10 chapters step-by-step from the official Primary 3 Term 1 curriculum. Complete all verification levels to reach <strong>100% Mastery</strong> and earn your Official Math Honor Certificate!`;
+    }
+
+    const activeCurriculum = this.getActiveCurriculum();
+    container.innerHTML = activeCurriculum.map(ch => {
       const chMastery = this.getChapterMastery(ch);
       const isMastered = chMastery === 100;
       const statusBadge = isMastered 
@@ -928,7 +1035,7 @@ class MasteryApp {
 
   // --- Quiz / Practice Execution ---
   startLesson(chapterId, lessonId) {
-    const ch = CURRICULUM_DATA.find(c => c.id === chapterId);
+    const ch = this.getActiveCurriculum().find(c => c.id === chapterId);
     if (!ch) return;
     const lesson = ch.lessons.find(l => l.id === lessonId);
     if (!lesson) return;
@@ -957,7 +1064,7 @@ class MasteryApp {
   }
 
   startChapterDrill(chapterId) {
-    const ch = CURRICULUM_DATA.find(c => c.id === chapterId);
+    const ch = this.getActiveCurriculum().find(c => c.id === chapterId);
     if (!ch) return;
 
     this.currentChapter = ch;
@@ -1017,6 +1124,11 @@ class MasteryApp {
     if (v.type === 'place_value') return window.QuestionVisuals.renderPlaceValueCard(v.num, v.target, '');
     if (v.type === 'place_value_compare') return window.QuestionVisuals.renderPlaceValueComparison(v.num1, v.num2, v.highlightPlace, '');
     if (v.type === 'fact_family_triangle') return window.QuestionVisuals.renderFactFamilyTriangle(v.top, v.left, v.right, '');
+    if (v.type === 'ten_frame') return window.QuestionVisuals.renderTenFrame(v.count, v.total || 10, v.color || '#2563EB');
+    if (v.type === 'cute_counters') return window.QuestionVisuals.renderCuteCounters(v.count, v.emoji || '🍎', v.maxPerRow || 5);
+    if (v.type === 'number_bond') return window.QuestionVisuals.renderNumberBond(v.whole, v.part1, v.part2, v.missing || 'part2');
+    if (v.type === 'spatial_scene') return window.QuestionVisuals.renderSpatialScene(v.position, v.targetEmoji || '🐱', v.baseEmoji || '📦');
+    if (v.type === 'length_comp') return window.QuestionVisuals.renderLengthComparison(v.item1Emoji || '✏️', v.len1, v.item2Emoji || '🖍️', v.len2);
     return '';
   }
 
@@ -2424,16 +2536,18 @@ class MasteryApp {
     const canvasEl = document.getElementById('book-image-canvas');
     const zoomResetBtn = document.getElementById('book-zoom-reset-btn');
 
-    const titleText = lessonTitle || (this.currentLesson ? (this.currentLesson.titleAr || this.currentLesson.title) : 'كتاب الوزارة الرسمي المعتمد 2027');
+    const isP1 = this.currentGrade === 'p1';
+    const gradeLabel = isP1 ? 'الصف الأول الابتدائي (Primary 1)' : 'الصف الثالث الابتدائي (Primary 3)';
+    const titleText = lessonTitle || (this.currentLesson ? (this.currentLesson.titleAr || this.currentLesson.title) : `كتاب الوزارة الرسمي • ${gradeLabel}`);
     if (titleEl) titleEl.textContent = titleText;
     if (subTitleEl) {
-      const chText = this.currentChapter ? `الفصل ${this.currentChapter.number}` : 'الصف الثالث الابتدائي';
+      const chText = this.currentChapter ? `الفصل ${this.currentChapter.number}` : gradeLabel;
       subTitleEl.textContent = `${chText} • صفحة ${pdfPage} من كتاب الوزارة الرسمي`;
     }
     if (indicatorEl) indicatorEl.textContent = `صـ ${pdfPage}`;
 
     if (imgEl) {
-      imgEl.src = `book_pages/page_${pdfPage}.jpg`;
+      imgEl.src = isP1 ? `book_pages_p1/page_${pdfPage}.jpg` : `book_pages/page_${pdfPage}.jpg`;
       imgEl.alt = `كتاب الوزارة صفحة ${pdfPage}`;
     }
 
@@ -2468,7 +2582,8 @@ class MasteryApp {
   }
 
   nextBookPage() {
-    if (!this.currentBookPdfPage || this.currentBookPdfPage >= 121) return;
+    const maxPages = this.currentGrade === 'p1' ? 98 : 121;
+    if (!this.currentBookPdfPage || this.currentBookPdfPage >= maxPages) return;
     this.currentBookPdfPage++;
     this.currentBookPrintedPage = this.currentBookPdfPage;
     this.updateBookModalImage();
@@ -2478,15 +2593,18 @@ class MasteryApp {
     const imgEl = document.getElementById('book-page-img');
     const indicatorEl = document.getElementById('book-page-indicator');
     const subTitleEl = document.getElementById('book-modal-subtitle');
+    const isP1 = this.currentGrade === 'p1';
+    const gradeLabel = isP1 ? 'الصف الأول الابتدائي' : 'الصف الثالث الابتدائي';
+    const maxPages = isP1 ? 98 : 121;
 
     if (imgEl) {
-      imgEl.src = `book_pages/page_${this.currentBookPdfPage}.jpg`;
+      imgEl.src = isP1 ? `book_pages_p1/page_${this.currentBookPdfPage}.jpg` : `book_pages/page_${this.currentBookPdfPage}.jpg`;
     }
     if (indicatorEl) {
       indicatorEl.textContent = `صـ ${this.currentBookPrintedPage}`;
     }
     if (subTitleEl) {
-      subTitleEl.textContent = `صفحة ${this.currentBookPrintedPage} من كتاب الوزارة الرسمي (صفحة ${this.currentBookPdfPage} من 121)`;
+      subTitleEl.textContent = `صفحة ${this.currentBookPrintedPage} من كتاب الوزارة الرسمي (${gradeLabel} - صفحة ${this.currentBookPdfPage} من ${maxPages})`;
     }
     window.soundManager.click();
   }

@@ -595,7 +595,186 @@ const QuestionVisuals = {
         </svg>
       </div>
     `;
+  },
+
+  // 13. Primary 1 Ten-Frame (2x5 Grid of Counters)
+  renderTenFrame(count = 3, total = 10, color = '#2563EB') {
+    let cellsSvg = '';
+    const cols = 5;
+    const rows = Math.ceil(total / cols);
+    const boxSize = 38;
+    const gap = 6;
+    const startX = 16;
+    const startY = 16;
+
+    for (let i = 0; i < total; i++) {
+      const r = Math.floor(i / cols);
+      const c = i % cols;
+      const x = startX + c * (boxSize + gap);
+      const y = startY + r * (boxSize + gap);
+      const isFilled = i < count;
+
+      cellsSvg += `
+        <rect x="${x}" y="${y}" width="${boxSize}" height="${boxSize}" rx="8" fill="#F8FAFC" stroke="#94A3B8" stroke-width="2"/>
+        ${isFilled ? `
+          <circle cx="${x + boxSize / 2}" cy="${y + boxSize / 2}" r="13" fill="${color}"/>
+          <circle cx="${x + boxSize / 2 - 4}" cy="${y + boxSize / 2 - 4}" r="3.5" fill="#FFFFFF" opacity="0.6"/>
+        ` : `
+          <circle cx="${x + boxSize / 2}" cy="${y + boxSize / 2}" r="8" fill="none" stroke="#CBD5E1" stroke-dasharray="3 3"/>
+        `}
+      `;
+    }
+
+    const totalW = startX * 2 + cols * (boxSize + gap) - gap;
+    const totalH = startY * 2 + rows * (boxSize + gap) - gap;
+
+    return `
+      <div class="q-visual-wrapper q-visual-ten-frame">
+        <svg viewBox="0 0 ${totalW} ${totalH}" width="260" height="${rows === 1 ? '75' : '120'}" class="q-visual-svg">
+          <rect x="6" y="6" width="${totalW - 12}" height="${totalH - 12}" rx="14" fill="#FFFFFF" stroke="#64748B" stroke-width="3"/>
+          ${cellsSvg}
+        </svg>
+      </div>
+    `;
+  },
+
+  // 14. Primary 1 Cute Counters (Fruits, Animals, Candies, Toys)
+  renderCuteCounters(count = 4, emoji = '🍎', maxPerRow = 5) {
+    const items = [];
+    for (let i = 0; i < count; i++) {
+      items.push(`
+        <div class="cute-counter-bubble animate-pop" style="animation-delay: ${i * 0.08}s">
+          <span class="counter-emoji">${emoji}</span>
+          <span class="counter-index-badge">${i + 1}</span>
+        </div>
+      `);
+    }
+
+    return `
+      <div class="q-visual-wrapper q-visual-cute-counters">
+        <div class="cute-counters-grid" style="grid-template-columns: repeat(${Math.min(count, maxPerRow)}, 1fr)">
+          ${items.join('')}
+        </div>
+      </div>
+    `;
+  },
+
+  // 15. Primary 1 Number Bonds (Whole & Parts)
+  renderNumberBond(whole = 5, part1 = 3, part2 = 2, missing = 'part2') {
+    return `
+      <div class="q-visual-wrapper q-visual-number-bond">
+        <svg viewBox="0 0 240 180" width="220" height="160" class="q-visual-svg">
+          <!-- Connection lines -->
+          <line x1="120" y1="50" x2="60" y2="135" stroke="#6366F1" stroke-width="4" stroke-linecap="round"/>
+          <line x1="120" y1="50" x2="180" y2="135" stroke="#6366F1" stroke-width="4" stroke-linecap="round"/>
+
+          <!-- Whole Circle (Top) -->
+          <circle cx="120" cy="50" r="32" fill="#4F46E5" stroke="#312E81" stroke-width="3"/>
+          <text x="120" y="58" font-size="24" font-weight="900" fill="#FFFFFF" text-anchor="middle">
+            ${missing === 'whole' ? '?' : whole}
+          </text>
+          <text x="120" y="24" font-size="11" font-weight="700" fill="#4F46E5" text-anchor="middle">Whole (الكل)</text>
+
+          <!-- Part 1 Circle (Bottom Left) -->
+          <circle cx="60" cy="135" r="28" fill="#10B981" stroke="#065F46" stroke-width="3"/>
+          <text x="60" y="143" font-size="20" font-weight="800" fill="#FFFFFF" text-anchor="middle">
+            ${missing === 'part1' ? '?' : part1}
+          </text>
+          <text x="60" y="174" font-size="10" font-weight="700" fill="#059669" text-anchor="middle">Part (جزء)</text>
+
+          <!-- Part 2 Circle (Bottom Right) -->
+          <circle cx="180" cy="135" r="28" fill="${missing === 'part2' ? '#F59E0B' : '#3B82F6'}" stroke="${missing === 'part2' ? '#B45309' : '#1D4ED8'}" stroke-width="3"/>
+          <text x="180" y="143" font-size="20" font-weight="800" fill="#FFFFFF" text-anchor="middle">
+            ${missing === 'part2' ? '?' : part2}
+          </text>
+          <text x="180" y="174" font-size="10" font-weight="700" fill="#D97706" text-anchor="middle">Part (جزء)</text>
+        </svg>
+      </div>
+    `;
+  },
+
+  // 16. Primary 1 Spatial Position Visual (Top/Bottom, Front/Behind, Left/Right)
+  renderSpatialScene(position = 'top', targetEmoji = '🐱', baseEmoji = '📦') {
+    let layoutHtml = '';
+    if (position === 'top' || position === 'above') {
+      layoutHtml = `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+          <div class="spatial-item target-item" style="font-size:46px;">${targetEmoji}</div>
+          <div class="spatial-item base-item" style="font-size:52px;">${baseEmoji}</div>
+        </div>
+      `;
+    } else if (position === 'bottom' || position === 'under' || position === 'below') {
+      layoutHtml = `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+          <div class="spatial-item base-item" style="font-size:52px;">${baseEmoji}</div>
+          <div class="spatial-item target-item" style="font-size:46px;">${targetEmoji}</div>
+        </div>
+      `;
+    } else if (position === 'left') {
+      layoutHtml = `
+        <div style="display:flex; flex-direction:row; align-items:center; gap:16px;">
+          <div class="spatial-item target-item" style="font-size:46px;">${targetEmoji}</div>
+          <div class="spatial-item base-item" style="font-size:52px;">${baseEmoji}</div>
+        </div>
+      `;
+    } else { // right
+      layoutHtml = `
+        <div style="display:flex; flex-direction:row; align-items:center; gap:16px;">
+          <div class="spatial-item base-item" style="font-size:52px;">${baseEmoji}</div>
+          <div class="spatial-item target-item" style="font-size:46px;">${targetEmoji}</div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="q-visual-wrapper q-visual-spatial">
+        <div class="spatial-box-card">
+          ${layoutHtml}
+        </div>
+      </div>
+    `;
+  },
+
+  // 17. Primary 1 Length Comparison on a Grid
+  renderLengthComparison(item1Emoji = '✏️', len1 = 5, item2Emoji = '🖍️', len2 = 3) {
+    const maxLen = Math.max(len1, len2, 6);
+    const unitW = 28;
+    const startX = 40;
+
+    let gridLinesSvg = '';
+    for (let u = 0; u <= maxLen; u++) {
+      const x = startX + u * unitW;
+      gridLinesSvg += `
+        <line x1="${x}" y1="20" x2="${x}" y2="105" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="2 2"/>
+        <text x="${x}" y="122" font-size="11" font-weight="700" fill="#94A3B8" text-anchor="middle">${u}</text>
+      `;
+    }
+
+    const bar1W = len1 * unitW;
+    const bar2W = len2 * unitW;
+
+    return `
+      <div class="q-visual-wrapper q-visual-length-comp">
+        <svg viewBox="0 0 ${startX + maxLen * unitW + 30} 135" width="280" height="135" class="q-visual-svg">
+          ${gridLinesSvg}
+          <!-- Baseline -->
+          <line x1="${startX}" y1="105" x2="${startX + maxLen * unitW}" y2="105" stroke="#64748B" stroke-width="2"/>
+          <line x1="${startX}" y1="15" x2="${startX}" y2="105" stroke="#EF4444" stroke-width="2.5"/>
+
+          <!-- Item 1 Bar -->
+          <text x="18" y="47" font-size="22" text-anchor="middle">${item1Emoji}</text>
+          <rect x="${startX}" y="32" width="${bar1W}" height="20" rx="6" fill="#3B82F6"/>
+          <text x="${startX + bar1W / 2}" y="47" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">${len1} units</text>
+
+          <!-- Item 2 Bar -->
+          <text x="18" y="85" font-size="22" text-anchor="middle">${item2Emoji}</text>
+          <rect x="${startX}" y="70" width="${bar2W}" height="20" rx="6" fill="#10B981"/>
+          <text x="${startX + bar2W / 2}" y="85" font-size="12" font-weight="900" fill="#FFFFFF" text-anchor="middle">${len2} units</text>
+        </svg>
+      </div>
+    `;
   }
 };
 
 window.QuestionVisuals = QuestionVisuals;
+
