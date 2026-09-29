@@ -485,24 +485,29 @@ class MasteryApp {
   renderQuestionVisual(q, size = 180) {
     if (!q || !q.visual || !window.QuestionVisuals) return '';
     const v = q.visual;
-    if (v.type === 'clock') return window.QuestionVisuals.renderClock(v.hour, v.minute, size, v.caption);
-    if (v.type === 'dual_clock') return window.QuestionVisuals.renderDualClock(v.startHour, v.startMin, v.endHour, v.endMin, v.caption);
-    if (v.type === 'array') return window.QuestionVisuals.renderArray(v.rows, v.cols, v.emoji || '⭐', v.caption);
-    if (v.type === 'split_array') return window.QuestionVisuals.renderSplitArray(v.rows, v.cols1, v.cols2, v.emoji || '⭐', v.caption);
-    if (v.type === 'equal_groups') return window.QuestionVisuals.renderEqualGroups(v.groups, v.items, v.emoji || '🍎', v.caption);
-    if (v.type === 'shape') return window.QuestionVisuals.renderShape(v.shape, size, v.caption);
-    if (v.type === 'dimensioned_shape') return window.QuestionVisuals.renderDimensionedShape(v.shape, v.dimensions, v.unit || 'cm', v.caption);
-    if (v.type === 'l_shape') return window.QuestionVisuals.renderLShape(v.dimensions, v.caption);
-    if (v.type === 'grid_area') return window.QuestionVisuals.renderGridArea(v.rows, v.cols, v.color || '#3B82F6', v.caption);
-    if (v.type === 'dual_grid_area') return window.QuestionVisuals.renderDualGridArea(v.r1, v.c1, v.r2, v.c2, v.label1, v.label2, v.caption);
+    // Suppress pseudo-patterns that are just verbal sentences/text rather than math sequences
+    if (v.type === 'pattern') {
+      const hasLongText = v.items && v.items.some(it => /[a-zA-Z\u0600-\u06FF]{4,}/.test(String(it)));
+      if (hasLongText) return '';
+      return window.QuestionVisuals.renderPattern(v.items, '');
+    }
+    if (v.type === 'clock') return window.QuestionVisuals.renderClock(v.hour, v.minute, size, '');
+    if (v.type === 'dual_clock') return window.QuestionVisuals.renderDualClock(v.startHour, v.startMin, v.endHour, v.endMin, '');
+    if (v.type === 'array') return window.QuestionVisuals.renderArray(v.rows, v.cols, v.emoji || '⭐', '');
+    if (v.type === 'split_array') return window.QuestionVisuals.renderSplitArray(v.rows, v.cols1, v.cols2, v.emoji || '⭐', '');
+    if (v.type === 'equal_groups') return window.QuestionVisuals.renderEqualGroups(v.groups, v.items, v.emoji || '🍎', '');
+    if (v.type === 'shape') return window.QuestionVisuals.renderShape(v.shape, size, '');
+    if (v.type === 'dimensioned_shape') return window.QuestionVisuals.renderDimensionedShape(v.shape, v.dimensions, v.unit || 'cm', '');
+    if (v.type === 'l_shape') return window.QuestionVisuals.renderLShape(v.dimensions, '');
+    if (v.type === 'grid_area') return window.QuestionVisuals.renderGridArea(v.rows, v.cols, v.color || '#3B82F6', '');
+    if (v.type === 'dual_grid_area') return window.QuestionVisuals.renderDualGridArea(v.r1, v.c1, v.r2, v.c2, '', '', '');
     if (v.type === 'ruler') return window.QuestionVisuals.renderRuler(v.length, v.name || 'Pencil', v.emoji || '✏️', v.isMm || false, v.startCm || 0);
-    if (v.type === 'line_plot') return window.QuestionVisuals.renderLinePlot(v.title, v.xValues, v.counts, v.xLabel, v.caption, v.keyText);
-    if (v.type === 'bar_graph') return window.QuestionVisuals.renderBarGraph(v.data, v.title, v.scale || 2, v.maxVal, v.caption, v.showValues || false);
-    if (v.type === 'beaker') return window.QuestionVisuals.renderBeaker(v.fillMl, v.maxMl || 500, v.caption);
-    if (v.type === 'place_value') return window.QuestionVisuals.renderPlaceValueCard(v.num, v.target, v.caption);
-    if (v.type === 'place_value_compare') return window.QuestionVisuals.renderPlaceValueComparison(v.num1, v.num2, v.highlightPlace, v.caption);
-    if (v.type === 'pattern') return window.QuestionVisuals.renderPattern(v.items, v.caption);
-    if (v.type === 'fact_family_triangle') return window.QuestionVisuals.renderFactFamilyTriangle(v.top, v.left, v.right, v.caption);
+    if (v.type === 'line_plot') return window.QuestionVisuals.renderLinePlot(v.title, v.xValues, v.counts, v.xLabel, '', v.keyText);
+    if (v.type === 'bar_graph') return window.QuestionVisuals.renderBarGraph(v.data, v.title, v.scale || 2, v.maxVal, '', v.showValues || false);
+    if (v.type === 'beaker') return window.QuestionVisuals.renderBeaker(v.fillMl, v.maxMl || 500, '');
+    if (v.type === 'place_value') return window.QuestionVisuals.renderPlaceValueCard(v.num, v.target, '');
+    if (v.type === 'place_value_compare') return window.QuestionVisuals.renderPlaceValueComparison(v.num1, v.num2, v.highlightPlace, '');
+    if (v.type === 'fact_family_triangle') return window.QuestionVisuals.renderFactFamilyTriangle(v.top, v.left, v.right, '');
     return '';
   }
 

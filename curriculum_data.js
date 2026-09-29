@@ -30,8 +30,7 @@ const CURRICULUM_DATA = [
                   "5 × 6 = 30",
                   "5 × 7 = 35",
                   "5 × 8 = ?"
-                ],
-                "caption": "5 times table: each step increases by 5 (جدول ضرب 5: كل خطوة تزيد 5)"
+                ]
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -56,8 +55,7 @@ const CURRICULUM_DATA = [
                 "type": "array",
                 "rows": 3,
                 "cols": 6,
-                "emoji": "⭐",
-                "caption": "3 rows of 6 = 6 rows of 3 (3 صفوف بكل منها 6 نجوم)"
+                "emoji": "⭐"
               },
               "format": "complete",
               "type": "calc",
@@ -78,15 +76,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch1_l1_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "4 × 6 = 24",
-                  "4 × 5 = ?",
-                  "Decrease by 1 group of 4"
-                ],
-                "caption": "Going down by 1 decreases by 4 (النزول خطوة ينقص بمقدار 4)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Fill in the blank: 4 × 5 = 4 × 6 - ___",
@@ -123,8 +112,7 @@ const CURRICULUM_DATA = [
                 "rows": 9,
                 "cols1": 4,
                 "cols2": 3,
-                "emoji": "🍎",
-                "caption": "9 rows split into (4 × 9) and (3 × 9) (مصفوفة مقسمة إلى جزأين)"
+                "emoji": "🍎"
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -150,8 +138,7 @@ const CURRICULUM_DATA = [
                 "rows": 6,
                 "cols1": 5,
                 "cols2": 3,
-                "emoji": "⭐",
-                "caption": "8 split into 5 and [ ? ] (العدد 8 مقسم إلى 5 و [ ؟ ])"
+                "emoji": "⭐"
               },
               "format": "complete",
               "type": "calc",
@@ -177,8 +164,7 @@ const CURRICULUM_DATA = [
                 "rows": 9,
                 "cols1": 3,
                 "cols2": 2,
-                "emoji": "🍪",
-                "caption": "5 columns split into 3 and 2 (5 أعمدة مقسمة إلى 3 و 2)"
+                "emoji": "🍪"
               },
               "format": "choose",
               "type": "word_problem",
@@ -217,8 +203,7 @@ const CURRICULUM_DATA = [
                   "10 × 1 = 10",
                   "10 × 2 = 20",
                   "... 10 × 7 = ?"
-                ],
-                "caption": "Count by 10s seven times (عد بالعشرات 7 مرات)"
+                ]
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -245,8 +230,7 @@ const CURRICULUM_DATA = [
                   "1 × 0 = 0",
                   "5 × 0 = 0",
                   "15 × 0 = ?"
-                ],
-                "caption": "Multiplying any number by 0 rule (خاصية الضرب في صفر)"
+                ]
               },
               "format": "complete",
               "type": "calc",
@@ -271,8 +255,7 @@ const CURRICULUM_DATA = [
                 "type": "equal_groups",
                 "groups": 4,
                 "items": 10,
-                "emoji": "✏️",
-                "caption": "4 boxes with 10 pencils each (4 علب في كل منها 10 أقلام)"
+                "emoji": "✏️"
               },
               "format": "choose",
               "type": "word_problem",
@@ -305,15 +288,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch1_l4_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Target area: 0 points",
-                  "Balls landed: 5 balls",
-                  "Score: 0 × 5 = ?"
-                ],
-                "caption": "0-point ring scoring (حساب نقاط منطقة 0)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "Sara threw 5 balls into the 0-point area. What is her score for these throws?",
@@ -333,15 +307,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch1_l4_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "10-point ring: 4 balls",
-                  "3-point ring: 2 balls",
-                  "0-point ring: 3 balls"
-                ],
-                "caption": "Sum points from each ring (اجمع نقاط كل منطقة)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "Hassan got: 4 balls in 10-point area, 2 in 3-point area, and 3 in 0-point area. What is his total score?",
@@ -361,15 +326,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch1_l4_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Target: 50 points",
-                  "Current score: 30 points",
-                  "Points still needed: 20"
-                ],
-                "caption": "How many 5-point throws make 20? (كم رمية من 5 نقاط تعطي 20؟)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Gamal needs 50 points. He already scored 30 points. How many 5-point throws does he need to reach 50?",
@@ -408,8 +364,7 @@ const CURRICULUM_DATA = [
                   "3 × 2 = 6",
                   "3 × 3 = 9",
                   "3 × [ ? ] = 12"
-                ],
-                "caption": "Use the 3 times table (استخدم جدول ضرب 3)"
+                ]
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -436,8 +391,7 @@ const CURRICULUM_DATA = [
                   "5 × 7 = 35",
                   "[ ? ] × 7 = 42",
                   "7 × 7 = 49"
-                ],
-                "caption": "Which factor × 7 gives 42? (أي عدد يضرب في 7 يعطي 42؟)"
+                ]
               },
               "format": "complete",
               "type": "calc",
@@ -458,14 +412,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch1_l5_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Missing factor: [ ? ] × 8 = 56",
-                  "Inverse operation: 56 ÷ 8 = [ ? ]"
-                ],
-                "caption": "Division is inverse of multiplication (القسمة عكس الضرب)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "To find the missing number in ___ × 8 = 56, which calculation can you use?",
@@ -511,8 +457,7 @@ const CURRICULUM_DATA = [
               "visual": {
                 "type": "clock",
                 "hour": 8,
-                "minute": 45,
-                "caption": "Current time is 8:45 (الوقت الحالي: 8:45)"
+                "minute": 45
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -536,8 +481,7 @@ const CURRICULUM_DATA = [
               "visual": {
                 "type": "clock",
                 "hour": 6,
-                "minute": 20,
-                "caption": "Current time is 6:20 (الوقت الحالي: 6:20)"
+                "minute": 20
               },
               "format": "complete",
               "type": "calc",
@@ -561,8 +505,7 @@ const CURRICULUM_DATA = [
               "visual": {
                 "type": "clock",
                 "hour": 3,
-                "minute": 10,
-                "caption": "Current time is 3:10 (الوقت الحالي: 3:10)"
+                "minute": 10
               },
               "format": "choose",
               "type": "word_problem",
@@ -595,15 +538,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch2_l2_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "1 hour = 60 minutes",
-                  "1 hr 20 min = 60 min + 20 min",
-                  "Total = [ ? ] minutes"
-                ],
-                "caption": "Hours to minutes conversion (تحويل الساعات إلى دقائق)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "Convert into minutes: 1 hour 20 minutes = ___ minutes",
@@ -628,8 +562,7 @@ const CURRICULUM_DATA = [
                 "startHour": 4,
                 "startMin": 50,
                 "endHour": 5,
-                "endMin": 20,
-                "caption": "From 4:50 PM to 5:20 PM (احسب الدقائق المنقضية)"
+                "endMin": 20
               },
               "format": "complete",
               "type": "calc",
@@ -655,8 +588,7 @@ const CURRICULUM_DATA = [
                 "startHour": 8,
                 "startMin": 40,
                 "endHour": 9,
-                "endMin": 45,
-                "caption": "Class start 8:40 AM -> End 9:45 AM (فترة الحصة)"
+                "endMin": 45
               },
               "format": "choose",
               "type": "word_problem",
@@ -689,14 +621,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch2_l3_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "1 minute = 60 seconds",
-                  "1 min 5 s = 60 s + 5 s = [ ? ] s"
-                ],
-                "caption": "Converting minutes to seconds (تحويل الدقائق إلى ثوانٍ)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "How many seconds are in 1 minute and 5 seconds?",
@@ -716,15 +640,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch2_l3_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Total: 90 seconds",
-                  "Take out 60 seconds (1 min)",
-                  "Remaining seconds: 90 - 60 = ?"
-                ],
-                "caption": "Extract 1 minute (60 s) from 90 s"
-              },
               "format": "complete",
               "type": "calc",
               "question": "Convert 90 seconds into minutes and seconds:",
@@ -744,15 +659,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch2_l3_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Mazen's time: 75 s",
-                  "Samy's time: 1 min 20 s = 80 s",
-                  "Difference = 80 - 75 = ?"
-                ],
-                "caption": "Compare race times (قارن بين زمن العدائين)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Mazen ran 100 m in 75 s. Samy ran it in 1 min 20 s. Who was faster and by how much?",
@@ -799,8 +705,7 @@ const CURRICULUM_DATA = [
                 "type": "equal_groups",
                 "groups": 5,
                 "items": 3,
-                "emoji": "🍎",
-                "caption": "15 apples shared into 5 baskets (15 تفاحة مقسمة على 5 سلال)"
+                "emoji": "🍎"
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -821,16 +726,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch3_l1_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "18 ÷ 3 = 6",
-                  "18: Dividend (المقسوم)",
-                  "3: [ ? ]",
-                  "6: Quotient (خارج القسمة)"
-                ],
-                "caption": "Identify part 3 of division (حدد مسمى العدد 3)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "In 18 ÷ 3 = 6, what is the number 3 called?",
@@ -850,14 +745,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch3_l1_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "36 ÷ 4 = [ ? ]",
-                  "Think: 4 × [ ? ] = 36"
-                ],
-                "caption": "Use the 4 times table (فكر: 4 × كم = 36؟)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Calculate: 36 ÷ 4 = ___",
@@ -893,8 +780,7 @@ const CURRICULUM_DATA = [
                 "type": "equal_groups",
                 "groups": 3,
                 "items": 4,
-                "emoji": "🍓",
-                "caption": "12 strawberries shared among 3 plates (12 فراولة تقسم على 3 أطباق)"
+                "emoji": "🍓"
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -919,8 +805,7 @@ const CURRICULUM_DATA = [
                 "type": "equal_groups",
                 "groups": 6,
                 "items": 4,
-                "emoji": "🍬",
-                "caption": "24 candies grouped in 4s (24 قطعة حلوى في مجموعات من 4)"
+                "emoji": "🍬"
               },
               "format": "complete",
               "type": "calc",
@@ -941,15 +826,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch3_l2_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Total tape length: 45 cm",
-                  "Cut into 5 equal parts",
-                  "Length of each part: 45 ÷ 5 = ? cm"
-                ],
-                "caption": "Divide length by 5 pieces (اقسم الطول الكلي على 5)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "If you cut a 45 cm tape into 5 equal pieces, how long is each piece in cm?",
@@ -985,8 +861,7 @@ const CURRICULUM_DATA = [
                 "type": "equal_groups",
                 "groups": 4,
                 "items": 2,
-                "emoji": "🍪",
-                "caption": "8 cookies shared equally among 4 children (8 كعكات تقسم بالتساوي على 4)"
+                "emoji": "🍪"
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -1007,15 +882,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch3_l3_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Total items: 9 water bottles",
-                  "Bottles per person: 3",
-                  "How many people: 9 ÷ 3 = ?"
-                ],
-                "caption": "Scenario matching 9 ÷ 3 (موقف يمثل 9 ÷ 3)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "Which scenario matches 9 ÷ 3?",
@@ -1039,8 +905,7 @@ const CURRICULUM_DATA = [
                 "type": "fact_family_triangle",
                 "top": 24,
                 "left": 6,
-                "right": 4,
-                "caption": "Fact family triangle {4, 6, 24} (مثلث عائلة الحقائق)"
+                "right": 4
               },
               "format": "choose",
               "type": "word_problem",
@@ -1073,15 +938,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch3_l4_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Hassan: 9 blocks [▬▬]",
-                  "Maryam: 27 blocks [▬▬▬▬▬▬]",
-                  "Times as many: 27 ÷ 9 = ?"
-                ],
-                "caption": "Multiplicative comparison (مقارنة الكميات بالقسمة)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "Hassan has 9 blocks. Maryam has 27 blocks. How many times as many blocks does Maryam have?",
@@ -1101,15 +957,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch3_l4_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Red ribbon: 6 m",
-                  "White ribbon: 42 m",
-                  "Times as long = 42 ÷ 6 = ?"
-                ],
-                "caption": "Compare ribbon lengths (قارن بين طولي الشريطين)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "A red ribbon is 6 m and a white ribbon is 42 m. How many times as long is the white ribbon?",
@@ -1129,15 +976,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch3_l4_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Sara: 30 sheets",
-                  "Brother: 5 sheets",
-                  "'Times as many' means divide: 30 ÷ 5 = ?"
-                ],
-                "caption": "Multiplicative comparison requires division"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Sara has 30 sheets, her brother has 5. Adam says 'Sara has 25 times as many.' What was Adam's error?",
@@ -1187,8 +1025,7 @@ const CURRICULUM_DATA = [
                   "+ 4 1 6",
                   "-------",
                   "  [ ? ]"
-                ],
-                "caption": "Add column by column (اجمع الآحاد ثم العشرات ثم المئات)"
+                ]
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -1217,8 +1054,7 @@ const CURRICULUM_DATA = [
                   "+ 5 4 5",
                   "-------",
                   "  [ ? ]"
-                ],
-                "caption": "4+5=9, 9+4=13 (carry 1 to hundreds)"
+                ]
               },
               "format": "complete",
               "type": "calc",
@@ -1246,8 +1082,7 @@ const CURRICULUM_DATA = [
                   "+ 2,8 5 4",
                   "---------",
                   "  [  ?  ]"
-                ],
-                "caption": "Align digits and carry over across places"
+                ]
               },
               "format": "choose",
               "type": "word_problem",
@@ -1287,8 +1122,7 @@ const CURRICULUM_DATA = [
                   "- 5 3 1",
                   "-------",
                   "  [ ? ]"
-                ],
-                "caption": "Subtract ones, tens, hundreds (اطرح خانة بخانة)"
+                ]
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -1316,8 +1150,7 @@ const CURRICULUM_DATA = [
                   "- 1 2 5",
                   "-------",
                   "  [ ? ]"
-                ],
-                "caption": "Borrow 1 ten into 10 ones: 14 - 5 = ?"
+                ]
               },
               "format": "complete",
               "type": "calc",
@@ -1345,8 +1178,7 @@ const CURRICULUM_DATA = [
                   "- 7 8 4",
                   "-------",
                   "  [ ? ]"
-                ],
-                "caption": "Borrow 1 hundred into 10 tens: 13 - 8 = ?"
+                ]
               },
               "format": "choose",
               "type": "word_problem",
@@ -1386,8 +1218,7 @@ const CURRICULUM_DATA = [
                   "- 1 8 5",
                   "-------",
                   "  [ ? ]"
-                ],
-                "caption": "Borrow across zero: tens become 9"
+                ]
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -1415,8 +1246,7 @@ const CURRICULUM_DATA = [
                   "-   2 1 7",
                   "---------",
                   "  [  ?  ]"
-                ],
-                "caption": "1,000 becomes 9 hundreds, 9 tens, 10 ones"
+                ]
               },
               "format": "complete",
               "type": "calc",
@@ -1444,8 +1274,7 @@ const CURRICULUM_DATA = [
                   "-   3 9 4",
                   "---------",
                   "  [  ?  ]"
-                ],
-                "caption": "Subtract with borrowing across zero"
+                ]
               },
               "format": "choose",
               "type": "word_problem",
@@ -1478,15 +1307,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch4_l4_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Shoes price: 246 EGP",
-                  "Bag price: 485 EGP",
-                  "Total = 246 + 485 = ?"
-                ],
-                "caption": "Find the total price (احسب إجمالي السعر)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "You buy shoes for 246 EGP and a bag for 485 EGP. What is the total cost?",
@@ -1506,15 +1326,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch4_l4_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Soccer ball: 825 EGP",
-                  "Stationery set: 415 EGP",
-                  "Difference = 825 - 415 = ?"
-                ],
-                "caption": "Find price difference (احسب فرق السعر)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "A stationery set costs 415 EGP and a soccer ball costs 825 EGP. How much more expensive is the soccer ball?",
@@ -1534,15 +1345,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch4_l4_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Paid amount: 200 EGP",
-                  "Meal price: 124 EGP",
-                  "Change = 200 - 124 = ?"
-                ],
-                "caption": "Calculate change to receive (احسب الباقي)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "You bought a meal for 124 EGP and paid with a 200 EGP note. How much change do you receive?",
@@ -1591,8 +1393,7 @@ const CURRICULUM_DATA = [
                   "1 km = 1,000 m",
                   "2 km = ?",
                   "3 km = 3,000 m"
-                ],
-                "caption": "1 kilometer = 1,000 meters (1 كم = 1,000 م)"
+                ]
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -1621,8 +1422,7 @@ const CURRICULUM_DATA = [
                   "1,000 m + 370 m",
                   "=",
                   "?"
-                ],
-                "caption": "Convert km to 1,000 m then add (حول الكيلومتر إلى 1,000 م ثم اجمع)"
+                ]
               },
               "format": "complete",
               "type": "calc",
@@ -1643,17 +1443,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch5_l1_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "1,080 m",
-                  "➔",
-                  "1,000 m + 80 m",
-                  "➔",
-                  "? km and ? m"
-                ],
-                "caption": "Separate thousands (km) from remaining meters (افصل الآلاف)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Write 1,080 m in kilometers and meters:",
@@ -1695,8 +1484,7 @@ const CURRICULUM_DATA = [
                   "m",
                   "<",
                   "km"
-                ],
-                "caption": "Order of length units: Smallest to Largest (من الأصغر للأكبر)"
+                ]
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -1717,15 +1505,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch5_l2_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Route: 1,400 m",
-                  "Distance: 900 m",
-                  "Difference: ?"
-                ],
-                "caption": "Compare walking route vs straight-line distance (الفرق بين طول الطريق والمسافة)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "Route is 1 km 400 m and straight-line distance is 900 m. What is the difference in meters?",
@@ -1745,15 +1524,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch5_l2_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Pencil: cm",
-                  "Classroom: m",
-                  "1-Hour Trip: ?"
-                ],
-                "caption": "Choose the best unit for long distances (اختر الوحدة الأنسب للمسافات الكبيرة)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Which unit is best to measure the route walked on a one-hour field trip?",
@@ -1806,8 +1576,7 @@ const CURRICULUM_DATA = [
                   "||| (3)",
                   "=",
                   "?"
-                ],
-                "caption": "Count tally bundles and single marks (عد الحزم والعلامات)"
+                ]
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -1828,15 +1597,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch6_l1_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "🍌 Bananas: 10",
-                  "🍊 Oranges: 6",
-                  "Difference: ?"
-                ],
-                "caption": "Compare the two fruit frequencies (قارن بين تكرار الموز والبرتقال)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "Bananas had 卌 卌 (10) and Oranges had 卌 | (6). How many MORE chose Bananas?",
@@ -1856,16 +1616,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch6_l1_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Total: 28 items",
-                  "Bundles of 5 (卌)",
-                  "28 ÷ 5 = ?",
-                  "Remainder = ?"
-                ],
-                "caption": "Group 28 items into sets of 5 (كم حزمة خماسية في العدد 28؟)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "A survey counted 14 cars, 6 buses, and 8 bicycles (Total = 28). How many full bundles of 5 can you make?",
@@ -1916,8 +1666,7 @@ const CURRICULUM_DATA = [
                     "val": 6
                   }
                 ],
-                "showValues": false,
-                "caption": "Read the height of the Blue bar on the scale (اقرأ ارتفاع عمود اللون الأزرق على المحور)"
+                "showValues": false
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -1953,8 +1702,7 @@ const CURRICULUM_DATA = [
                     "val": 25
                   }
                 ],
-                "showValues": true,
-                "caption": "Compare Grade 3 (25) and Grade 1 (15) (قارن بين الصف الثالث والأول)"
+                "showValues": true
               },
               "format": "complete",
               "type": "calc",
@@ -1986,8 +1734,7 @@ const CURRICULUM_DATA = [
                     "val": 7
                   }
                 ],
-                "showValues": false,
-                "caption": "The bar ends halfway between 6 and 8 (ينتهي العمود في المنتصف تماماً بين 6 و 8)"
+                "showValues": false
               },
               "format": "choose",
               "type": "word_problem",
@@ -2020,15 +1767,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch6_l3_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Scale base: ?",
-                  "Steps: 2, 4, 6, 8...",
-                  "Top: Max Data"
-                ],
-                "caption": "Where does the vertical axis always begin? (من أين يبدأ المحور الرأسي دائماً؟)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "What number MUST the vertical scale of a bar graph start with at the bottom?",
@@ -2059,8 +1797,7 @@ const CURRICULUM_DATA = [
                     "val": 10
                   }
                 ],
-                "showValues": false,
-                "caption": "10-line grid for maximum value 10 (شبكة من 10 خطوط لأعلى قيمة 10)"
+                "showValues": false
               },
               "format": "complete",
               "type": "calc",
@@ -2081,17 +1818,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch6_l3_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "0 to 2 (+2)",
-                  "2 to 5 (+3)",
-                  "5 to 8 (+3)",
-                  "8 to 10 (+2)",
-                  "Equal steps?"
-                ],
-                "caption": "Check if interval steps are constant (تحقق هل الزيادة متساوية وثابتة؟)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Smarty wrote the scale: 0, 2, 5, 8, 10. Why is this incorrect?",
@@ -2123,17 +1849,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch6_l4_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Class 1: 12",
-                  "+",
-                  "Class 2: 15",
-                  "=",
-                  "Total: ?"
-                ],
-                "caption": "Add across the row for total football players (اجمع طلاب الفصلين)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "In a table: Class 1 has 12 football players and Class 2 has 15. What is the total?",
@@ -2153,19 +1868,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch6_l4_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Grade 1: 18",
-                  "+",
-                  "Grade 2: 22",
-                  "+",
-                  "Grade 3: 20",
-                  "=",
-                  "Total: ?"
-                ],
-                "caption": "Sum all three grade columns (اجمع الصفوف الثلاثة)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "Injured students: Grade 1 = 18, Grade 2 = 22, Grade 3 = 20. What is the grand total?",
@@ -2185,17 +1887,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch6_l4_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Total: 50",
-                  "-",
-                  "Class 1: 28",
-                  "=",
-                  "Class 2: ?"
-                ],
-                "caption": "Find the missing category count (أوجد العدد المجهول للفصل الثاني)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Total of Class 1 and Class 2 is 50 students. If Class 1 has 28 students, how many are in Class 2?",
@@ -2238,16 +1929,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch7_l1_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "13 + 20",
-                  "Tens: 10 + 20 = 30",
-                  "Ones: 3 + 0 = 3",
-                  "Total: ?"
-                ],
-                "caption": "Add tens mentally first, then add ones (اجمع العشرات ذهنياً أولاً ثم الآحاد)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "Calculate using mental math: 13 + 20 = ___",
@@ -2267,15 +1948,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch7_l1_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "34 + 32",
-                  "Step 1: 34 + 30 = 64",
-                  "Step 2: 64 + 2 = ?"
-                ],
-                "caption": "Decompose 32 into 30 + 2 (فكك 32 إلى 30 + 2)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "Calculate mentally: 34 + 32 = ___",
@@ -2295,15 +1967,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch7_l1_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "87 + 8",
-                  "Step 1: 87 + 3 = 90",
-                  "Step 2: 90 + 5 = ?"
-                ],
-                "caption": "Make a ten first (كون عشرة كاملة أولاً: 87 + 3 = 90)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Calculate mentally using 'make a ten': 87 + 8 = ___",
@@ -2335,16 +1998,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch7_l2_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "83 - 20",
-                  "Tens: 80 - 20 = 60",
-                  "Ones: 3 - 0 = 3",
-                  "Total: ?"
-                ],
-                "caption": "Subtract tens mentally (اطرح العشرات ذهنياً)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "Calculate using mental math: 83 - 20 = ___",
@@ -2364,15 +2017,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch7_l2_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "62 - 39",
-                  "Step 1: 62 - 30 = 32",
-                  "Step 2: 32 - 9 = ?"
-                ],
-                "caption": "Subtract 30 first, then subtract 9 (اطرح 30 ثم اطرح 9)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "Calculate mentally: 62 - 39 = ___",
@@ -2392,15 +2036,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch7_l2_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "100 - 42",
-                  "Step 1: 100 - 40 = 60",
-                  "Step 2: 60 - 2 = ?"
-                ],
-                "caption": "Subtract 40 first, then subtract 2 (اطرح 40 ثم اطرح 2)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Calculate mentally: 100 - 42 = ___",
@@ -2443,16 +2078,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch8_l1_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Total: 17 items",
-                  "3 equal groups",
-                  "3 × ? ≤ 17",
-                  "Remainder: ?"
-                ],
-                "caption": "Find largest multiple of 3 ≤ 17 (أوجد أكبر مضاعف للعدد 3 أقل من أو يساوي 17)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "What is 17 ÷ 3?",
@@ -2472,16 +2097,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch8_l1_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "29 ÷ 4",
-                  "4 × 7 = 28",
-                  "29 - 28 = ?",
-                  "Quotient: 7, R: ?"
-                ],
-                "caption": "Find quotient and remainder (أوجد خارج القسمة والباقي)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "Calculate: 29 ÷ 4 = ___",
@@ -2507,8 +2122,7 @@ const CURRICULUM_DATA = [
                   "50 ÷ 6",
                   "6 × 8 = 48",
                   "50 - 48 = ?"
-                ],
-                "caption": "Subtract closest multiple from 50 (اطرح أقرب مضاعف من 50)"
+                ]
               },
               "format": "choose",
               "type": "word_problem",
@@ -2541,17 +2155,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch8_l2_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Divisor × Quotient",
-                  "+",
-                  "Remainder",
-                  "=",
-                  "Dividend"
-                ],
-                "caption": "Division verification formula (علاقة التحقق من صحة القسمة)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "To check if 15 ÷ 4 = 3 remainder 3 is correct, which formula do you use?",
@@ -2571,16 +2174,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch8_l2_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Divisor = 4",
-                  "Remainder = 6",
-                  "Is 6 < 4?",
-                  "Rule: Remainder < Divisor"
-                ],
-                "caption": "Check if remainder is smaller than divisor (هل الباقي أصغر من المقسوم عليه؟)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "A student wrote: 14 ÷ 4 = 2 remainder 6. Why is this incorrect?",
@@ -2608,8 +2201,7 @@ const CURRICULUM_DATA = [
                   "(7 × 5) + 4",
                   "=",
                   "?"
-                ],
-                "caption": "Find mystery dividend: (Divisor × Quotient) + Remainder (أوجد العدد المجهول)"
+                ]
               },
               "format": "choose",
               "type": "word_problem",
@@ -2642,16 +2234,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch8_l3_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "37 candies",
-                  "÷ 5 people",
-                  "5 × 7 = 35",
-                  "Left over: ?"
-                ],
-                "caption": "Distribute candies and find remainder (وزع الحلوى وحدد الباقي)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "Share 37 candies equally among 5 people. What is each person's share and what is left over?",
@@ -2671,16 +2253,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch8_l3_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "25 sheets",
-                  "÷ 7 people",
-                  "7 × 3 = 21",
-                  "Left over: ?"
-                ],
-                "caption": "Distribute drawing sheets (وزع أوراق الرسم وحدد الباقي)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "25 sheets of paper are shared among 7 people. How many sheets does each get and how many are left over?",
@@ -2700,16 +2272,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch8_l3_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "56 sheets ÷ 6",
-                  "6 × 9 = 54",
-                  "Remainder: 56 - 54 = ?",
-                  "Sentence: 56 ÷ 6 = ? R ?"
-                ],
-                "caption": "Write complete division sentence with remainder (اكتب جملة القسمة بالباقي)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "56 sheets of colored paper are shared equally among 6 children. What is the mathematical sentence?",
@@ -2741,16 +2303,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch8_l4_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "43 children ÷ 5",
-                  "8 benches seat 40",
-                  "3 children left over",
-                  "Extra bench needed?"
-                ],
-                "caption": "Do all children need a seat? (هل يحتاج التلاميذ المتبقون مقعداً إضافياً؟)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "There are 43 children. One bench seats 5 children. How many benches are needed for ALL children?",
@@ -2770,16 +2322,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch8_l4_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "29 books ÷ 8",
-                  "3 trips carry 24",
-                  "5 books remain",
-                  "Total trips needed: ?"
-                ],
-                "caption": "Must carry ALL books (يلزم نقل جميع الكتب دون ترك أي كتاب)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "You have 29 books. If you carry 8 books per trip, how many trips will it take to carry ALL books?",
@@ -2799,16 +2341,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch8_l4_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "38 roses ÷ 6",
-                  "6 × 6 = 36",
-                  "2 roses leftover",
-                  "Full bouquets only = ?"
-                ],
-                "caption": "Count only full complete bouquets (المطلوب باقات كاملة فقط)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "A florist has 38 roses and puts 6 roses in each bouquet. How many COMPLETE bouquets can she make?",
@@ -2857,8 +2389,7 @@ const CURRICULUM_DATA = [
                   "? × 10,000",
                   "=",
                   "100,000"
-                ],
-                "caption": "Bundling ten-thousands into hundred-thousand (كم عشرة آلاف في مائة ألف؟)"
+                ]
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -2879,15 +2410,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch9_l1_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Thousands Period: 309",
-                  "Units Period: 820",
-                  "Standard Form: ?"
-                ],
-                "caption": "Combine thousands and units periods (اكتب بالصيغة الرمزية القياسية)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "Write in standard form: 'Three hundred nine thousand, eight hundred twenty':",
@@ -2910,8 +2432,7 @@ const CURRICULUM_DATA = [
               "visual": {
                 "type": "place_value",
                 "num": 426703,
-                "target": 2,
-                "caption": "Look at digit 2 in place value table (حدد خانة وقيمة الرقم 2)"
+                "target": 2
               },
               "format": "choose",
               "type": "word_problem",
@@ -2944,17 +2465,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch9_l2_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "10,000",
-                  "20,000",
-                  "30,000",
-                  "40,000",
-                  "Point A: ?"
-                ],
-                "caption": "Follow the constant step size of 10,000 (تتبع نمط الزيادة بمقدار 10,000)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "On a number line stepping by 10,000, what number follows 40,000?",
@@ -2982,8 +2492,7 @@ const CURRICULUM_DATA = [
                   "30,000",
                   "=",
                   "?"
-                ],
-                "caption": "Add 4 ten-thousands + 3 ten-thousands (اجمع عشرات الألوف)"
+                ]
               },
               "format": "complete",
               "type": "calc",
@@ -3012,8 +2521,7 @@ const CURRICULUM_DATA = [
                   "30,000",
                   "=",
                   "?"
-                ],
-                "caption": "Subtract 3 ten-thousands from 10 ten-thousands (اطرح من مائة ألف)"
+                ]
               },
               "format": "choose",
               "type": "word_problem",
@@ -3050,8 +2558,7 @@ const CURRICULUM_DATA = [
                 "type": "place_value_compare",
                 "num1": 542000,
                 "num2": 538000,
-                "highlightPlace": "Ten Thousands",
-                "caption": "Compare Ten Thousands place: 4 vs 3 (قارن خانة عشرات الألوف)"
+                "highlightPlace": "Ten Thousands"
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -3076,8 +2583,7 @@ const CURRICULUM_DATA = [
                 "type": "place_value_compare",
                 "num1": 98500,
                 "num2": 102000,
-                "highlightPlace": "Number of digits",
-                "caption": "Count number of digits: 5 digits vs 6 digits (عد أرقام كل عدد)"
+                "highlightPlace": "Number of digits"
               },
               "format": "complete",
               "type": "calc",
@@ -3098,15 +2604,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch9_l3_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Left: 60,000 + 4,000",
-                  "VS",
-                  "Right: 64,000"
-                ],
-                "caption": "Calculate left side before comparing (احسب الطرف الأيسر أولاً ثم قارن)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Compare: 60,000 + 4,000 ___ 64,000",
@@ -3138,17 +2635,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch9_l4_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "350 × 10",
-                  "➔",
-                  "Shift left, add 1 zero",
-                  "➔",
-                  "?"
-                ],
-                "caption": "Multiplying by 10 appends one zero (الضرب في 10 يضيف صفراً على اليمين)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "What is 350 × 10?",
@@ -3168,17 +2654,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch9_l4_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "40,000 ÷ 10",
-                  "➔",
-                  "Drop one zero",
-                  "➔",
-                  "?"
-                ],
-                "caption": "Dividing by 10 removes one zero (القسمة على 10 تحذف صفراً من اليمين)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "What is 40,000 ÷ 10?",
@@ -3198,17 +2673,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch9_l4_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "52 × 100",
-                  "➔",
-                  "Append two zeros",
-                  "➔",
-                  "?"
-                ],
-                "caption": "Multiplying by 100 appends two zeros (الضرب في 100 يضيف صفرين)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "What is 52 × 100?",
@@ -3251,15 +2715,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch10_l1_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Base Fact: 2 × 4 = 8",
-                  "➔",
-                  "20 × 4 = ?"
-                ],
-                "caption": "Multiply base digits then append one zero (اضرب الأرقام ثم ضع الصفر)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "Calculate: 20 × 4 = ___",
@@ -3279,15 +2734,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch10_l1_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Base Fact: 3 × 5 = 15",
-                  "➔",
-                  "300 × 5 = ?"
-                ],
-                "caption": "Multiply base digits then append two zeros (اضرب الأرقام ثم ضع الصفرين)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "Calculate: 300 × 5 = ___",
@@ -3307,15 +2753,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch10_l1_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Base Fact: 6 × 7 = 42",
-                  "➔",
-                  "60 × 7 = ?"
-                ],
-                "caption": "Use 6 × 7 to solve 60 × 7 (استخدم حقيقة 6 × 7 لحل المسألة)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Calculate: 60 × 7 = ___",
@@ -3347,18 +2784,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch10_l2_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "[ 2 6 ]",
-                  "×   [ 3 ]",
-                  "-------",
-                  "Ones: 3 × 6 = 18",
-                  "Tens: 3 × 20 = 60",
-                  "Total: ?"
-                ],
-                "caption": "Multiply ones and tens then combine (اضرب الآحاد ثم العشرات واجمع)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "Calculate using vertical method: 26 × 3 = ___",
@@ -3378,18 +2803,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch10_l2_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "[ 4 8 ]",
-                  "×   [ 4 ]",
-                  "-------",
-                  "Ones: 4 × 8 = 32",
-                  "Tens: 4 × 40 = 160",
-                  "Total: ?"
-                ],
-                "caption": "Vertical multiplication algorithm (خطوات خوارزمية الضرب الرأسي)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "Calculate: 48 × 4 = ___",
@@ -3409,18 +2822,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch10_l2_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "[ 7 6 ]",
-                  "×   [ 8 ]",
-                  "-------",
-                  "Ones: 8 × 6 = 48",
-                  "Tens: 8 × 70 = 560",
-                  "Total: ?"
-                ],
-                "caption": "Carefully align and add regrouped values (حاذِ الخانات واجمع بدقة)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Calculate: 76 × 8 = ___",
@@ -3452,19 +2853,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch10_l3_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "[ 2 1 3 ]",
-                  "×     [ 3 ]",
-                  "---------",
-                  "3 × 3 = 9",
-                  "3 × 10 = 30",
-                  "3 × 200 = 600",
-                  "Total: ?"
-                ],
-                "caption": "Multiply each place value by 3 (اضرب كل خانة في 3 ثم اجمع)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "Calculate: 213 × 3 = ___",
@@ -3484,19 +2872,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch10_l3_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "[ 2 7 6 ]",
-                  "×     [ 6 ]",
-                  "---------",
-                  "Ones: 6 × 6 = 36",
-                  "Tens: 6 × 7 = 42",
-                  "Hundreds: 6 × 2 = 12",
-                  "Result: ?"
-                ],
-                "caption": "Step-by-step regrouping (خطوات الضرب الرأسي مع إعادة التسمية)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "Calculate: 276 × 6 = ___",
@@ -3516,19 +2891,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch10_l3_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "[ 4 0 5 ]",
-                  "×     [ 6 ]",
-                  "---------",
-                  "6 × 5 = 30",
-                  "6 × 0 tens = 0",
-                  "6 × 4 hundreds = 24",
-                  "Result: ?"
-                ],
-                "caption": "Multiplying across zero in tens place (الانتباه للصفر في خانة العشرات)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "Calculate: 405 × 6 = ___",
@@ -3568,8 +2930,7 @@ const CURRICULUM_DATA = [
                   "80 × 3",
                   "=",
                   "?"
-                ],
-                "caption": "Multiply friendly first pair (اضرب الزوج الأول السهل)"
+                ]
               },
               "format": "choose",
               "type": "tier1_concept",
@@ -3598,8 +2959,7 @@ const CURRICULUM_DATA = [
                   "(25 × 4) × 7",
                   "➔",
                   "100 × 7 = ?"
-                ],
-                "caption": "Pair friendly numbers: 25 × 4 = 100 (اجمع الأعداد الصديقة: 25 × 4 = 100)"
+                ]
               },
               "format": "complete",
               "type": "calc",
@@ -3628,8 +2988,7 @@ const CURRICULUM_DATA = [
                   "(5 × 2) × 19",
                   "➔",
                   "10 × 19 = ?"
-                ],
-                "caption": "Pair friendly numbers: 5 × 2 = 10 (اجمع الأعداد الصديقة: 5 × 2 = 10)"
+                ]
               },
               "format": "choose",
               "type": "word_problem",
@@ -3662,17 +3021,6 @@ const CURRICULUM_DATA = [
           "t1": [
             {
               "id": "ch10_l5_q1",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "5 buses",
-                  "×",
-                  "43 people per bus",
-                  "=",
-                  "Total: ? people"
-                ],
-                "caption": "Write multiplication sentence with unit (اكتب جملة الضرب وحدد التمييز)"
-              },
               "format": "choose",
               "type": "tier1_concept",
               "question": "There are 5 buses. If 43 people ride in each bus, how many people ride in total?",
@@ -3692,17 +3040,6 @@ const CURRICULUM_DATA = [
           "t2": [
             {
               "id": "ch10_l5_q2",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "6 bundles",
-                  "×",
-                  "37 flowers each",
-                  "=",
-                  "Total: ? flowers"
-                ],
-                "caption": "Find total flowers across all bundles (أوجد إجمالي عدد الأزهار)"
-              },
               "format": "complete",
               "type": "calc",
               "question": "You make 6 bundles of flowers with 37 flowers in each. How many flowers in total?",
@@ -3722,15 +3059,6 @@ const CURRICULUM_DATA = [
           "t3": [
             {
               "id": "ch10_l5_q3",
-              "visual": {
-                "type": "pattern",
-                "items": [
-                  "Cakes: 3 × 2 = 6 cakes",
-                  "Cost: 6 × 138 EGP",
-                  "Total: ? EGP"
-                ],
-                "caption": "Step 1: Total cakes -> Step 2: Total cost (خطوة 1: عدد الكعكات، خطوة 2: التكلفة)"
-              },
               "format": "choose",
               "type": "word_problem",
               "question": "A cake costs 138 EGP. There are 3 cakes in one box. If you buy 2 boxes, how much do you pay?",

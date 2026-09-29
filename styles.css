@@ -2003,14 +2003,7 @@ body {
 }
 
 .q-visual-caption {
-  font-size: 13px;
-  font-weight: 700;
-  color: #475569;
-  margin-top: 10px;
-  background: white;
-  padding: 4px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
+  display: none !important;
 }
 
 /* Visual Array */
