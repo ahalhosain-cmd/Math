@@ -7,12 +7,11 @@ const GeminiTutor = {
     try { return atob(this._encKey); } catch (e) { return this._encKey; }
   },
   candidateModels: [
-    'gemini-3.6-flash',
-    'gemini-3.1-flash-lite',
-    'gemini-3.5-flash-lite',
-    'gemini-3.7-flash',
     'gemini-flash-lite-latest',
-    'gemini-3.8-flash'
+    'gemini-3.5-flash-lite',
+    'gemini-3.1-flash-lite',
+    'gemini-3.5-flash',
+    'gemini-3.6-flash'
   ],
 
   getActiveKey() {
@@ -70,7 +69,7 @@ const GeminiTutor = {
 
       try {
         controller = new AbortController();
-        timeoutId = setTimeout(() => controller.abort(), 12000);
+        timeoutId = setTimeout(() => controller.abort(), 7500);
 
         const response = await fetch(url, {
           method: 'POST',
