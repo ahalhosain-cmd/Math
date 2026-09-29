@@ -77,7 +77,10 @@ class ConfettiCannon {
 // --- App State & Mastery Store ---
 class MasteryApp {
   constructor() {
-    this.storageKey = 'primary3_math_mastery_v1';
+    this.profilesStorageKey = 'primary3_math_profiles_v2';
+    this.storageKey = 'primary3_math_mastery_v1'; // legacy fallback
+    this.selectedWelcomeAvatar = '🚀';
+    this.selectedManageAvatar = '🚀';
     this.state = this.loadState();
     this.currentChapter = null;
     this.currentLesson = null;
@@ -98,28 +101,139 @@ class MasteryApp {
     this.init();
   }
 
-  loadState() {
-    const saved = localStorage.getItem(this.storageKey);
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error("Corrupt state:", e);
-      }
-    }
+  // --- Multi-Profile State Engine ---
+  createEmptyProfileState(name = "Champion", avatar = "🚀") {
     return {
-      childName: "Champion",
+      id: 'prof_' + Date.now(),
+      name: name,
+      childName: name,
+      avatar: avatar,
       stars: 0,
       streak: 0,
       answers: {}, // { [qId]: { correct: bool, attempts: int, wrongCount: int } }
       completedLessons: {}, // { [lessonId]: bool }
       completedChapters: {}, // { [chapterId]: bool }
+      lastLesson: null,
+      examHistory: [],
+      createdAt: new Date().toISOString(),
       lastActive: new Date().toISOString()
     };
   }
 
+  ensureStateSchema(p) {
+    const name = p.name || p.childName || 'Champion';
+    return {
+      id: p.id || ('prof_' + Date.now()),
+      name: name,
+      childName: name,
+      avatar: p.avatar || '🚀',
+      stars: typeof p.stars === 'number' ? p.stars : 0,
+      streak: typeof p.streak === 'number' ? p.streak : 0,
+      answers: p.answers || {},
+      completedLessons: p.completedLessons || {},
+      completedChapters: p.completedChapters || {},
+      lastLesson: p.lastLesson || null,
+      examHistory: Array.isArray(p.examHistory) ? p.examHistory : [],
+      createdAt: p.createdAt || new Date().toISOString(),
+      lastActive: new Date().toISOString()
+    };
+  }
+
+  getProfilesData() {
+    const raw = localStorage.getItem(this.profilesStorageKey);
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed && Array.isArray(parsed.profiles) && parsed.profiles.length > 0) {
+          return parsed;
+        }
+      } catch (e) {
+        console.warn("[Profiles] Corrupt data:", e);
+      }
+    }
+
+    // Check legacy single-profile storage
+    const legacyRaw = localStorage.getItem(this.storageKey);
+    if (legacyRaw) {
+      try {
+        const legacy = JSON.parse(legacyRaw);
+        if (legacy && (legacy.childName !== 'Champion' || legacy.stars > 0 || Object.keys(legacy.answers || {}).length > 0)) {
+          const name = legacy.childName || 'Champion';
+          const legacyProfile = {
+            id: 'prof_' + Date.now(),
+            name: name,
+            childName: name,
+            avatar: legacy.avatar || '🚀',
+            stars: legacy.stars || 0,
+            streak: legacy.streak || 0,
+            answers: legacy.answers || {},
+            completedLessons: legacy.completedLessons || {},
+            completedChapters: legacy.completedChapters || {},
+            lastLesson: legacy.lastLesson || null,
+            examHistory: legacy.examHistory || [],
+            createdAt: legacy.lastActive || new Date().toISOString(),
+            lastActive: new Date().toISOString()
+          };
+          const initialData = {
+            profiles: [legacyProfile],
+            activeProfileId: legacyProfile.id
+          };
+          localStorage.setItem(this.profilesStorageKey, JSON.stringify(initialData));
+          return initialData;
+        }
+      } catch (e) {
+        console.warn("[Profiles] Legacy parsing error:", e);
+      }
+    }
+
+    return {
+      profiles: [],
+      activeProfileId: null
+    };
+  }
+
+  saveProfilesData(data) {
+    try {
+      localStorage.setItem(this.profilesStorageKey, JSON.stringify(data));
+    } catch (e) {
+      console.error("[Profiles] Save error:", e);
+    }
+  }
+
+  loadState() {
+    const data = this.getProfilesData();
+    if (data.profiles.length > 0) {
+      let active = data.profiles.find(p => p.id === data.activeProfileId);
+      if (!active) {
+        active = data.profiles[0];
+        data.activeProfileId = active.id;
+        this.saveProfilesData(data);
+      }
+      return this.ensureStateSchema(active);
+    }
+    return this.createEmptyProfileState("Champion", "🚀");
+  }
+
   saveState() {
-    localStorage.setItem(this.storageKey, JSON.stringify(this.state));
+    this.state.name = this.state.name || this.state.childName || 'Champion';
+    this.state.childName = this.state.name;
+    this.state.lastActive = new Date().toISOString();
+
+    const data = this.getProfilesData();
+    const idx = data.profiles.findIndex(p => p.id === this.state.id);
+    if (idx >= 0) {
+      data.profiles[idx] = { ...this.state };
+    } else if (this.state.id && this.state.name !== 'Champion') {
+      data.profiles.push({ ...this.state });
+    }
+    data.activeProfileId = this.state.id;
+    this.saveProfilesData(data);
+
+    // Keep legacy storage key synced for backward compatibility
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(this.state));
+    } catch (e) {}
+
     this.updateHeaderStats();
   }
 
@@ -134,6 +248,385 @@ class MasteryApp {
     this.renderRoadmap();
     this.renderParentDashboard();
     this.initVoiceRecognition();
+
+    // Check if first-time user: show Welcome Modal if no profiles exist
+    const data = this.getProfilesData();
+    if (data.profiles.length === 0) {
+      setTimeout(() => this.showWelcomeModal(), 400);
+    }
+  }
+
+  // --- Welcome Modal for First-Time Child ---
+  showWelcomeModal() {
+    const modal = document.getElementById('welcome-profile-modal');
+    if (!modal) return;
+    this.selectedWelcomeAvatar = '🚀';
+
+    const picker = document.getElementById('welcome-avatar-picker');
+    if (picker) {
+      picker.querySelectorAll('.avatar-opt').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-avatar') === '🚀');
+      });
+    }
+
+    const input = document.getElementById('welcome-input-name');
+    if (input) {
+      input.value = '';
+      setTimeout(() => input.focus(), 250);
+    }
+
+    modal.style.display = 'flex';
+  }
+
+  selectWelcomeAvatar(btn, avatar) {
+    this.selectedWelcomeAvatar = avatar;
+    const picker = document.getElementById('welcome-avatar-picker');
+    if (picker) {
+      picker.querySelectorAll('.avatar-opt').forEach(b => b.classList.remove('active'));
+    }
+    if (btn) btn.classList.add('active');
+    if (window.soundManager) window.soundManager.click();
+  }
+
+  submitWelcomeProfile() {
+    const input = document.getElementById('welcome-input-name');
+    const name = input ? input.value.trim() : '';
+    if (!name) {
+      if (input) {
+        input.focus();
+        input.style.borderColor = '#EF4444';
+      }
+      return;
+    }
+
+    const newProfile = {
+      id: 'prof_' + Date.now(),
+      name: name,
+      childName: name,
+      avatar: this.selectedWelcomeAvatar || '🚀',
+      stars: 0,
+      streak: 0,
+      answers: {},
+      completedLessons: {},
+      completedChapters: {},
+      lastLesson: null,
+      examHistory: [],
+      createdAt: new Date().toISOString(),
+      lastActive: new Date().toISOString()
+    };
+
+    const data = this.getProfilesData();
+    data.profiles.push(newProfile);
+    data.activeProfileId = newProfile.id;
+    this.saveProfilesData(data);
+
+    this.state = this.ensureStateSchema(newProfile);
+    this.saveState();
+
+    const modal = document.getElementById('welcome-profile-modal');
+    if (modal) modal.style.display = 'none';
+
+    this.updateHeaderStats();
+    this.renderRoadmap();
+    this.renderParentDashboard();
+
+    if (window.soundManager) window.soundManager.levelUp();
+    if (this.confetti) this.confetti.fire(3500);
+  }
+
+  // --- Profiles Manager & Switcher Modal ---
+  openProfilesModal() {
+    const modal = document.getElementById('profiles-manager-modal');
+    if (!modal) return;
+    this.toggleAddProfileForm(false);
+    this.renderProfilesList();
+    modal.style.display = 'flex';
+    if (window.soundManager) window.soundManager.click();
+  }
+
+  closeProfilesModal() {
+    const modal = document.getElementById('profiles-manager-modal');
+    if (modal) modal.style.display = 'none';
+    this.toggleAddProfileForm(false);
+  }
+
+  renderProfilesList() {
+    const container = document.getElementById('profiles-list-container');
+    if (!container) return;
+
+    const data = this.getProfilesData();
+    if (data.profiles.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 24px; color: #64748B;">
+          <p>لا يوجد أبطال مسجلون حالياً. أضف بطلك الأول لبدء المغامرة وحفظ الإنجازات! 🚀</p>
+        </div>
+      `;
+      return;
+    }
+
+    let totalCurriculumQuestions = 0;
+    CURRICULUM_DATA.forEach(ch => {
+      ch.lessons.forEach(l => {
+        totalCurriculumQuestions += (l.tiers.t1.length + l.tiers.t2.length + l.tiers.t3.length);
+      });
+    });
+
+    container.innerHTML = data.profiles.map(p => {
+      const isActive = p.id === this.state.id;
+      const completedLessonsCount = Object.keys(p.completedLessons || {}).length;
+      const correctAnswersCount = Object.values(p.answers || {}).filter(a => a && a.correct).length;
+      const masteryPct = totalCurriculumQuestions > 0 ? Math.round((correctAnswersCount / totalCurriculumQuestions) * 100) : 0;
+
+      return `
+        <div class="profile-item-card ${isActive ? 'is-active-child' : ''}">
+          <div class="profile-card-left">
+            <div class="profile-card-avatar">${p.avatar || '🚀'}</div>
+            <div class="profile-card-info">
+              <h4>
+                <span>${this.escapeHtml(p.name || p.childName || 'Champion')}</span>
+                ${isActive ? '<span class="badge-active-tag">🌟 البطل الحالي</span>' : ''}
+              </h4>
+              <div class="profile-card-stats">
+                <span>⭐ ${p.stars || 0} نجمة</span>
+                <span>•</span>
+                <span>🎯 ${masteryPct}% إتقان</span>
+                <span>•</span>
+                <span>📚 ${completedLessonsCount} دروس مكتملة</span>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card-actions">
+            ${!isActive ? `
+              <button type="button" class="btn-select-profile" onclick="app.switchProfile('${p.id}')">
+                ▶ اختيار
+              </button>
+            ` : ''}
+            <button type="button" class="btn-edit-profile-icon" onclick="app.toggleAddProfileForm(true, '${p.id}')" title="تعديل الاسم أو الشخصية">
+              ✏️
+            </button>
+            ${data.profiles.length > 1 ? `
+              <button type="button" class="btn-delete-profile-icon" onclick="app.deleteProfile('${p.id}')" title="حذف هذا الملف">
+                🗑️
+              </button>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  switchProfile(profileId) {
+    const data = this.getProfilesData();
+    const target = data.profiles.find(p => p.id === profileId);
+    if (!target) return;
+
+    data.activeProfileId = target.id;
+    this.saveProfilesData(data);
+    this.state = this.ensureStateSchema(target);
+
+    this.closeProfilesModal();
+    this.updateHeaderStats();
+    this.renderRoadmap();
+    this.renderParentDashboard();
+
+    if (window.soundManager) window.soundManager.click();
+    if (this.confetti) this.confetti.fire(1500);
+  }
+
+  toggleAddProfileForm(show, editingId = null) {
+    const formSection = document.getElementById('add-profile-section');
+    const openBtn = document.getElementById('btn-toggle-add-profile');
+    const formTitle = document.getElementById('profile-form-title');
+    const idInput = document.getElementById('manage-profile-editing-id');
+    const nameInput = document.getElementById('manage-profile-input-name');
+    const picker = document.getElementById('manage-avatar-picker');
+
+    if (!formSection) return;
+
+    if (show) {
+      formSection.style.display = 'block';
+      if (openBtn) openBtn.style.display = 'none';
+
+      if (editingId) {
+        const data = this.getProfilesData();
+        const existing = data.profiles.find(p => p.id === editingId);
+        if (existing) {
+          if (formTitle) formTitle.textContent = '✏️ تعديل بيانات البطل (Edit Champion)';
+          if (idInput) idInput.value = existing.id;
+          if (nameInput) {
+            nameInput.value = existing.name || existing.childName || '';
+            setTimeout(() => nameInput.focus(), 150);
+          }
+          this.selectedManageAvatar = existing.avatar || '🚀';
+        }
+      } else {
+        if (formTitle) formTitle.textContent = '➕ إضافة بطل جديد (Add New Champion)';
+        if (idInput) idInput.value = '';
+        if (nameInput) {
+          nameInput.value = '';
+          setTimeout(() => nameInput.focus(), 150);
+        }
+        this.selectedManageAvatar = '🚀';
+      }
+
+      if (picker) {
+        picker.querySelectorAll('.avatar-opt').forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-avatar') === this.selectedManageAvatar);
+        });
+      }
+    } else {
+      formSection.style.display = 'none';
+      if (openBtn) openBtn.style.display = 'inline-block';
+      if (idInput) idInput.value = '';
+      if (nameInput) nameInput.value = '';
+    }
+  }
+
+  selectManageAvatar(btn, avatar) {
+    this.selectedManageAvatar = avatar;
+    const picker = document.getElementById('manage-avatar-picker');
+    if (picker) {
+      picker.querySelectorAll('.avatar-opt').forEach(b => b.classList.remove('active'));
+    }
+    if (btn) btn.classList.add('active');
+    if (window.soundManager) window.soundManager.click();
+  }
+
+  saveManageProfile() {
+    const idInput = document.getElementById('manage-profile-editing-id');
+    const nameInput = document.getElementById('manage-profile-input-name');
+    const name = nameInput ? nameInput.value.trim() : '';
+    const editingId = idInput ? idInput.value : '';
+
+    if (!name) {
+      if (nameInput) {
+        nameInput.focus();
+        nameInput.style.borderColor = '#EF4444';
+      }
+      return;
+    }
+
+    const data = this.getProfilesData();
+    const avatar = this.selectedManageAvatar || '🚀';
+
+    if (editingId) {
+      const target = data.profiles.find(p => p.id === editingId);
+      if (target) {
+        target.name = name;
+        target.childName = name;
+        target.avatar = avatar;
+        target.lastActive = new Date().toISOString();
+        if (this.state.id === editingId) {
+          this.state.name = name;
+          this.state.childName = name;
+          this.state.avatar = avatar;
+        }
+      }
+    } else {
+      const newProf = {
+        id: 'prof_' + Date.now(),
+        name: name,
+        childName: name,
+        avatar: avatar,
+        stars: 0,
+        streak: 0,
+        answers: {},
+        completedLessons: {},
+        completedChapters: {},
+        lastLesson: null,
+        examHistory: [],
+        createdAt: new Date().toISOString(),
+        lastActive: new Date().toISOString()
+      };
+      data.profiles.push(newProf);
+      data.activeProfileId = newProf.id;
+      this.state = this.ensureStateSchema(newProf);
+    }
+
+    this.saveProfilesData(data);
+    this.saveState();
+    this.toggleAddProfileForm(false);
+    this.renderProfilesList();
+    this.updateHeaderStats();
+    this.renderRoadmap();
+    this.renderParentDashboard();
+
+    if (window.soundManager) window.soundManager.levelUp();
+    if (this.confetti) this.confetti.fire(1500);
+  }
+
+  deleteProfile(profileId) {
+    const data = this.getProfilesData();
+    const target = data.profiles.find(p => p.id === profileId);
+    if (!target) return;
+
+    if (!confirm(`هل أنت متأكد من حذف البطل "${target.name || target.childName}"؟ سيتم حذف تقدمه فقط.`)) {
+      return;
+    }
+
+    data.profiles = data.profiles.filter(p => p.id !== profileId);
+    if (data.activeProfileId === profileId) {
+      data.activeProfileId = data.profiles.length > 0 ? data.profiles[0].id : null;
+      if (data.activeProfileId) {
+        this.state = this.ensureStateSchema(data.profiles[0]);
+      } else {
+        this.state = this.createEmptyProfileState("Champion", "🚀");
+      }
+    }
+
+    this.saveProfilesData(data);
+    this.saveState();
+    this.renderProfilesList();
+    this.updateHeaderStats();
+    this.renderRoadmap();
+    this.renderParentDashboard();
+
+    if (window.soundManager) window.soundManager.click();
+  }
+
+  renderResumeBannerHtml() {
+    if (!this.state.lastLesson || !this.state.lastLesson.chapterId || !this.state.lastLesson.lessonId) {
+      return '';
+    }
+
+    const ch = CURRICULUM_DATA.find(c => c.id === this.state.lastLesson.chapterId);
+    if (!ch) return '';
+    const lesson = ch.lessons.find(l => l.id === this.state.lastLesson.lessonId);
+    if (!lesson) return '';
+
+    const lMastery = this.getLessonMastery(lesson);
+    const isMastered = lMastery === 100;
+
+    return `
+      <div class="resume-lesson-banner animate-pop">
+        <div class="resume-info">
+          <div class="resume-icon-badge">${this.state.avatar || '🚀'}</div>
+          <div class="resume-text-content">
+            <div class="resume-tag">
+              <span>${isMastered ? '🏆 آخر درس أتقنته' : '⚡ تابع من حيث توقفت'}</span>
+              <span>•</span>
+              <span>مرحباً يا ${this.escapeHtml(this.state.name || this.state.childName)}!</span>
+            </div>
+            <h3 class="resume-title">
+              ${this.escapeHtml(lesson.titleAr || lesson.title)}
+              <span class="resume-title-en">(${this.escapeHtml(lesson.title)})</span>
+            </h3>
+            <div class="resume-meta">
+              <span>الفصل ${ch.number}: ${this.escapeHtml(ch.titleAr)}</span>
+              <span class="meta-sep">•</span>
+              <span>نسبة الإنجاز: <strong>${lMastery}%</strong></span>
+              <span class="meta-sep">•</span>
+              <span>📖 صـ ${lesson.bookPage} في كتاب الوزارة</span>
+            </div>
+          </div>
+        </div>
+        <div class="resume-action-wrap">
+          <button type="button" class="btn-resume-action" onclick="app.startLesson('${ch.id}', '${lesson.id}')">
+            ${isMastered ? '🔄 مراجعة الدرس' : '▶ استكمال الدرس الآن'}
+          </button>
+        </div>
+      </div>
+    `;
   }
 
   // --- Calculation Helpers ---
@@ -216,17 +709,11 @@ class MasteryApp {
       };
     }
 
-    // Name edit
+    // Profile / Name switcher click
     const nameDisplay = document.getElementById('display-child-name');
     if (nameDisplay) {
       nameDisplay.onclick = () => {
-        const newName = prompt("Enter student name / أدخل اسم البطل الصغير:", this.state.childName);
-        if (newName && newName.trim()) {
-          this.state.childName = newName.trim();
-          this.saveState();
-          this.updateHeaderStats();
-          this.renderParentDashboard();
-        }
+        this.openProfilesModal();
       };
     }
   }
@@ -251,15 +738,23 @@ class MasteryApp {
     const starEl = document.getElementById('stat-stars');
     const masteryEl = document.getElementById('stat-mastery');
     const nameEl = document.getElementById('display-child-name');
+    const avatarEl = document.getElementById('display-child-avatar');
     if (starEl) starEl.textContent = `⭐ ${this.state.stars}`;
     if (masteryEl) masteryEl.textContent = `🎯 ${this.getOverallMastery()}% Mastered`;
-    if (nameEl) nameEl.textContent = this.state.childName;
+    if (nameEl) nameEl.textContent = this.state.name || this.state.childName || "Champion";
+    if (avatarEl) avatarEl.textContent = this.state.avatar || "🚀";
   }
 
   // --- View: Adventure Roadmap ---
   renderRoadmap() {
     const container = document.getElementById('roadmap-chapters-list');
     if (!container) return;
+
+    // Render continue / resume last lesson banner
+    const resumeContainer = document.getElementById('roadmap-resume-container');
+    if (resumeContainer) {
+      resumeContainer.innerHTML = this.renderResumeBannerHtml();
+    }
 
     const overall = this.getOverallMastery();
     document.getElementById('overall-progress-bar').style.width = `${overall}%`;
@@ -442,7 +937,21 @@ class MasteryApp {
     this.currentLesson = lesson;
     this.isTargetedPractice = false;
     this.activeQuestionList = this.getLessonQuestions(lesson);
-    this.currentQuestionIdx = 0;
+
+    // Save as last active lesson for this profile
+    this.state.lastLesson = {
+      chapterId: ch.id,
+      lessonId: lesson.id,
+      lessonTitle: lesson.title,
+      lessonTitleAr: lesson.titleAr,
+      bookPage: lesson.bookPage,
+      timestamp: Date.now()
+    };
+    this.saveState();
+
+    // Smart resume: start on first unanswered question
+    const firstUnansweredIdx = this.activeQuestionList.findIndex(q => !this.state.answers[q.id]?.correct);
+    this.currentQuestionIdx = firstUnansweredIdx >= 0 ? firstUnansweredIdx : 0;
 
     this.launchQuizInterface();
   }
@@ -899,6 +1408,18 @@ class MasteryApp {
       record.correct = true;
       this.state.stars += 2;
       this.state.streak++;
+      if (this.currentLesson) {
+        const lMastery = this.getLessonMastery(this.currentLesson);
+        if (lMastery === 100) {
+          this.state.completedLessons[this.currentLesson.id] = true;
+        }
+      }
+      if (this.currentChapter) {
+        const chMastery = this.getChapterMastery(this.currentChapter);
+        if (chMastery === 100) {
+          this.state.completedChapters[this.currentChapter.id] = true;
+        }
+      }
       this.saveState();
 
       window.soundManager.correct();
@@ -972,10 +1493,16 @@ class MasteryApp {
     const overall = this.getOverallMastery();
 
     let titleMsg = "🌟 Awesome Effort!";
-    if (this.currentLesson && this.getLessonMastery(this.currentLesson) === 100) {
-      titleMsg = "🏆 100% Lesson Mastered!";
+    if (this.currentLesson) {
+      if (this.getLessonMastery(this.currentLesson) === 100) {
+        titleMsg = "🏆 100% Lesson Mastered!";
+      }
+      this.state.completedLessons[this.currentLesson.id] = true;
+      this.saveState();
     } else if (this.currentChapter && this.getChapterMastery(this.currentChapter) === 100) {
       titleMsg = `👑 100% Chapter ${this.currentChapter.number} Mastered!`;
+      this.state.completedChapters[this.currentChapter.id] = true;
+      this.saveState();
     }
 
     container.innerHTML = `
@@ -1034,14 +1561,20 @@ class MasteryApp {
   }
 
   resetAllProgress() {
-    if (confirm("Are you sure you want to reset all progress and start fresh? هل أنت متأكد من إعادة تصفير التقدم؟")) {
-      localStorage.removeItem(this.storageKey);
-      this.state = this.loadState();
+    const childName = this.state.name || this.state.childName || "Champion";
+    if (confirm(`Are you sure you want to reset all progress for ${childName}? هل أنت متأكد من إعادة تصفير التقدم لهذا البطل؟`)) {
+      this.state.stars = 0;
+      this.state.streak = 0;
+      this.state.answers = {};
+      this.state.completedLessons = {};
+      this.state.completedChapters = {};
+      this.state.lastLesson = null;
+      this.state.examHistory = [];
       this.saveState();
       this.updateHeaderStats();
       this.renderRoadmap();
       this.renderParentDashboard();
-      alert("Progress reset successfully! بالتوفيق في البداية الجديدة.");
+      alert("Progress reset successfully! تم تصفير تقدم هذا البطل بنجاح وبدء التحدي من جديد.");
     }
   }
 

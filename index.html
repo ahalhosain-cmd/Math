@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Primary 3 Math Mastery (100% Term 1 Curriculum)</title>
-  <link rel="stylesheet" href="styles.css?v=2027_14">
+  <link rel="stylesheet" href="styles.css?v=2027_15">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌟</text></svg>">
 </head>
 <body>
@@ -38,9 +38,11 @@
       <div class="user-quick-stats">
         <div class="stat-chip" id="stat-stars">⭐ 0</div>
         <div class="stat-chip" id="stat-mastery">🎯 0% Mastered</div>
-        <div class="stat-chip" style="cursor: pointer;" title="Click to edit name" id="user-name-tag">
-          👤 <span id="display-child-name">Champion</span> ✏️
-        </div>
+        <button class="stat-chip btn-profile-chip" id="user-name-tag" onclick="app.openProfilesModal()" title="تبديل أو تعديل البطل (Switch or Edit Champion)">
+          <span id="display-child-avatar">🚀</span>
+          <span id="display-child-name">Champion</span>
+          <span class="profile-switch-badge">تبديل ▾</span>
+        </button>
         <button class="btn-ask-emma-nav" id="btn-ask-emma-nav" onclick="app.openAiTutor()" title="Ask Miss Emma (المعلمة الذكية)">
           👩‍🏫 <span>Ask Miss Emma ✨</span>
         </button>
@@ -72,6 +74,9 @@
         </div>
       </div>
 
+      <!-- Continue / Resume Banner Container -->
+      <div id="roadmap-resume-container"></div>
+
       <!-- Chapter Cards Grid -->
       <div class="chapters-grid" id="roadmap-chapters-list">
         <!-- Rendered dynamically by app.js -->
@@ -85,8 +90,11 @@
           <div class="quiz-context" id="quiz-context-title">
             <!-- Chapter > Lesson Title -->
           </div>
-          <div class="quiz-counter" id="quiz-counter-text">
-            Question 1 of 5
+          <div class="quiz-header-right">
+            <button class="btn-quiz-back-map" onclick="app.switchTab('roadmap')" title="العودة لخريطة المغامرة وحفظ التقدم">🗺️ الخريطة</button>
+            <div class="quiz-counter" id="quiz-counter-text">
+              Question 1 of 5
+            </div>
           </div>
         </div>
 
@@ -371,13 +379,111 @@
     </div>
   </div>
 
+  <!-- Welcome First-Time Profile Modal -->
+  <div class="modal-overlay" id="welcome-profile-modal" style="display: none;">
+    <div class="profile-modal-container welcome-card animate-pop">
+      <div class="welcome-badge-icon">🌟</div>
+      <h2>أهلاً بك يا بطل في عالم الرياضيات!</h2>
+      <p class="welcome-sub">Welcome to Primary 3 Math Quest!</p>
+      <p class="welcome-intro">اكتب اسمك واختر شخصيتك لحفظ دروسك وإنجازاتك والبدء في المغامرة 🚀</p>
+      
+      <form onsubmit="event.preventDefault(); app.submitWelcomeProfile();">
+        <div class="profile-form-group">
+          <label class="form-label" for="welcome-input-name">ما هو اسمك يا بطل؟ (Your Name)</label>
+          <div class="input-name-wrap">
+            <input type="text" id="welcome-input-name" class="profile-text-input" placeholder="اكتب اسمك هنا (مثال: عمر، مريم، يوسف...)" maxlength="25" autocomplete="off" required>
+          </div>
+        </div>
+
+        <div class="profile-form-group">
+          <label class="form-label">اختر شخصيتك المفضلة (Choose Your Avatar):</label>
+          <div class="avatar-picker-grid" id="welcome-avatar-picker">
+            <button type="button" class="avatar-opt active" data-avatar="🚀" onclick="app.selectWelcomeAvatar(this, '🚀')"><span class="avatar-emoji">🚀</span><span class="avatar-label">رائد فضاء</span></button>
+            <button type="button" class="avatar-opt" data-avatar="🦁" onclick="app.selectWelcomeAvatar(this, '🦁')"><span class="avatar-emoji">🦁</span><span class="avatar-label">أسد شجاع</span></button>
+            <button type="button" class="avatar-opt" data-avatar="👑" onclick="app.selectWelcomeAvatar(this, '👑')"><span class="avatar-emoji">👑</span><span class="avatar-label">أمير / أميرة</span></button>
+            <button type="button" class="avatar-opt" data-avatar="🦊" onclick="app.selectWelcomeAvatar(this, '🦊')"><span class="avatar-emoji">🦊</span><span class="avatar-label">ثعلب ذكي</span></button>
+            <button type="button" class="avatar-opt" data-avatar="🐼" onclick="app.selectWelcomeAvatar(this, '🐼')"><span class="avatar-emoji">🐼</span><span class="avatar-label">باندا لطيف</span></button>
+            <button type="button" class="avatar-opt" data-avatar="🦄" onclick="app.selectWelcomeAvatar(this, '🦄')"><span class="avatar-emoji">🦄</span><span class="avatar-label">يونيكورن</span></button>
+            <button type="button" class="avatar-opt" data-avatar="⚡" onclick="app.selectWelcomeAvatar(this, '⚡')"><span class="avatar-emoji">⚡</span><span class="avatar-label">بطل خارق</span></button>
+            <button type="button" class="avatar-opt" data-avatar="🌟" onclick="app.selectWelcomeAvatar(this, '🌟')"><span class="avatar-emoji">🌟</span><span class="avatar-label">نجم متألق</span></button>
+          </div>
+        </div>
+
+        <div class="welcome-actions">
+          <button type="submit" class="btn-start-quest">
+            🚀 ابدأ مغامرة التفوق الآن! (Start Adventure)
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Profiles Switcher & Manager Modal -->
+  <div class="modal-overlay" id="profiles-manager-modal" style="display: none;" onclick="if(event.target===this) app.closeProfilesModal()">
+    <div class="profile-modal-container animate-pop">
+      <div class="profile-modal-header">
+        <div class="modal-title-with-icon">
+          <span class="icon-bubble">👥</span>
+          <div>
+            <h3>أبطال الرياضيات (Math Champions)</h3>
+            <span class="sub-text">اختر بطلاً للمتابعة من حيث توقف، أو أضف بطلاً جديداً</span>
+          </div>
+        </div>
+        <button type="button" class="modal-close-x" onclick="app.closeProfilesModal()" title="إغلاق">✕</button>
+      </div>
+
+      <div class="profiles-modal-body">
+        <!-- List of existing profiles -->
+        <div class="profiles-cards-grid" id="profiles-list-container">
+          <!-- Dynamically populated by app.js -->
+        </div>
+
+        <!-- Add or Edit Profile Form Section -->
+        <div class="add-profile-section" id="add-profile-section" style="display: none;">
+          <h4 id="profile-form-title">➕ إضافة بطل جديد (Add New Champion)</h4>
+          <input type="hidden" id="manage-profile-editing-id" value="">
+          <div class="profile-form-group">
+            <label class="form-label" for="manage-profile-input-name">اسم البطل:</label>
+            <input type="text" id="manage-profile-input-name" class="profile-text-input" placeholder="اسم البطل (مثال: عمر، مريم...)" maxlength="25">
+          </div>
+          <div class="profile-form-group">
+            <label class="form-label">اختر الشخصية:</label>
+            <div class="avatar-picker-grid" id="manage-avatar-picker">
+              <button type="button" class="avatar-opt active" data-avatar="🚀" onclick="app.selectManageAvatar(this, '🚀')"><span class="avatar-emoji">🚀</span></button>
+              <button type="button" class="avatar-opt" data-avatar="🦁" onclick="app.selectManageAvatar(this, '🦁')"><span class="avatar-emoji">🦁</span></button>
+              <button type="button" class="avatar-opt" data-avatar="👑" onclick="app.selectManageAvatar(this, '👑')"><span class="avatar-emoji">👑</span></button>
+              <button type="button" class="avatar-opt" data-avatar="🦊" onclick="app.selectManageAvatar(this, '🦊')"><span class="avatar-emoji">🦊</span></button>
+              <button type="button" class="avatar-opt" data-avatar="🐼" onclick="app.selectManageAvatar(this, '🐼')"><span class="avatar-emoji">🐼</span></button>
+              <button type="button" class="avatar-opt" data-avatar="🦄" onclick="app.selectManageAvatar(this, '🦄')"><span class="avatar-emoji">🦄</span></button>
+              <button type="button" class="avatar-opt" data-avatar="⚡" onclick="app.selectManageAvatar(this, '⚡')"><span class="avatar-emoji">⚡</span></button>
+              <button type="button" class="avatar-opt" data-avatar="🌟" onclick="app.selectManageAvatar(this, '🌟')"><span class="avatar-emoji">🌟</span></button>
+            </div>
+          </div>
+          <div class="add-profile-actions">
+            <button type="button" class="btn-confirm-add-profile" onclick="app.saveManageProfile()">✔ حفظ ومتابعة</button>
+            <button type="button" class="btn-cancel-add-profile" onclick="app.toggleAddProfileForm(false)">إلغاء</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="profiles-modal-footer">
+        <button type="button" class="btn-open-add-profile" id="btn-toggle-add-profile" onclick="app.toggleAddProfileForm(true)">
+          ➕ إضافة بطل جديد (Add Champion)
+        </button>
+        <button type="button" class="btn-secondary-close" onclick="app.closeProfilesModal()">
+          إغلاق
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
-  <script src="audio_system.js?v=2027_14"></script>
-  <script src="math_dictionary.js?v=2027_14"></script>
-  <script src="question_visuals.js?v=2027_14"></script>
-  <script src="gemini_tutor.js?v=2027_14"></script>
-  <script src="curriculum_data.js?v=2027_14"></script>
-  <script src="interactive_widgets.js?v=2027_14"></script>
-  <script src="app.js?v=2027_14"></script>
+  <script src="audio_system.js?v=2027_15"></script>
+  <script src="math_dictionary.js?v=2027_15"></script>
+  <script src="question_visuals.js?v=2027_15"></script>
+  <script src="gemini_tutor.js?v=2027_15"></script>
+  <script src="curriculum_data.js?v=2027_15"></script>
+  <script src="interactive_widgets.js?v=2027_15"></script>
+  <script src="app.js?v=2027_15"></script>
 </body>
 </html>
