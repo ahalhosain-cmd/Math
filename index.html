@@ -15,31 +15,15 @@
   <!-- Top Navigation Bar -->
   <header class="top-navbar">
     <div class="nav-container">
-      <div class="brand-section">
-        <div class="brand-icon">📐</div>
-        <div class="brand-text">
-          <h1>Math</h1>
-        </div>
-      </div>
-
-      <nav class="nav-tabs">
-        <button class="nav-tab-btn active" data-tab="roadmap" title="قائمة الدروس">
-          📚 <span>الدروس</span>
-        </button>
-        <button class="nav-tab-btn" data-tab="dashboard" title="لوحة المتابعة">
-          📊 <span>المتابعة</span>
-        </button>
-        <button class="nav-tab-btn" data-tab="exam" title="امتحان الشهر">
-          📝 <span>الامتحان</span>
-        </button>
-      </nav>
+      <button class="btn-nav-home" onclick="app.switchTab('roadmap')" title="الصفحة الرئيسية">
+        🏠 <span>الرئيسية</span>
+      </button>
 
       <div class="user-quick-stats">
         <div class="stat-chip" id="stat-stars">⭐ 0</div>
         <button class="stat-chip btn-profile-chip" id="user-name-tag" onclick="app.openProfilesModal()" title="تبديل أو تعديل البطل">
           <span id="display-child-avatar">🚀</span>
           <span id="display-child-name">Champion</span>
-          <span class="profile-switch-badge">▾</span>
         </button>
         <button class="btn-icon-toggle" id="btn-sound-toggle" title="الصوت">🔊</button>
         <div id="stat-mastery" style="display: none;">0%</div>
@@ -71,6 +55,33 @@
         </div>
       </div>
 
+      <!-- Main Navigation Choices on the Home Page -->
+      <div class="home-nav-section">
+        <div class="home-nav-grid">
+          <button type="button" class="nav-tab-btn home-nav-btn active" data-tab="roadmap" onclick="app.switchTab('roadmap')">
+            <span class="home-nav-icon">📚</span>
+            <div class="home-nav-info">
+              <strong>قائمة الدروس</strong>
+              <small>المنهج الكامل والتمارين</small>
+            </div>
+          </button>
+          <button type="button" class="nav-tab-btn home-nav-btn" data-tab="dashboard" onclick="app.switchTab('dashboard')">
+            <span class="home-nav-icon">📊</span>
+            <div class="home-nav-info">
+              <strong>لوحة المتابعة</strong>
+              <small>تقرير ولي الأمر ونقاط القوة</small>
+            </div>
+          </button>
+          <button type="button" class="nav-tab-btn home-nav-btn" data-tab="exam" onclick="app.switchTab('exam')">
+            <span class="home-nav-icon">📝</span>
+            <div class="home-nav-info">
+              <strong>امتحان الشهر</strong>
+              <small>نماذج امتحانات الوزارة التجريبية</small>
+            </div>
+          </button>
+        </div>
+      </div>
+
       <!-- Continue / Resume Banner Container -->
       <div id="roadmap-resume-container"></div>
 
@@ -84,9 +95,6 @@
     <section class="tab-view" id="view-quiz">
       <div class="quiz-wrapper">
         <div class="quiz-header-bar">
-          <button class="btn-quiz-back-menu" onclick="app.switchTab('roadmap')" title="العودة إلى قائمة الدروس">
-            🔙 <span>قائمة الدروس</span>
-          </button>
           <div class="quiz-context" id="quiz-context-title">
             <!-- Chapter > Lesson Title -->
           </div>

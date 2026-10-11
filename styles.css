@@ -47,11 +47,11 @@ body {
   z-index: 9999;
 }
 
-/* Header & Top Bar - Ultra Compact Mode */
+/* Header & Top Bar - Ultra Compact (Home, Stars, Name only) */
 .top-navbar {
   background: #FFFFFF;
   border-bottom: 1.5px solid #E2E8F0;
-  padding: 3px 12px;
+  padding: 4px 12px;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -68,69 +68,90 @@ body {
   gap: 8px;
 }
 
-.brand-section {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
-
-.brand-icon {
-  font-size: 14px;
-  background: linear-gradient(135deg, #6366F1, #8B5CF6);
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  color: white;
-  box-shadow: 0 1px 4px rgba(99, 102, 241, 0.2);
-  flex-shrink: 0;
-}
-
-.brand-text h1 {
+.btn-nav-home {
+  background: #EEF2FF;
+  color: #3730A3;
+  border: 1.5px solid #C7D2FE;
+  padding: 4px 12px;
+  border-radius: 10px;
   font-size: 13px;
   font-weight: 800;
-  color: #1E1B4B;
-  margin: 0;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.brand-text span {
-  display: none !important;
-}
-
-.nav-tabs {
-  display: flex;
-  gap: 3px;
-  background: #F1F5F9;
-  padding: 2px 4px;
-  border-radius: 8px;
-  flex-shrink: 1;
-}
-
-.nav-tab-btn {
-  border: none;
-  background: transparent;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--gray);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   cursor: pointer;
   transition: all 0.15s ease;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.nav-tab-btn.active {
+.btn-nav-home:hover {
+  background: #4F46E5;
+  color: #FFFFFF;
+  border-color: #4F46E5;
+}
+
+/* Home Navigation Section (Choices inside the Home Page) */
+.home-nav-section {
+  margin: 16px 0 20px 0;
+}
+
+.home-nav-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.home-nav-btn {
   background: #FFFFFF;
-  color: var(--primary);
-  box-shadow: var(--shadow-sm);
+  border: 2px solid #E2E8F0;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  text-align: right;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.home-nav-btn:hover {
+  border-color: #3B82F6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.home-nav-btn.active {
+  border-color: #2563EB;
+  background: linear-gradient(135deg, #EFF6FF, #F8FAFC);
+}
+
+.home-nav-icon {
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.home-nav-info strong {
+  display: block;
+  font-size: 14px;
+  color: #0F172A;
+  font-weight: 800;
+}
+
+.home-nav-info small {
+  display: block;
+  font-size: 11px;
+  color: #64748B;
+  margin-top: 2px;
+}
+
+@media (max-width: 640px) {
+  .home-nav-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .home-nav-btn {
+    padding: 10px 12px;
 }
 
 .user-quick-stats {
@@ -3479,39 +3500,9 @@ body {
     flex-wrap: nowrap;
   }
 
-  .brand-section {
-    gap: 5px;
-    flex-shrink: 0;
-  }
-
-  .brand-icon {
-    width: 22px;
-    height: 22px;
-    font-size: 13px;
-    border-radius: 5px;
-  }
-
-  .brand-text h1 {
+  .btn-nav-home {
+    padding: 3px 8px;
     font-size: 12px;
-  }
-
-  .brand-text span {
-    display: none !important;
-  }
-
-  .nav-tabs {
-    width: auto;
-    justify-content: center;
-    padding: 2px 3px;
-    order: 0;
-    gap: 2px;
-  }
-
-  .nav-tab-btn {
-    padding: 3px 6px;
-    font-size: 11px;
-    flex: initial;
-    justify-content: center;
   }
 
   .user-quick-stats {
@@ -3526,7 +3517,7 @@ body {
   }
 
   .btn-icon-toggle {
-    padding: 3px 6px;
+    padding: 2px 6px;
     font-size: 11px;
   }
 
