@@ -1220,13 +1220,16 @@ class MasteryApp {
     if (v.type === 'number_bond') return window.QuestionVisuals.renderNumberBond(v.whole, v.part1, v.part2, v.missing || 'part2');
     if (v.type === 'spatial_scene') return window.QuestionVisuals.renderSpatialScene(v.position, v.targetEmoji || '🐱', v.baseEmoji || '📦');
     if (v.type === 'length_comp') return window.QuestionVisuals.renderLengthComparison(v.item1Emoji || '✏️', v.len1, v.item2Emoji || '🖍️', v.len2);
-    if (v.type === 'vocab_card') {
-      const cleanWord = (v.label || q.answer || '').replace(/[\u{1F300}-\u{1F9FF}]/gu, '').trim();
+    if (v.type === 'listen_card' || (this.currentSubject === 'english' && q.type === 'listen_tap')) {
+      const soundText = q.audioListen || q.question;
       return `
-        <div class="vocab-question-visual animate-pop" onclick="window.soundManager.speak('${this.escapeHtml(cleanWord)}')">
-          <div class="vocab-visual-emoji">${v.emoji || '🌟'}</div>
-          <div class="vocab-visual-label">${v.label || ''}</div>
-          <button type="button" class="btn-vocab-speaker">🔊 استمع للنطق</button>
+        <div class="listen-challenge-visual animate-pop" onclick="window.soundManager.speak('${this.escapeHtml(soundText)}')">
+          <div class="listen-headphone-icon">🎧</div>
+          <div class="listen-pulse-title">اسمع الصوت كويس وركز 🎵</div>
+          <button type="button" class="btn-listen-sound-play">
+            <span>🔊</span>
+            <span>اضغط لسماع الكلمة</span>
+          </button>
         </div>
       `;
     }
@@ -1374,7 +1377,7 @@ class MasteryApp {
           <div class="q-text-ar" id="q-text-ar" dir="rtl" style="display: ${(this.showArabic || this.currentSubject === 'english') ? 'block' : 'none'};">
             ${q.questionAr || q.hintAr || ''}
           </div>
-          ${q.audioListen ? `
+          ${(!visualDiagramHtml && q.audioListen) ? `
             <div style="display:flex; justify-content:center; margin-top:10px;">
               <button type="button" class="btn-fc-audio" style="max-width:280px; background:#EFF6FF; border-color:#93C5FD; color:#1D4ED8; font-size:15px;" onclick="window.soundManager.speak('${this.escapeHtml(q.audioListen)}')">
                 <span>🎧</span>
