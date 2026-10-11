@@ -25,19 +25,19 @@
 
       <nav class="nav-tabs">
         <button class="nav-tab-btn active" data-tab="roadmap">
-          🗺️ <span>Adventure Map</span>
+          📚 <span>قائمة الدروس</span>
         </button>
         <button class="nav-tab-btn" data-tab="dashboard">
-          📊 <span>Parent Dashboard</span>
+          📊 <span>لوحة المتابعة</span>
         </button>
         <button class="nav-tab-btn" data-tab="exam">
-          📝 <span>Monthly Exam (امتحان الشهر)</span>
+          📝 <span>امتحان الشهر</span>
         </button>
       </nav>
 
       <div class="user-quick-stats">
         <div class="stat-chip" id="stat-stars">⭐ 0</div>
-        <div class="stat-chip" id="stat-mastery">🎯 0% Mastered</div>
+        <div class="stat-chip" id="stat-mastery">🎯 0%</div>
         <button class="stat-chip btn-grade-chip grade-p1" id="btn-grade-toggle" onclick="app.toggleGradeSelector()" title="تبديل الصف الدراسي (Switch Grade)">
           🎒 <span>Primary 1 (أولى)</span> ▾
         </button>
@@ -46,10 +46,7 @@
           <span id="display-child-name">Champion</span>
           <span class="profile-switch-badge">تبديل ▾</span>
         </button>
-        <button class="btn-ask-emma-nav" id="btn-ask-emma-nav" onclick="app.openAiTutor()" title="Ask Miss Emma (المعلمة الذكية)">
-          👩‍🏫 <span>Ask Miss Emma ✨</span>
-        </button>
-        <button class="btn-icon-toggle" id="btn-sound-toggle">🔊 Sound On</button>
+        <button class="btn-icon-toggle" id="btn-sound-toggle">🔊 صوت</button>
       </div>
     </div>
   </header>
@@ -94,7 +91,9 @@
             <!-- Chapter > Lesson Title -->
           </div>
           <div class="quiz-header-right">
-            <button class="btn-quiz-back-map" onclick="app.switchTab('roadmap')" title="العودة لخريطة المغامرة وحفظ التقدم">🗺️ الخريطة</button>
+            <button class="btn-quiz-back-menu" onclick="app.switchTab('roadmap')" title="العودة إلى قائمة الدروس">
+              🔙 <span>العودة لقائمة الدروس</span>
+            </button>
             <div class="quiz-counter" id="quiz-counter-text">
               Question 1 of 5
             </div>
@@ -117,7 +116,7 @@
         <!-- Left Column: Circular Mastery Gauge -->
         <div class="dash-gauge-card">
           <h3>Total Curriculum Mastery</h3>
-          <p style="font-size: 13px; color: var(--gray); margin-top: 4px;">Primary 3 - Term 1 MOETE</p>
+          <p id="dash-grade-subtitle" style="font-size: 13px; color: var(--gray); margin-top: 4px;">Primary 3 - Term 1 MOETE</p>
 
           <div class="gauge-svg-wrap">
             <svg class="gauge-svg" width="160" height="160" viewBox="0 0 120 120">
@@ -132,7 +131,7 @@
 
           <div class="dash-summary-details">
             <p>Target: <strong>100% Comprehensive Understanding</strong></p>
-            <p style="margin-top: 6px;">Evaluation across 6 Chapters, all official lessons, and multi-tier verification checks.</p>
+            <p id="dash-summary-desc" style="margin-top: 6px;">Evaluation across all official textbook chapters, core lessons, and multi-tier verification checks.</p>
           </div>
         </div>
 
@@ -192,7 +191,7 @@
       <div class="exam-simulator-wrap">
         <div class="exam-header-banner">
           <div class="exam-badge-tag">🏫 Official School Model Exam</div>
-          <h2>Primary 3 Mathematics Monthly Assessment</h2>
+          <h2 id="exam-grade-title">Primary 3 Mathematics Monthly Assessment</h2>
           <p>امتحان تجريبي مطابق تماماً لورقة الامتحان الشهري بمدارس اللغات (الدرجة الكلية: 20 درجة)</p>
           <div class="exam-controls-bar">
             <button class="btn-primary-action" style="width:auto; padding: 10px 24px;" onclick="app.generateNewSchoolExam()">
@@ -448,8 +447,8 @@
         <div class="modal-title-with-icon">
           <span class="icon-bubble">👥</span>
           <div>
-            <h3>أبطال الرياضيات (Math Champions)</h3>
-            <span class="sub-text">اختر بطلاً للمتابعة من حيث توقف، أو أضف بطلاً جديداً</span>
+            <h3>👋 من سيتعلم معنا اليوم؟ (Choose Champion)</h3>
+            <span class="sub-text">اختر اسم البطل لمتابعة دروسه فوراً، أو أضف بطلاً جديداً</span>
           </div>
         </div>
         <button type="button" class="modal-close-x" onclick="app.closeProfilesModal()" title="إغلاق">✕</button>

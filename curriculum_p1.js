@@ -35,10 +35,10 @@ const CURRICULUM_P1 = [
               "question": "How many apples are there? 🍎",
               "questionAr": "كم عدد التفاحات؟ 🍎",
               "options": [
-                "3",
-                "2",
                 "4",
-                "5"
+                "2",
+                "5",
+                "3"
               ],
               "answer": "3",
               "explanation": "Count them: 1, 2, 3! There are 3 sweet apples.",
@@ -59,10 +59,10 @@ const CURRICULUM_P1 = [
               "question": "How many blue dots in the Ten-Frame? 🔵",
               "questionAr": "كم نقطة زرقاء داخل إطار العشر خانات؟ 🔵",
               "options": [
-                "4",
-                "3",
+                "2",
                 "5",
-                "2"
+                "4",
+                "3"
               ],
               "answer": "4",
               "explanation": "There are 4 filled blue dots in the frame.",
@@ -83,10 +83,10 @@ const CURRICULUM_P1 = [
               "question": "Brainy the Cat sees kittens playing! How many kittens? 🐱",
               "questionAr": "القط برايني يرى قططاً صغيرة تلعب! كم عدد القطط؟ 🐱",
               "options": [
-                "5",
                 "4",
+                "6",
                 "3",
-                "6"
+                "5"
               ],
               "answer": "5",
               "explanation": "1, 2, 3, 4, 5 kittens! High five! 🖐️",
@@ -118,9 +118,9 @@ const CURRICULUM_P1 = [
               "question": "How many colorful balloons? 🎈",
               "questionAr": "كم عدد البالونات الملونة؟ 🎈",
               "options": [
-                "7",
                 "6",
                 "8",
+                "7",
                 "5"
               ],
               "answer": "7",
@@ -142,10 +142,10 @@ const CURRICULUM_P1 = [
               "question": "Count the pink dots in the Ten-Frame:",
               "questionAr": "عُد النقاط الوردية في إطار العشر خانات:",
               "options": [
-                "8",
                 "7",
                 "9",
-                "6"
+                "6",
+                "8"
               ],
               "answer": "8",
               "explanation": "5 on top row + 3 on bottom row = 8 dots!",
@@ -166,10 +166,10 @@ const CURRICULUM_P1 = [
               "question": "Smarty the Dog counts shining stars! How many stars? 🌟",
               "questionAr": "الكلب سمارتي يعد النجوم اللامعة! كم نجمة في السماء؟ 🌟",
               "options": [
-                "10",
                 "9",
+                "7",
                 "8",
-                "7"
+                "10"
               ],
               "answer": "10",
               "explanation": "A full set of 10 shiny stars! 🌟 You are a superstar!",
@@ -202,9 +202,9 @@ const CURRICULUM_P1 = [
               "question": "What number is missing? 3 and ___ make 5.",
               "questionAr": "ما هو العدد الناقص؟ 3 مع ___ يُعطي 5.",
               "options": [
-                "2",
-                "1",
                 "3",
+                "1",
+                "2",
                 "4"
               ],
               "answer": "2",
@@ -227,10 +227,10 @@ const CURRICULUM_P1 = [
               "question": "What number makes 8 with 4? 4 + ___ = 8.",
               "questionAr": "ما هو العدد الذي يكمل 4 ليصبح 8؟ 4 + ___ = 8.",
               "options": [
-                "4",
                 "3",
-                "5",
-                "2"
+                "2",
+                "4",
+                "5"
               ],
               "answer": "4",
               "explanation": "4 and 4 make 8! Double 4 is 8.",
@@ -253,8 +253,8 @@ const CURRICULUM_P1 = [
               "questionAr": "أصدقاء الـ 10: 7 مع ___ يُعطي 10!",
               "options": [
                 "3",
-                "2",
                 "4",
+                "2",
                 "5"
               ],
               "answer": "3",
@@ -287,10 +287,10 @@ const CURRICULUM_P1 = [
               "question": "How many dots are in this empty Ten-Frame?",
               "questionAr": "كم نقطة داخل هذا الإطار الفارغ؟",
               "options": [
-                "0",
-                "1",
                 "10",
-                "2"
+                "2",
+                "0",
+                "1"
               ],
               "answer": "0",
               "explanation": "The frame is completely empty, which means 0!",
@@ -311,10 +311,10 @@ const CURRICULUM_P1 = [
               "question": "You eat 1 candy from 1 candy. How many are left? 🍬",
               "questionAr": "كان معك قطعة حلوى واحدة وأكلتها! كم قطعة متبقية؟ 🍬",
               "options": [
-                "0",
-                "1",
                 "2",
-                "3"
+                "1",
+                "3",
+                "0"
               ],
               "answer": "0",
               "explanation": "1 - 1 = 0! No candies left in your hand.",
@@ -336,10 +336,10 @@ const CURRICULUM_P1 = [
               "question": "Complete: 6 + ___ = 6.",
               "questionAr": "أكمل: 6 + ___ = 6.",
               "options": [
-                "0",
-                "1",
+                "2",
                 "6",
-                "2"
+                "1",
+                "0"
               ],
               "answer": "0",
               "explanation": "Adding 0 to any number leaves it unchanged: 6 + 0 = 6.",
@@ -404,8 +404,8 @@ const CURRICULUM_P1 = [
               "question": "Where is the ball ⚽ relative to the chair?",
               "questionAr": "أين الكرة ⚽ بالنسبة للكرسي؟",
               "options": [
-                "Bottom (تحت)",
-                "Top (فوق)"
+                "Top (فوق)",
+                "Bottom (تحت)"
               ],
               "answer": "Bottom (تحت)",
               "explanation": "The ball is at the BOTTOM (under) the chair. ⚽🪑",
@@ -459,8 +459,8 @@ const CURRICULUM_P1 = [
               "question": "Smarty the Dog is to the ___ of the doghouse. (Left or Right?)",
               "questionAr": "الكلب سمارتي 🐶 يقف على ___ البيت. (Left أم Right؟)",
               "options": [
-                "Left (يسار)",
-                "Right (يمين)"
+                "Right (يمين)",
+                "Left (يسار)"
               ],
               "answer": "Left (يسار)",
               "explanation": "Smarty is on the LEFT side of the house! 🐶🏠",
@@ -503,8 +503,8 @@ const CURRICULUM_P1 = [
               "question": "Three ducks in a line: 🦆 🦆 🦆. Which duck is in front?",
               "questionAr": "ثلاث بطات في طابور: 🦆 🦆 🦆. أي بطة تقف في الأمام؟",
               "options": [
-                "The 1st duck (الأولى)",
-                "The last duck (الأخيرة)"
+                "The last duck (الأخيرة)",
+                "The 1st duck (الأولى)"
               ],
               "answer": "The 1st duck (الأولى)",
               "explanation": "The 1st duck (First) leads the line in front!",
@@ -549,8 +549,8 @@ const CURRICULUM_P1 = [
               "options": [
                 "4",
                 "3",
-                "5",
-                "2"
+                "2",
+                "5"
               ],
               "answer": "4",
               "explanation": "2 + 2 = 4 sweet strawberries!",
@@ -572,10 +572,10 @@ const CURRICULUM_P1 = [
               "question": "What is 3 + 2? (Find the whole):",
               "questionAr": "كم حاصل 3 + 2؟ (العدد الكلي):",
               "options": [
+                "3",
                 "5",
-                "4",
                 "6",
-                "3"
+                "4"
               ],
               "answer": "5",
               "explanation": "3 + 2 = 5! You got it right! ⭐",
@@ -596,10 +596,10 @@ const CURRICULUM_P1 = [
               "question": "Mom has 4 flowers 🌸. You give her 1 more flower. How many now?",
               "questionAr": "ماما معها 4 زهور 🌸. وأنت أعطيتها زهرة إضافية واحدة. كم زهرة معها الآن؟",
               "options": [
-                "5",
                 "4",
+                "3",
                 "6",
-                "3"
+                "5"
               ],
               "answer": "5",
               "explanation": "4 + 1 = 5 beautiful flowers for Mom!",
@@ -631,10 +631,10 @@ const CURRICULUM_P1 = [
               "question": "5 dots + 2 dots = ___ dots in total?",
               "questionAr": "5 نقاط + 2 نقطة = ___ نقطة في المجموع؟",
               "options": [
-                "7",
                 "6",
-                "8",
-                "9"
+                "9",
+                "7",
+                "8"
               ],
               "answer": "7",
               "explanation": "5 + 2 = 7 dots in the Ten-Frame!",
@@ -655,10 +655,10 @@ const CURRICULUM_P1 = [
               "question": "6 fish + 3 fish = ___ swimming fish? 🐠",
               "questionAr": "6 سمكات + 3 سمكات = ___ سمكة تسبح؟ 🐠",
               "options": [
-                "9",
-                "8",
+                "7",
                 "10",
-                "7"
+                "8",
+                "9"
               ],
               "answer": "9",
               "explanation": "6 + 3 = 9 fish swimming happily!",
@@ -726,9 +726,9 @@ const CURRICULUM_P1 = [
               "questionAr": "معك 5 تفاحات. أكلت منها 2. كم يتبقى؟ 5 - 2 = ___",
               "options": [
                 "3",
-                "2",
                 "4",
-                "1"
+                "1",
+                "2"
               ],
               "answer": "3",
               "explanation": "5 - 2 = 3 apples left! 🍎🍎🍎",
@@ -750,9 +750,9 @@ const CURRICULUM_P1 = [
               "questionAr": "كان هناك 4 بالونات 🎈. طرقعت اثنتان! كم بالونة باقية؟ 4 - 2 = ___",
               "options": [
                 "2",
-                "1",
+                "0",
                 "3",
-                "0"
+                "1"
               ],
               "answer": "2",
               "explanation": "4 - 2 = 2 flying balloons! 🎈🎈",
@@ -773,10 +773,10 @@ const CURRICULUM_P1 = [
               "question": "Brainy has 3 ice creams 🍦. He gives 2 to his friends. How many for Brainy?",
               "questionAr": "القط برايني معه 3 آيس كريم 🍦. أعطى 2 لأصدقائه. كم آيس كريم معه الآن؟",
               "options": [
-                "1",
                 "2",
+                "3",
                 "0",
-                "3"
+                "1"
               ],
               "answer": "1",
               "explanation": "3 - 2 = 1 yummy ice cream left for Brainy!",
@@ -808,10 +808,10 @@ const CURRICULUM_P1 = [
               "question": "10 dots in the frame. We take away 4 dots. How many left? 10 - 4 = ___",
               "questionAr": "10 نقاط في الإطار. حذفنا منها 4 نقاط. كم يتبقى؟ 10 - 4 = ___",
               "options": [
-                "6",
-                "5",
                 "7",
-                "4"
+                "4",
+                "6",
+                "5"
               ],
               "answer": "6",
               "explanation": "10 - 4 = 6 dots left in the frame!",
@@ -832,9 +832,9 @@ const CURRICULUM_P1 = [
               "question": "8 ducks in the pond. 3 fly away! How many left? 8 - 3 = ___",
               "questionAr": "8 بطات في البحيرة. طارت 3 بطات! كم بطة باقية؟ 8 - 3 = ___",
               "options": [
+                "4",
                 "5",
                 "6",
-                "4",
                 "3"
               ],
               "answer": "5",
@@ -857,10 +857,10 @@ const CURRICULUM_P1 = [
               "question": "Find the difference: 9 - 5 = ___",
               "questionAr": "احسب ناتج الطرح: 9 - 5 = ___",
               "options": [
-                "4",
                 "3",
-                "5",
-                "6"
+                "6",
+                "4",
+                "5"
               ],
               "answer": "4",
               "explanation": "9 - 5 = 4! Excellent job superstar! 🌟",
@@ -904,8 +904,8 @@ const CURRICULUM_P1 = [
               "question": "Which item is LONGER (أطول)?",
               "questionAr": "أي الأغراض أطول (Longer)؟",
               "options": [
-                "The pencil ✏️ (القلم الرصاص)",
-                "The crayon 🖍️ (قلم التلوين)"
+                "The crayon 🖍️ (قلم التلوين)",
+                "The pencil ✏️ (القلم الرصاص)"
               ],
               "answer": "The pencil ✏️ (القلم الرصاص)",
               "explanation": "The pencil is 6 units, which is longer than the crayon (3 units)!",
@@ -950,9 +950,9 @@ const CURRICULUM_P1 = [
               "question": "How many units longer is the ruler 📏 (8 units) than the pencil ✏️ (5 units)?",
               "questionAr": "بكم وحدة تزيد المسطرة 📏 (8 وحدات) عن القلم ✏️ (5 وحدات)؟",
               "options": [
+                "4 units",
                 "3 units",
                 "2 units",
-                "4 units",
                 "1 unit"
               ],
               "answer": "3 units",
@@ -997,9 +997,9 @@ const CURRICULUM_P1 = [
               "questionAr": "عُد النجوم ⭐ في المخطط:",
               "options": [
                 "4",
-                "3",
+                "2",
                 "5",
-                "2"
+                "3"
               ],
               "answer": "4",
               "explanation": "There are 4 stars in this group!",
@@ -1020,8 +1020,8 @@ const CURRICULUM_P1 = [
               "question": "In the fruit basket: 6 apples 🍎 and 3 bananas 🍌. Which fruit has MORE?",
               "questionAr": "في سلة الفواكه: 6 تفاحات 🍎 و 3 موزات 🍌. أي الفواكه أكثر (More)؟",
               "options": [
-                "Apples 🍎 (التفاح)",
-                "Bananas 🍌 (الموز)"
+                "Bananas 🍌 (الموز)",
+                "Apples 🍎 (التفاح)"
               ],
               "answer": "Apples 🍎 (التفاح)",
               "explanation": "6 is greater than 3, so there are MORE apples! 🍎",
@@ -1043,8 +1043,8 @@ const CURRICULUM_P1 = [
               "questionAr": "سمارتي عد 5 سيارات حمراء 🚗 وسياراتين زرقاوتين 🚙. كم مجموع كل السيارات؟",
               "options": [
                 "7",
-                "6",
                 "8",
+                "6",
                 "5"
               ],
               "answer": "7",
@@ -1089,10 +1089,10 @@ const CURRICULUM_P1 = [
               "question": "What is 10 + 4?",
               "questionAr": "كم حاصل 10 + 4؟",
               "options": [
-                "14",
-                "13",
                 "15",
-                "12"
+                "14",
+                "12",
+                "13"
               ],
               "answer": "14",
               "explanation": "10 and 4 make 14 (fourteen)! 🌟",
@@ -1115,9 +1115,9 @@ const CURRICULUM_P1 = [
               "questionAr": "العدد 17 يتكون من 10 و ___؟",
               "options": [
                 "7",
-                "6",
+                "5",
                 "8",
-                "5"
+                "6"
               ],
               "answer": "7",
               "explanation": "17 = 10 + 7! The ones digit is 7.",
@@ -1183,10 +1183,10 @@ const CURRICULUM_P1 = [
               "question": "What time is it on the clock? ⏰",
               "questionAr": "كم الساعة الآن على هذه الساعة؟ ⏰",
               "options": [
-                "3 o'clock (الساعة 3 بالضبط)",
                 "12 o'clock",
-                "2 o'clock",
-                "4 o'clock"
+                "4 o'clock",
+                "3 o'clock (الساعة 3 بالضبط)",
+                "2 o'clock"
               ],
               "answer": "3 o'clock (الساعة 3 بالضبط)",
               "explanation": "Short red hand is at 3, long blue hand is at 12: It is 3 o'clock!",
@@ -1206,9 +1206,9 @@ const CURRICULUM_P1 = [
               "question": "Short hand points to 7, long hand points to 12. What time is it?",
               "questionAr": "العقرب القصير يشير إلى 7، والعقرب الطويل يشير إلى 12. كم الساعة؟",
               "options": [
-                "7 o'clock (الساعة 7)",
                 "6 o'clock",
                 "8 o'clock",
+                "7 o'clock (الساعة 7)",
                 "12 o'clock"
               ],
               "answer": "7 o'clock (الساعة 7)",
@@ -1229,10 +1229,10 @@ const CURRICULUM_P1 = [
               "question": "Brainy goes to sleep at 9 o'clock 🌙. Where does the short hand point?",
               "questionAr": "برايني ينام في تمام الساعة 9 🌙. إلى أي رقم يشير العقرب القصير؟",
               "options": [
-                "At 9 (إلى الرقم 9)",
                 "At 12",
                 "At 6",
-                "At 3"
+                "At 3",
+                "At 9 (إلى الرقم 9)"
               ],
               "answer": "At 9 (إلى الرقم 9)",
               "explanation": "At 9 o'clock, the short hour hand points directly at 9!",
@@ -1275,8 +1275,8 @@ const CURRICULUM_P1 = [
               "question": "Calculate: 2 + 1 + 3 = ___ 🍎",
               "questionAr": "احسب: 2 + 1 + 3 = ___ 🍎",
               "options": [
-                "6",
                 "5",
+                "6",
                 "7",
                 "4"
               ],
@@ -1300,8 +1300,8 @@ const CURRICULUM_P1 = [
               "questionAr": "كم حاصل 4 + 2 + 2؟",
               "options": [
                 "8",
-                "7",
                 "9",
+                "7",
                 "6"
               ],
               "answer": "8",
@@ -1323,10 +1323,10 @@ const CURRICULUM_P1 = [
               "question": "Genius has 3 balloons, Smarty has 3, and Brainy has 4. How many balloons together? 🎈",
               "questionAr": "جينيوس معه 3 بالونات، وسمارتي معه 3، وبرايني معه 4. كم بالونة معهم جميعاً؟ 🎈",
               "options": [
-                "10",
                 "9",
-                "8",
-                "11"
+                "10",
+                "11",
+                "8"
               ],
               "answer": "10",
               "explanation": "3 + 3 = 6, and 6 + 4 = 10 balloons! 🎈 Party time!",
@@ -1337,6 +1337,6 @@ const CURRICULUM_P1 = [
       }
     ]
   }
-];
+];;
 
 window.CURRICULUM_P1 = CURRICULUM_P1;

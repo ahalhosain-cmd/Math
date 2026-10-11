@@ -257,10 +257,21 @@ class MasteryApp {
     if (newGrade !== 'p1' && newGrade !== 'p3') return;
     this.currentGrade = newGrade;
     this.state.grade = newGrade;
+    this.currentExam = null; // Clear any existing exam so new grade exam is generated
     this.saveState();
     this.updateHeaderStats();
     this.renderRoadmap();
     this.renderParentDashboard();
+
+    // Update document title and brand subtitle
+    document.title = (newGrade === 'p1') ? 'Primary 1 Math Mastery (الصف الأول الابتدائي)' : 'Primary 3 Math Mastery (100% Term 1 Curriculum)';
+
+    // If currently on exam tab, regenerate exam for the new grade
+    const examView = document.getElementById('view-exam');
+    if (examView && examView.classList.contains('active')) {
+      this.generateNewSchoolExam();
+    }
+
     if (window.soundManager) window.soundManager.click();
   }
 
@@ -281,11 +292,15 @@ class MasteryApp {
     this.renderParentDashboard();
     this.initVoiceRecognition();
 
-    // Check if first-time user: show Welcome Modal if no profiles exist
+    // Prompt user to pick or create champion on startup
     const data = this.getProfilesData();
-    if (data.profiles.length === 0) {
-      setTimeout(() => this.showWelcomeModal(), 400);
-    }
+    setTimeout(() => {
+      if (data.profiles.length === 0) {
+        this.showWelcomeModal();
+      } else {
+        this.openProfilesModal();
+      }
+    }, 350);
   }
 
   // --- Welcome Modal for First-Time Child ---
@@ -417,21 +432,28 @@ class MasteryApp {
       return;
     }
 
-    let totalCurriculumQuestions = 0;
-    CURRICULUM_DATA.forEach(ch => {
-      ch.lessons.forEach(l => {
-        totalCurriculumQuestions += (l.tiers.t1.length + l.tiers.t2.length + l.tiers.t3.length);
+    const getProfileTotalQuestions = (grade) => {
+      let count = 0;
+      this.getActiveCurriculum(grade).forEach(ch => {
+        ch.lessons.forEach(l => {
+          count += this.getLessonQuestions(l).length;
+        });
       });
-    });
+      return count;
+    };
 
     container.innerHTML = data.profiles.map(p => {
       const isActive = p.id === this.state.id;
       const completedLessonsCount = Object.keys(p.completedLessons || {}).length;
       const correctAnswersCount = Object.values(p.answers || {}).filter(a => a && a.correct).length;
+      const totalCurriculumQuestions = getProfileTotalQuestions(p.grade || 'p1');
       const masteryPct = totalCurriculumQuestions > 0 ? Math.round((correctAnswersCount / totalCurriculumQuestions) * 100) : 0;
 
+      const gradeLabel = p.grade === 'p3' ? '📐 الصف الثالث الابتدائي (ثالثة)' : '🎒 الصف الأول الابتدائي (أولى)';
+      const gradeBadgeClass = p.grade === 'p3' ? 'badge-grade-p3' : 'badge-grade-p1';
+
       return `
-        <div class="profile-item-card ${isActive ? 'is-active-child' : ''}">
+        <div class="profile-item-card ${isActive ? 'is-active-child' : ''}" onclick="app.switchProfile('${p.id}')" title="انقر للدخول بحساب ${this.escapeHtml(p.name || p.childName || 'البطل')}">
           <div class="profile-card-left">
             <div class="profile-card-avatar">${p.avatar || '🚀'}</div>
             <div class="profile-card-info">
@@ -439,23 +461,19 @@ class MasteryApp {
                 <span>${this.escapeHtml(p.name || p.childName || 'Champion')}</span>
                 ${isActive ? '<span class="badge-active-tag">🌟 البطل الحالي</span>' : ''}
               </h4>
-              <div class="profile-card-stats">
-                <span style="color:#2563EB; font-weight:800;">${p.grade === 'p3' ? '📐 Primary 3' : '🎒 Primary 1'}</span>
+              <div class="profile-card-stats" style="margin-top: 4px;">
+                <span class="${gradeBadgeClass}">${gradeLabel}</span>
                 <span>•</span>
                 <span>⭐ ${p.stars || 0} نجمة</span>
                 <span>•</span>
                 <span>🎯 ${masteryPct}% إتقان</span>
-                <span>•</span>
-                <span>📚 ${completedLessonsCount} دروس</span>
               </div>
             </div>
           </div>
-          <div class="profile-card-actions">
-            ${!isActive ? `
-              <button type="button" class="btn-select-profile" onclick="app.switchProfile('${p.id}')">
-                ▶ اختيار
-              </button>
-            ` : ''}
+          <div class="profile-card-actions" onclick="event.stopPropagation()">
+            <button type="button" class="btn-select-profile" onclick="app.switchProfile('${p.id}')">
+              ${isActive ? '✔ متابعة' : '▶ اختيار والبدء'}
+            </button>
             <button type="button" class="btn-edit-profile-icon" onclick="app.toggleAddProfileForm(true, '${p.id}')" title="تعديل الاسم أو الشخصية">
               ✏️
             </button>
@@ -976,8 +994,9 @@ class MasteryApp {
 
     // Breakdown table
     const tableBody = document.getElementById('dash-breakdown-body');
+    const activeCurriculum = this.getActiveCurriculum();
     if (tableBody) {
-      tableBody.innerHTML = CURRICULUM_DATA.map(ch => {
+      tableBody.innerHTML = activeCurriculum.map(ch => {
         return ch.lessons.map(l => {
           const mastery = this.getLessonMastery(l);
           const totalQ = this.getLessonQuestions(l).length;
@@ -991,7 +1010,7 @@ class MasteryApp {
               <td><strong>Ch ${ch.number}</strong></td>
               <td>
                 <strong>${l.title}</strong><br>
-                <small style="color:#64748B;">${l.titleAr} • 📖 Book Page ${l.bookPage}</small>
+                <small style="color:#64748B;">${l.titleAr || ''} • 📖 Book Page ${l.bookPage}</small>
               </td>
               <td>${totalQ} Checks</td>
               <td>
@@ -1012,21 +1031,28 @@ class MasteryApp {
       }).join('');
     }
 
+    // Dynamic dashboard grade subtitle
+    const dashGradeSubtitle = document.getElementById('dash-grade-subtitle');
+    if (dashGradeSubtitle) {
+      dashGradeSubtitle.textContent = this.currentGrade === 'p1' ? 'Primary 1 - Term 1 MOETE (الصف الأول الابتدائي)' : 'Primary 3 - Term 1 MOETE (الصف الثالث الابتدائي)';
+    }
+
     // Certificate preview state
     const certCard = document.getElementById('cert-action-card');
+    const gradeTitle = this.currentGrade === 'p1' ? 'Grade 1' : 'Grade 3';
     if (certCard) {
       if (overall === 100) {
         certCard.classList.remove('cert-locked');
         certCard.classList.add('cert-unlocked');
         document.getElementById('cert-status-msg').innerHTML = `
-          <strong>🎊 Congratulations!</strong> 100% Mastery has been achieved across all 6 Chapters!
+          <strong>🎊 Congratulations!</strong> 100% Mastery has been achieved across all ${activeCurriculum.length} Chapters!
         `;
         document.getElementById('btn-view-cert').disabled = false;
       } else {
         certCard.classList.add('cert-locked');
         certCard.classList.remove('cert-unlocked');
         document.getElementById('cert-status-msg').innerHTML = `
-          Reach <strong>100% Overall Mastery</strong> to unlock the Official Grade 3 Math Honor Certificate! (${100 - overall}% remaining).
+          Reach <strong>100% Overall Mastery</strong> to unlock the Official ${gradeTitle} Math Honor Certificate! (${100 - overall}% remaining).
         `;
         document.getElementById('btn-view-cert').disabled = true;
       }
@@ -1035,6 +1061,17 @@ class MasteryApp {
 
   // --- Quiz / Practice Execution ---
   startLesson(chapterId, lessonId) {
+    if (!lessonId) {
+      // Find chapter containing this lesson if only 1 argument was passed
+      for (const c of this.getActiveCurriculum()) {
+        const found = c.lessons.find(l => l.id === chapterId);
+        if (found) {
+          lessonId = chapterId;
+          chapterId = c.id;
+          break;
+        }
+      }
+    }
     const ch = this.getActiveCurriculum().find(c => c.id === chapterId);
     if (!ch) return;
     const lesson = ch.lessons.find(l => l.id === lessonId);
@@ -1094,6 +1131,7 @@ class MasteryApp {
   }
 
   launchQuizInterface() {
+    this.quizSession = [];
     this.switchTab('quiz');
     this.renderCurrentQuestion();
   }
@@ -1218,9 +1256,12 @@ class MasteryApp {
         </div>
       `;
     } else {
+      if (!q._displayOptions) {
+        q._displayOptions = [...q.options].sort(() => 0.5 - Math.random());
+      }
       inputControlsHtml = `
         <div class="q-options-grid">
-          ${q.options.map(opt => `
+          ${q._displayOptions.map(opt => `
             <button class="btn-option" onclick="app.handleAnswer('${this.escapeHtml(opt)}')">
               <span class="opt-bullet">○</span>
               <span class="opt-label">${opt}</span>
@@ -1241,7 +1282,7 @@ class MasteryApp {
             <span>سؤال ${qNum} من ${total}</span>
           </div>
           <div class="q-quick-tools">
-            <button class="btn-q-tool btn-q-listen" id="btn-read-aloud" onclick="app.startKaraokeReading('${this.escapeHtml(q.question)}')" title="استمع لقراءة السؤال">
+            <button class="btn-q-tool btn-q-listen" id="btn-read-aloud" onclick="app.startKaraokeReading('${this.escapeHtml(q.question)}')" title="استمع لقراءة السؤال بصوت واضح">
               <span class="tool-icon">🔊</span>
               <span id="read-aloud-text">اسمع</span>
             </button>
@@ -1249,17 +1290,9 @@ class MasteryApp {
               <span class="tool-icon">🌐</span>
               <span id="toggle-ar-text">${this.showArabic ? 'إخفاء العربي' : 'عربي'}</span>
             </button>
-            <button class="btn-q-tool btn-q-book" onclick="app.openCurrentLessonBookPage()" title="تصفح صفحة كتاب الوزارة لهذا الدرس">
+            <button class="btn-q-tool btn-q-book" onclick="app.openCurrentLessonBookPage()" title="تصفح صفحة كتاب الوزارة الرسمية لهذا الدرس">
               <span class="tool-icon">📖</span>
               <span>الكتاب</span>
-            </button>
-            <button class="btn-q-tool btn-q-tutor" id="btn-ask-ai" onclick="app.openAiTutor()" title="اسأل المعلمة إيما">
-              <span class="tool-icon">👩‍🏫</span>
-              <span>المعلمة إيما</span>
-            </button>
-            <button class="btn-q-tool btn-q-voice" id="btn-q-voice" onclick="app.openAiTutorWithVoice()" title="تحدث بصوتك للمعلمة">
-              <span class="tool-icon">🎙️</span>
-              <span>تحدث</span>
             </button>
           </div>
         </div>
@@ -1473,48 +1506,20 @@ class MasteryApp {
       isCorrect = String(selectedOpt).trim() === String(q.answer).trim();
     }
 
-    // Track state
+    // Save into session for summary review at the end of the lesson
+    if (!this.quizSession) this.quizSession = [];
+    this.quizSession.push({
+      question: q,
+      selectedOpt: selectedOpt,
+      isCorrect: isCorrect
+    });
+
+    // Track state in profile
     if (!this.state.answers[q.id]) {
       this.state.answers[q.id] = { correct: false, attempts: 0, wrongCount: 0 };
     }
     const record = this.state.answers[q.id];
     record.attempts++;
-
-    const feedbackBox = document.getElementById('q-feedback-box');
-    feedbackBox.style.display = 'block';
-
-    const optionBtns = document.querySelectorAll('.btn-option');
-    optionBtns.forEach(btn => {
-      btn.disabled = true;
-      const label = btn.querySelector('.opt-label');
-      const text = label ? label.textContent.trim() : btn.textContent.trim();
-      if (text === q.answer) {
-        btn.classList.add('opt-correct');
-        const bullet = btn.querySelector('.opt-bullet');
-        if (bullet) bullet.textContent = '✓';
-      } else if (text === selectedOpt && !isCorrect) {
-        btn.classList.add('opt-wrong');
-        const bullet = btn.querySelector('.opt-bullet');
-        if (bullet) bullet.textContent = '✗';
-      }
-    });
-
-    const compareBtns = document.querySelectorAll('.btn-compare-symbol');
-    compareBtns.forEach(btn => {
-      btn.disabled = true;
-      if (btn.textContent.includes(q.answer)) {
-        btn.classList.add('opt-correct');
-      } else if (btn.textContent.includes(selectedOpt) && !isCorrect) {
-        btn.classList.add('opt-wrong');
-      }
-    });
-
-    const completeInput = document.getElementById('complete-input-field');
-    if (completeInput) {
-      completeInput.disabled = true;
-      completeInput.style.borderColor = isCorrect ? '#10B981' : '#EF4444';
-      completeInput.style.backgroundColor = isCorrect ? '#ECFDF5' : '#FEF2F2';
-    }
 
     if (isCorrect) {
       record.correct = true;
@@ -1532,58 +1537,57 @@ class MasteryApp {
           this.state.completedChapters[this.currentChapter.id] = true;
         }
       }
-      this.saveState();
-
-      window.soundManager.correct();
-      if (this.confetti) this.confetti.fire(1200);
-
-      feedbackBox.className = 'q-feedback-box feedback-correct animate-pop';
-      feedbackBox.innerHTML = `
-        <div class="feedback-title">🎉 أحسنت يا بطل! إجابة صحيحة وممتازة! Excellent!</div>
-        <div class="feedback-desc-en" dir="ltr">
-          <span class="fb-tag fb-tag-en">ENG</span>
-          <span>${q.explanation}</span>
-        </div>
-        ${q.hintAr ? `
-          <div class="feedback-desc-ar" dir="rtl">
-            <span class="fb-tag fb-tag-ar">عربي</span>
-            <span>${q.hintAr}</span>
-          </div>
-        ` : ''}
-        <div class="feedback-actions">
-          <button class="btn-next-action" onclick="app.nextQuestion()">Next Question (السؤال التالي) ➜</button>
-        </div>
-      `;
     } else {
       record.wrongCount++;
       this.state.streak = 0;
-      this.saveState();
-
-      window.soundManager.incorrect();
-
-      feedbackBox.className = 'q-feedback-box feedback-wrong animate-shake';
-      feedbackBox.innerHTML = `
-        <div class="feedback-title">🤔 فكر فيها تاني يا بطل! Almost there!</div>
-        <div class="feedback-desc-en" dir="ltr">
-          <span class="fb-tag fb-tag-en">ENG</span>
-          <span>${q.explanation}</span>
-        </div>
-        ${q.hintAr ? `
-          <div class="feedback-desc-ar" dir="rtl">
-            <span class="fb-tag fb-tag-ar">عربي</span>
-            <span>${q.hintAr}</span>
-          </div>
-        ` : ''}
-        <div class="feedback-tutor-callout">
-          <span class="callout-text" dir="rtl">👩‍🏫 محتاج المعلمة إيما تبسطلك فكرة السؤال بمثال سهل بصوتها؟</span>
-          <button class="btn-ask-ai-mini" onclick="app.openAiTutor()">✨ اسأل المعلمة إيما</button>
-        </div>
-        <div class="feedback-actions">
-          <button class="btn-next-action btn-retry-action" onclick="app.retryQuestion()">Try Again (حاول مرة أخرى) 🔄</button>
-          <button class="btn-next-action" onclick="app.nextQuestion()">Continue (متابعة) ➜</button>
-        </div>
-      `;
     }
+    this.saveState();
+    this.updateHeaderStats();
+
+    // Disable option buttons and mark selection neutrally without revealing answer
+    const optionBtns = document.querySelectorAll('.btn-option');
+    optionBtns.forEach(btn => {
+      btn.disabled = true;
+      const label = btn.querySelector('.opt-label');
+      const text = label ? label.textContent.trim() : btn.textContent.trim();
+      if (text === String(selectedOpt).trim()) {
+        btn.classList.add('opt-selected-current');
+      }
+    });
+
+    const compareBtns = document.querySelectorAll('.btn-compare-symbol');
+    compareBtns.forEach(btn => {
+      btn.disabled = true;
+      if (btn.textContent.includes(selectedOpt)) {
+        btn.classList.add('opt-selected-current');
+      }
+    });
+
+    const completeInput = document.getElementById('complete-input-field');
+    if (completeInput) {
+      completeInput.disabled = true;
+      completeInput.classList.add('opt-selected-current');
+    }
+
+    if (window.soundManager) window.soundManager.click();
+
+    // Feedback: Recorded neutrally, answer will be summarized at end of lesson
+    const feedbackBox = document.getElementById('q-feedback-box');
+    feedbackBox.style.display = 'block';
+    feedbackBox.className = 'q-feedback-box feedback-recorded animate-pop';
+
+    const isLastQ = this.currentQuestionIdx >= this.activeQuestionList.length - 1;
+    feedbackBox.innerHTML = `
+      <div class="feedback-title">✨ تم تسجيل إجابتك بنجاح يا بطل! 🎯</div>
+      <div style="font-size: 14px; opacity: 0.95; margin-top: 6px; line-height: 1.5;">
+        Answer saved! واصل التحدي، وستظهر النتيجة والحلول النموذجية لكل الأسئلة بعد إنهاء أسئلة هذا الدرس.
+      </div>
+      <div class="feedback-actions" style="margin-top: 14px;">
+        <button class="btn-next-action" onclick="app.nextQuestion()">
+          ${isLastQ ? 'إنهاء الدرس وعرض النتيجة والحلول النموذجية 🏁' : 'السؤال التالي (Next Question) ➜'}
+        </button>
+      </div>
+    `;
   }
 
   retryQuestion() {
@@ -1592,6 +1596,15 @@ class MasteryApp {
 
   nextQuestion() {
     this.currentQuestionIdx++;
+    this.renderCurrentQuestion();
+  }
+
+  restartCurrentLesson() {
+    if (this.activeQuestionList) {
+      this.activeQuestionList.forEach(q => { delete q._displayOptions; });
+    }
+    this.quizSession = [];
+    this.currentQuestionIdx = 0;
     this.renderCurrentQuestion();
   }
 
@@ -1604,43 +1617,117 @@ class MasteryApp {
 
     const overall = this.getOverallMastery();
 
-    let titleMsg = "🌟 Awesome Effort!";
+    let titleMsg = "🌟 أحسنت يا بطل! أنهيت أسئلة الدرس بنجاح!";
+    let titleMsgEn = "Awesome Effort! You finished all questions!";
     if (this.currentLesson) {
       if (this.getLessonMastery(this.currentLesson) === 100) {
-        titleMsg = "🏆 100% Lesson Mastered!";
+        titleMsg = "🏆 مبروك! أتقنت هذا الدرس بنسبة 100%!";
+        titleMsgEn = "100% Lesson Mastered!";
       }
       this.state.completedLessons[this.currentLesson.id] = true;
       this.saveState();
     } else if (this.currentChapter && this.getChapterMastery(this.currentChapter) === 100) {
-      titleMsg = `👑 100% Chapter ${this.currentChapter.number} Mastered!`;
+      titleMsg = `👑 مبروك! أتقنت الوحدة بالكامل!`;
+      titleMsgEn = `100% Chapter Mastered!`;
       this.state.completedChapters[this.currentChapter.id] = true;
       this.saveState();
     }
+
+    // Session questions summary
+    const sessionItems = (this.quizSession && this.quizSession.length > 0)
+      ? this.quizSession
+      : this.activeQuestionList.map(q => ({
+          question: q,
+          selectedOpt: (this.state.answers[q.id]?.correct ? q.answer : '—'),
+          isCorrect: !!this.state.answers[q.id]?.correct
+        }));
+
+    const totalSessionQ = sessionItems.length;
+    const correctSessionQ = sessionItems.filter(s => s.isCorrect).length;
+    const scorePct = totalSessionQ > 0 ? Math.round((correctSessionQ / totalSessionQ) * 100) : 100;
+    const earnedStars = correctSessionQ * 2;
+
+    // Build Model Answers Review
+    const reviewCardsHtml = sessionItems.map((item, idx) => {
+      const q = item.question;
+      const isOk = item.isCorrect;
+      return `
+        <div class="summary-q-item ${isOk ? 'summary-right' : 'summary-wrong'}">
+          <div class="summary-q-title-row">
+            <span class="summary-q-num">السؤال رقم ${idx + 1} من ${totalSessionQ}</span>
+            <span class="summary-q-badge ${isOk ? 'badge-right' : 'badge-wrong'}">
+              ${isOk ? '✅ إجابة صحيحة' : '❌ إجابة تحتاج مراجعة'}
+            </span>
+          </div>
+          <div class="summary-q-question">${q.question}</div>
+          ${q.questionAr ? `<div class="summary-q-ar">${q.questionAr}</div>` : ''}
+          <div class="summary-answers-box">
+            <div class="summary-user-choice">
+              إجابتك: <span class="${isOk ? 'choice-right' : 'choice-wrong'}" style="font-weight: 700;">${item.selectedOpt || '—'}</span>
+            </div>
+            <div class="summary-model-answer">
+              💡 الإجابة النموذجية الصحيحة: <span class="choice-model" style="font-weight: 800;">${q.answer}</span>
+            </div>
+          </div>
+          ${q.explanation ? `
+            <div class="summary-explanation-box">
+              <strong>📖 الشرح والتفسير:</strong>
+              <div>${q.explanation}</div>
+              ${q.hintAr ? `<div style="margin-top: 4px; color: #1D4ED8;">${q.hintAr}</div>` : ''}
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }).join('');
 
     container.innerHTML = `
       <div class="quiz-complete-card animate-pop">
         <div class="complete-trophy-icon">🏆</div>
         <h2>${titleMsg}</h2>
-        <p class="complete-sub">You've finished this practice set! Your knowledge is growing stronger every day.</p>
+        <p class="complete-sub" style="font-size: 15px; margin-top: 4px;">${titleMsgEn}</p>
+        <p class="complete-sub" style="color: #64748B;">تم إنهاء أسئلة هذا التدريب بنجاح وحفظ درجاتك في ملف البطل.</p>
 
         <div class="complete-stats-row">
           <div class="complete-stat">
-            <span class="c-val">⭐ +${this.activeQuestionList.length * 2}</span>
-            <span class="c-label">Stars Earned</span>
+            <span class="c-val">⭐ +${earnedStars}</span>
+            <span class="c-label">نجوم مكتسبة (Stars)</span>
+          </div>
+          <div class="complete-stat">
+            <span class="c-val">${scorePct}%</span>
+            <span class="c-label">دقة الإجابات (${correctSessionQ}/${totalSessionQ})</span>
           </div>
           <div class="complete-stat">
             <span class="c-val">${overall}%</span>
-            <span class="c-label">Overall Mastery</span>
+            <span class="c-label">الإتقان العام للدروس</span>
           </div>
         </div>
 
-        <div class="complete-buttons">
-          <button class="btn-primary-action" onclick="app.switchTab('roadmap')">
-            🗺️ Return to Adventure Map
+        <div class="complete-buttons" style="margin-top: 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <button class="btn-primary-action btn-quiz-back-menu" onclick="app.switchTab('roadmap')" style="background: #2563EB; font-weight: 700; padding: 12px 24px; font-size: 15px;">
+            📚 العودة لقائمة الدروس (Lessons Menu)
           </button>
-          <button class="btn-secondary-action" onclick="app.switchTab('dashboard')">
-            📊 View Parent Diagnostic Report
+          <button class="btn-secondary-action" onclick="app.restartCurrentLesson()" style="padding: 12px 20px;">
+            🔄 إعادة تدريب الدرس
           </button>
+          <button class="btn-secondary-action" onclick="app.switchTab('dashboard')" style="padding: 12px 20px;">
+            📊 تقرير ولي الأمر
+          </button>
+        </div>
+
+        <!-- ملخص إجابات الدرس والحل النموذجي لجميع الأسئلة -->
+        <div class="lesson-summary-review-card" style="margin-top: 30px; text-align: right;" dir="rtl">
+          <div class="summary-review-header">
+            <h3>📋 ملخص إجابات الدرس والحل النموذجي لجميع الأسئلة</h3>
+            <p>راجع إجاباتك وتعلم من الخطوات والشرح النموذجي لكل سؤال:</p>
+          </div>
+          <div class="summary-q-list">
+            ${reviewCardsHtml}
+          </div>
+          <div style="text-align: center; margin-top: 24px;">
+            <button class="btn-primary-action btn-quiz-back-menu" onclick="app.switchTab('roadmap')" style="background: #2563EB; font-weight: 700; padding: 12px 24px; font-size: 15px;">
+              📚 العودة لقائمة الدروس
+            </button>
+          </div>
         </div>
       </div>
     `;
@@ -1651,12 +1738,34 @@ class MasteryApp {
     const modal = document.getElementById('cert-modal');
     if (!modal) return;
 
-    document.getElementById('cert-child-name').textContent = this.state.childName;
-    document.getElementById('cert-date').textContent = new Date().toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    const childName = this.state.name || this.state.childName || "Champion";
+    const isP1 = this.currentGrade === 'p1';
+
+    const nameEl = document.getElementById('cert-child-name');
+    if (nameEl) nameEl.textContent = childName;
+
+    const dateEl = document.getElementById('cert-date');
+    if (dateEl) {
+      dateEl.textContent = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    }
+
+    const subEl = modal.querySelector('.cert-sub');
+    if (subEl) {
+      subEl.textContent = isP1 ? 'PRIMARY 1 MATHEMATICS MASTERY (TERM 1)' : 'PRIMARY 3 MATHEMATICS MASTERY (TERM 1)';
+    }
+
+    const descEl = modal.querySelector('.cert-desc');
+    if (descEl) {
+      if (isP1) {
+        descEl.innerHTML = `for demonstrating <strong>100% Comprehensive Mastery</strong> of all curriculum standards in Grade 1 Mathematics, including Numbers up to 10, Spatial Positions, Addition & Subtraction Foundations, Comparing Lengths, Representing Data, Numbers Greater than 10, Reading the Clock, and Operations with 3 Numbers.`;
+      } else {
+        descEl.innerHTML = `for demonstrating <strong>100% Comprehensive Mastery</strong> of all curriculum standards in Grade 3 Mathematics, including Rules of Multiplication, Time and Duration, Division, Addition and Subtraction with Regrouping, Length & Distances, Organizing Data, Mental Math, Division with Remainders, Numbers Bigger than 10,000, and Vertical Multiplication.`;
+      }
+    }
 
     modal.style.display = 'flex';
     window.soundManager.levelUp();
@@ -1698,15 +1807,15 @@ class MasteryApp {
   }
 
   generateNewSchoolExam() {
-    // 1. Gather pool of questions
+    // 1. Gather pool of questions from active curriculum
     const allQuestions = [];
-    CURRICULUM_DATA.forEach(ch => {
+    this.getActiveCurriculum().forEach(ch => {
       ch.lessons.forEach(l => {
         allQuestions.push(...this.getLessonQuestions(l));
       });
     });
 
-    // 2. Select: 5 choose questions, 5 complete questions, 2 story problems
+    // 2. Select: 5 choose questions, 5 complete/skill questions, 2 story problems
     const shuffle = arr => [...arr].sort(() => 0.5 - Math.random());
 
     let choosePool = allQuestions.filter(q => q.format !== 'complete' && !q.type.includes('word'));
@@ -1732,6 +1841,7 @@ class MasteryApp {
     const part3 = shuffle(storyPool).slice(0, 2);
 
     this.currentExam = {
+      grade: this.currentGrade,
       date: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
       part1,
       part2,
@@ -1740,6 +1850,12 @@ class MasteryApp {
       submitted: false,
       score: 0
     };
+
+    // Update exam header banner text if element exists
+    const examGradeTitle = document.getElementById('exam-grade-title');
+    if (examGradeTitle) {
+      examGradeTitle.textContent = this.currentGrade === 'p1' ? 'Primary 1 Mathematics Monthly Assessment (الصف الأول الابتدائي)' : 'Primary 3 Mathematics Monthly Assessment (الصف الثالث الابتدائي)';
+    }
 
     this.renderSchoolExamPaper();
   }
@@ -1765,16 +1881,26 @@ class MasteryApp {
       if (this.currentExam.userAnswers[q.id] === q.answer) score += 1;
     });
 
-    // Part 2: 5 complete questions (1 mark each = 5)
+    // Part 2: 5 questions (1 mark each = 5)
     this.currentExam.part2.forEach(q => {
-      const u = String(this.currentExam.userAnswers[q.id] || '').replace(/[^0-9a-zA-Z]/g, '').toLowerCase();
-      const a = String(q.answer).replace(/[^0-9a-zA-Z]/g, '').toLowerCase();
-      if (u && (u === a || a.startsWith(u))) score += 1;
+      if (q.format === 'choose' || (q.options && q.options.length > 0)) {
+        if (this.currentExam.userAnswers[q.id] === q.answer) score += 1;
+      } else {
+        const u = String(this.currentExam.userAnswers[q.id] || '').replace(/[^0-9a-zA-Z]/g, '').toLowerCase();
+        const a = String(q.answer).replace(/[^0-9a-zA-Z]/g, '').toLowerCase();
+        if (u && (u === a || a.startsWith(u))) score += 1;
+      }
     });
 
     // Part 3: 2 story problems (5 marks each = 10)
     this.currentExam.part3.forEach(q => {
-      if (this.currentExam.userAnswers[q.id] === q.answer) score += 5;
+      if (q.options && q.options.length > 0) {
+        if (this.currentExam.userAnswers[q.id] === q.answer) score += 5;
+      } else {
+        const u = String(this.currentExam.userAnswers[q.id] || '').replace(/[^0-9a-zA-Z]/g, '').toLowerCase();
+        const a = String(q.answer).replace(/[^0-9a-zA-Z]/g, '').toLowerCase();
+        if (u && (u === a || a.startsWith(u))) score += 5;
+      }
     });
 
     this.currentExam.submitted = true;
@@ -1796,6 +1922,7 @@ class MasteryApp {
     if (!container || !this.currentExam) return;
 
     const exam = this.currentExam;
+    const isP1 = this.currentGrade === 'p1';
 
     let resultBannerHtml = '';
     if (exam.submitted) {
@@ -1810,7 +1937,7 @@ class MasteryApp {
             Score: ${exam.score} / 20
           </div>
           <h3 style="color: ${gradeColor}; font-size: 24px; margin-bottom: 6px;">${gradeText}</h3>
-          <p style="color: #64748B;">Student: <strong>${this.state.childName}</strong> • Date: ${exam.date}</p>
+          <p style="color: #64748B;">Student: <strong>${this.state.name || this.state.childName || 'Champion'}</strong> • Date: ${exam.date}</p>
         </div>
       `;
     }
@@ -1821,10 +1948,10 @@ class MasteryApp {
       <div class="exam-paper-school-head">
         <div>
           <strong>Ministry of Education & Technical Education</strong><br>
-          Primary 3 Language Schools • Mathematics Assessment
+          ${isP1 ? 'Primary 1' : 'Primary 3'} Language Schools • Mathematics Assessment
         </div>
         <div style="text-align: right;">
-          Student Name: <u>${this.state.childName}</u><br>
+          Student Name: <u>${this.state.name || this.state.childName || 'Champion'}</u><br>
           Total Marks: <strong>20 Marks</strong>
         </div>
       </div>
@@ -1848,7 +1975,7 @@ class MasteryApp {
               <div class="exam-q-title">(${idx + 1}) ${q.question}${statusLabel}</div>
               ${this.renderQuestionVisual(q, 140)}
               <div class="exam-choose-options">
-                ${q.options.map(opt => `
+                ${(q.options || []).map(opt => `
                   <button type="button" class="btn-exam-opt ${userAns === opt ? 'active' : ''}" 
                           ${exam.submitted ? 'disabled' : ''}
                           onclick="app.selectExamAnswer('${q.id}', '${this.escapeHtml(opt)}')">
@@ -1864,30 +1991,48 @@ class MasteryApp {
       <!-- SECTION 2 -->
       <div class="exam-section-card">
         <div class="exam-section-header">
-          <span>Question 2: Complete the following</span>
+          <span>Question 2: ${isP1 ? 'Choose the correct answer' : 'Complete the following'}</span>
           <span class="marks-tag">[5 Marks]</span>
         </div>
         ${exam.part2.map((q, idx) => {
           const userAns = exam.userAnswers[q.id] || '';
+          const hasOptions = (q.options && q.options.length > 0) && (q.format === 'choose' || isP1);
           let statusLabel = '';
           if (exam.submitted) {
-            const u = String(userAns).replace(/[^0-9a-zA-Z]/g, '').toLowerCase();
-            const a = String(q.answer).replace(/[^0-9a-zA-Z]/g, '').toLowerCase();
-            const isRight = u && (u === a || a.startsWith(u));
-            statusLabel = isRight ? ' <span style="color:#10B981; font-weight:bold;">✔ Correct (1 Mark)</span>' : ` <span style="color:#DC2626; font-weight:bold;">✗ Model Answer: ${q.answer}</span>`;
+            if (hasOptions) {
+              const isRight = userAns === q.answer;
+              statusLabel = isRight ? ' <span style="color:#10B981; font-weight:bold;">✔ Correct (1 Mark)</span>' : ` <span style="color:#DC2626; font-weight:bold;">✗ Model Answer: ${q.answer}</span>`;
+            } else {
+              const u = String(userAns).replace(/[^0-9a-zA-Z]/g, '').toLowerCase();
+              const a = String(q.answer).replace(/[^0-9a-zA-Z]/g, '').toLowerCase();
+              const isRight = u && (u === a || a.startsWith(u));
+              statusLabel = isRight ? ' <span style="color:#10B981; font-weight:bold;">✔ Correct (1 Mark)</span>' : ` <span style="color:#DC2626; font-weight:bold;">✗ Model Answer: ${q.answer}</span>`;
+            }
           }
 
           return `
             <div class="exam-q-row">
               <div class="exam-q-title">(${idx + 1}) ${q.question}${statusLabel}</div>
               ${this.renderQuestionVisual(q, 140)}
-              <div>
-                <input type="text" class="complete-input" style="max-width: 260px; font-size:16px; padding:8px 12px;" 
-                       value="${userAns}" 
-                       placeholder="Write answer..." 
-                       ${exam.submitted ? 'disabled' : ''}
-                       oninput="app.setExamTextInput('${q.id}', this.value)" />
-              </div>
+              ${hasOptions ? `
+                <div class="exam-choose-options">
+                  ${q.options.map(opt => `
+                    <button type="button" class="btn-exam-opt ${userAns === opt ? 'active' : ''}" 
+                            ${exam.submitted ? 'disabled' : ''}
+                            onclick="app.selectExamAnswer('${q.id}', '${this.escapeHtml(opt)}')">
+                      ${opt}
+                    </button>
+                  `).join('')}
+                </div>
+              ` : `
+                <div>
+                  <input type="text" class="complete-input" style="max-width: 260px; font-size:16px; padding:8px 12px;" 
+                         value="${userAns}" 
+                         placeholder="Write answer..." 
+                         ${exam.submitted ? 'disabled' : ''}
+                         oninput="app.setExamTextInput('${q.id}', this.value)" />
+                </div>
+              `}
             </div>
           `;
         }).join('')}
@@ -1901,6 +2046,7 @@ class MasteryApp {
         </div>
         ${exam.part3.map((q, idx) => {
           const userAns = exam.userAnswers[q.id];
+          const hasOptions = q.options && q.options.length > 0;
           let statusLabel = '';
           if (exam.submitted) {
             const isRight = userAns === q.answer;
@@ -1911,15 +2057,25 @@ class MasteryApp {
             <div class="exam-q-row">
               <div class="exam-q-title">(${idx + 1}) ${q.question}${statusLabel}</div>
               ${this.renderQuestionVisual(q, 140)}
-              <div class="exam-choose-options">
-                ${q.options.map(opt => `
-                  <button type="button" class="btn-exam-opt ${userAns === opt ? 'active' : ''}" 
-                          ${exam.submitted ? 'disabled' : ''}
-                          onclick="app.selectExamAnswer('${q.id}', '${this.escapeHtml(opt)}')">
-                    ${opt}
-                  </button>
-                `).join('')}
-              </div>
+              ${hasOptions ? `
+                <div class="exam-choose-options">
+                  ${q.options.map(opt => `
+                    <button type="button" class="btn-exam-opt ${userAns === opt ? 'active' : ''}" 
+                            ${exam.submitted ? 'disabled' : ''}
+                            onclick="app.selectExamAnswer('${q.id}', '${this.escapeHtml(opt)}')">
+                      ${opt}
+                    </button>
+                  `).join('')}
+                </div>
+              ` : `
+                <div>
+                  <input type="text" class="complete-input" style="max-width: 260px; font-size:16px; padding:8px 12px;" 
+                         value="${userAns || ''}" 
+                         placeholder="Write answer..." 
+                         ${exam.submitted ? 'disabled' : ''}
+                         oninput="app.setExamTextInput('${q.id}', this.value)" />
+                </div>
+              `}
             </div>
           `;
         }).join('')}
@@ -2518,9 +2674,11 @@ class MasteryApp {
   // --- Feature: Official Ministry Textbook Page Viewer ---
   // --- Feature: Official Ministry Textbook Page Viewer ---
   openBookPageModal(bookPageNumber, lessonTitle) {
-    const pageNum = parseInt(bookPageNumber) || (this.currentLesson ? this.currentLesson.bookPage : 8);
-    // Verified 1-to-1 direct mapping in new 2027 Ministry textbook: PDF Page = Book Page
-    const pdfPage = Math.min(121, Math.max(1, pageNum));
+    const pageNum = parseInt(bookPageNumber) || (this.currentLesson ? this.currentLesson.bookPage : (this.currentGrade === 'p1' ? 6 : 8));
+    const isP1 = this.currentGrade === 'p1';
+    const maxPages = isP1 ? 98 : 121;
+    // Verified 1-to-1 direct mapping in Ministry textbook: PDF Page = Book Page
+    const pdfPage = Math.min(maxPages, Math.max(1, pageNum));
 
     this.currentBookPrintedPage = pdfPage;
     this.currentBookPdfPage = pdfPage;
@@ -2536,7 +2694,6 @@ class MasteryApp {
     const canvasEl = document.getElementById('book-image-canvas');
     const zoomResetBtn = document.getElementById('book-zoom-reset-btn');
 
-    const isP1 = this.currentGrade === 'p1';
     const gradeLabel = isP1 ? 'الصف الأول الابتدائي (Primary 1)' : 'الصف الثالث الابتدائي (Primary 3)';
     const titleText = lessonTitle || (this.currentLesson ? (this.currentLesson.titleAr || this.currentLesson.title) : `كتاب الوزارة الرسمي • ${gradeLabel}`);
     if (titleEl) titleEl.textContent = titleText;

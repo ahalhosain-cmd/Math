@@ -37,10 +37,10 @@ const CURRICULUM_DATA = [
               "question": "Complete the rule: 5 × 8 is ___ more than 5 × 7.",
               "questionAr": "أكمل القاعدة: حاصل 5 × 8 يزيد بمقدار ___ عن 5 × 7.",
               "options": [
-                "5",
+                "7",
                 "8",
                 "1",
-                "7"
+                "5"
               ],
               "answer": "5",
               "explanation": "When multiplier increases by 1, product increases by the multiplicand (5).",
@@ -81,10 +81,10 @@ const CURRICULUM_DATA = [
               "question": "Fill in the blank: 4 × 5 = 4 × 6 - ___",
               "questionAr": "أكمل الفراغ: 4 × 5 = 4 × 6 - ___",
               "options": [
-                "4",
+                "1",
                 "5",
-                "6",
-                "1"
+                "4",
+                "6"
               ],
               "answer": "4",
               "explanation": "Taking away 1 from multiplier decreases product by the multiplicand (4).",
@@ -119,9 +119,9 @@ const CURRICULUM_DATA = [
               "question": "To calculate 7 × 9, we break up 7 into 4 and 3. What is (4 × 9) + (3 × 9)?",
               "questionAr": "لحساب 7 × 9 فككنا 7 إلى 4 و 3. ما ناتج (4 × 9) + (3 × 9)؟",
               "options": [
-                "36 + 27 = 63",
-                "36 + 18 = 54",
                 "40 + 23 = 63",
+                "36 + 18 = 54",
+                "36 + 27 = 63",
                 "28 + 35 = 63"
               ],
               "answer": "36 + 27 = 63",
@@ -171,10 +171,10 @@ const CURRICULUM_DATA = [
               "question": "Is 9 × 5 equal to (9 × 3) + (9 × 2)?",
               "questionAr": "هل 9 × 5 تساوي (9 × 3) + (9 × 2)؟",
               "options": [
-                "Yes, because 3 + 2 = 5 and 27 + 18 = 45",
+                "Only for even numbers",
                 "No, second number cannot be split",
                 "No, answer is 50",
-                "Only for even numbers"
+                "Yes, because 3 + 2 = 5 and 27 + 18 = 45"
               ],
               "answer": "Yes, because 3 + 2 = 5 and 27 + 18 = 45",
               "explanation": "Breaking up multiplier gives same result: 27 + 18 = 45.",
@@ -210,10 +210,10 @@ const CURRICULUM_DATA = [
               "question": "What is 7 × 10?",
               "questionAr": "ما حاصل ضرب 7 × 10؟",
               "options": [
+                "7",
                 "70",
-                "17",
                 "700",
-                "7"
+                "17"
               ],
               "answer": "70",
               "explanation": "7 × 10 = 70.",
@@ -262,10 +262,10 @@ const CURRICULUM_DATA = [
               "question": "One box has 10 pencils. If you buy 4 boxes, how many pencils will you have in total?",
               "questionAr": "علبة بها 10 أقلام. إذا اشتريت 4 علب، فكم قلماً معك بالإجمالي؟",
               "options": [
-                "40 pencils (4 × 10 = 40)",
                 "14 pencils",
-                "400 pencils",
-                "24 pencils"
+                "40 pencils (4 × 10 = 40)",
+                "24 pencils",
+                "400 pencils"
               ],
               "answer": "40 pencils (4 × 10 = 40)",
               "explanation": "4 boxes × 10 pencils = 40 pencils.",
@@ -293,10 +293,10 @@ const CURRICULUM_DATA = [
               "question": "Sara threw 5 balls into the 0-point area. What is her score for these throws?",
               "questionAr": "رمت سارة 5 كرات في منطقة 0 نقطة. كم نقاطها من هذه الرميات؟",
               "options": [
-                "0 points (0 × 5 = 0)",
-                "5 points",
                 "50 points",
-                "1 point"
+                "0 points (0 × 5 = 0)",
+                "1 point",
+                "5 points"
               ],
               "answer": "0 points (0 × 5 = 0)",
               "explanation": "0 × 5 = 0 points.",
@@ -331,10 +331,10 @@ const CURRICULUM_DATA = [
               "question": "Gamal needs 50 points. He already scored 30 points. How many 5-point throws does he need to reach 50?",
               "questionAr": "يحتاج جمال 50 نقطة. أحرز 30 نقطة. كم رمية ذات 5 نقاط يحتاجها للوصول إلى 50؟",
               "options": [
-                "4 throws (4 × 5 = 20)",
+                "10 throws",
                 "2 throws",
                 "5 throws",
-                "10 throws"
+                "4 throws (4 × 5 = 20)"
               ],
               "answer": "4 throws (4 × 5 = 20)",
               "explanation": "50 - 30 = 20 points needed. 20 ÷ 5 = 4 throws.",
@@ -371,9 +371,9 @@ const CURRICULUM_DATA = [
               "question": "Write the missing number in the box: 3 × ___ = 12",
               "questionAr": "اكتب العدد الناقص في المربع: 3 × ___ = 12",
               "options": [
-                "4",
                 "3",
                 "5",
+                "4",
                 "6"
               ],
               "answer": "4",
@@ -417,10 +417,10 @@ const CURRICULUM_DATA = [
               "question": "To find the missing number in ___ × 8 = 56, which calculation can you use?",
               "questionAr": "لإيجاد العدد الناقص في ___ × 8 = 56، أي عملية حسابية تستخدم؟",
               "options": [
+                "56 × 8",
                 "56 ÷ 8 = 7",
                 "56 - 8 = 48",
-                "56 + 8 = 64",
-                "56 × 8"
+                "56 + 8 = 64"
               ],
               "answer": "56 ÷ 8 = 7",
               "explanation": "Division is inverse of multiplication: 56 ÷ 8 = 7, so 7 × 8 = 56.",
@@ -464,10 +464,10 @@ const CURRICULUM_DATA = [
               "question": "What time will it be 25 minutes after 8:45?",
               "questionAr": "كم ستكون الساعة بعد 25 دقيقة من 8:45؟",
               "options": [
-                "9:10",
                 "9:05",
                 "8:70",
-                "9:15"
+                "9:15",
+                "9:10"
               ],
               "answer": "9:10",
               "explanation": "8:45 + 15 min = 9:00, plus 10 min = 9:10.",
@@ -512,10 +512,10 @@ const CURRICULUM_DATA = [
               "question": "What time will it be 55 minutes after 3:10?",
               "questionAr": "كم ستكون الساعة بعد 55 دقيقة من 3:10؟",
               "options": [
-                "4:05",
+                "4:00",
                 "3:65",
                 "4:15",
-                "4:00"
+                "4:05"
               ],
               "answer": "4:05",
               "explanation": "3:10 + 50 min = 4:00, plus 5 min = 4:05.",
@@ -543,10 +543,10 @@ const CURRICULUM_DATA = [
               "question": "Convert into minutes: 1 hour 20 minutes = ___ minutes",
               "questionAr": "حول إلى دقائق: ساعة و 20 دقيقة = ___ دقيقة",
               "options": [
-                "80 minutes",
                 "120 minutes",
+                "85 minutes",
                 "70 minutes",
-                "85 minutes"
+                "80 minutes"
               ],
               "answer": "80 minutes",
               "explanation": "60 + 20 = 80 minutes.",
@@ -596,9 +596,9 @@ const CURRICULUM_DATA = [
               "questionAr": "بدأت الحصة 8:40 صباحاً وانتهت 9:45 صباحاً. كم كانت مدتها بالساعات والدقائق؟",
               "options": [
                 "1 hour 5 minutes",
-                "1 hour 15 minutes",
+                "1 hour 25 minutes",
                 "55 minutes",
-                "1 hour 25 minutes"
+                "1 hour 15 minutes"
               ],
               "answer": "1 hour 5 minutes",
               "explanation": "20 min to 9:00 + 45 min after = 65 min = 1 hour 5 minutes.",
@@ -627,9 +627,9 @@ const CURRICULUM_DATA = [
               "questionAr": "كم ثانية في دقيقة و 5 ثوانٍ؟",
               "options": [
                 "65 seconds",
-                "15 seconds",
                 "105 seconds",
-                "55 seconds"
+                "55 seconds",
+                "15 seconds"
               ],
               "answer": "65 seconds",
               "explanation": "60 + 5 = 65 seconds.",
@@ -664,10 +664,10 @@ const CURRICULUM_DATA = [
               "question": "Mazen ran 100 m in 75 s. Samy ran it in 1 min 20 s. Who was faster and by how much?",
               "questionAr": "جرى مازن 100 م في 75 ثانية، وسامي في دقيقة و 20 ثانية. من كان أسرع وبكم؟",
               "options": [
+                "They tied",
                 "Mazen by 5 seconds (75 s vs 80 s)",
-                "Samy by 5 seconds",
                 "Mazen by 15 seconds",
-                "They tied"
+                "Samy by 5 seconds"
               ],
               "answer": "Mazen by 5 seconds (75 s vs 80 s)",
               "explanation": "Samy = 80 s, Mazen = 75 s. Mazen is faster by 80 - 75 = 5 seconds.",
@@ -713,9 +713,9 @@ const CURRICULUM_DATA = [
               "questionAr": "ما ناتج 15 ÷ 5؟",
               "options": [
                 "3",
+                "2",
                 "5",
-                "4",
-                "2"
+                "4"
               ],
               "answer": "3",
               "explanation": "5 × 3 = 15, so 15 ÷ 5 = 3.",
@@ -787,10 +787,10 @@ const CURRICULUM_DATA = [
               "question": "If you share 12 strawberries equally among 3 people, how many will each get?",
               "questionAr": "إذا وزعت 12 فراولة بالتساوي على 3 أصدقاء، فكم نصيب كل منهم؟",
               "options": [
-                "4 strawberries",
                 "3 strawberries",
                 "5 strawberries",
-                "6 strawberries"
+                "6 strawberries",
+                "4 strawberries"
               ],
               "answer": "4 strawberries",
               "explanation": "12 ÷ 3 = 4 strawberries each.",
@@ -831,10 +831,10 @@ const CURRICULUM_DATA = [
               "question": "If you cut a 45 cm tape into 5 equal pieces, how long is each piece in cm?",
               "questionAr": "إذا قطعت شريطاً طوله 45 سم إلى 5 قطع متساوية، فما طول كل قطعة؟",
               "options": [
-                "9 cm",
-                "8 cm",
                 "7 cm",
-                "10 cm"
+                "10 cm",
+                "8 cm",
+                "9 cm"
               ],
               "answer": "9 cm",
               "explanation": "45 ÷ 5 = 9 cm.",
@@ -868,10 +868,10 @@ const CURRICULUM_DATA = [
               "question": "Which problem uses the mathematical sentence 8 ÷ 4?",
               "questionAr": "أي مسألة يعبر عنها بجملة القسمة 8 ÷ 4؟",
               "options": [
+                "8 cookies and someone ate 4",
                 "Divide 8 cookies equally among 4 people",
-                "8 people on the bus and 4 got on",
                 "Buy 4 bouquets with 8 flowers each",
-                "8 cookies and someone ate 4"
+                "8 people on the bus and 4 got on"
               ],
               "answer": "Divide 8 cookies equally among 4 people",
               "explanation": "Equal sharing of 8 into 4 parts is 8 ÷ 4.",
@@ -912,10 +912,10 @@ const CURRICULUM_DATA = [
               "question": "Which equation DOES NOT belong to the fact family {4, 6, 24}?",
               "questionAr": "أي معادلة لا تنتمي لعائلة الحقائق {4، 6، 24}؟",
               "options": [
-                "24 - 4 = 20",
                 "24 ÷ 4 = 6",
                 "6 × 4 = 24",
-                "24 ÷ 6 = 4"
+                "24 ÷ 6 = 4",
+                "24 - 4 = 20"
               ],
               "answer": "24 - 4 = 20",
               "explanation": "Fact family uses multiplication and division operations.",
@@ -943,10 +943,10 @@ const CURRICULUM_DATA = [
               "question": "Hassan has 9 blocks. Maryam has 27 blocks. How many times as many blocks does Maryam have?",
               "questionAr": "مع حسن 9 مكعبات ومع مريم 27 مكعباً. كم ضعفاً لمكعبات حسن تملك مريم؟",
               "options": [
-                "3 times (27 ÷ 9 = 3)",
-                "18 times",
+                "2 times",
                 "4 times",
-                "2 times"
+                "3 times (27 ÷ 9 = 3)",
+                "18 times"
               ],
               "answer": "3 times (27 ÷ 9 = 3)",
               "explanation": "27 ÷ 9 = 3 times.",
@@ -981,10 +981,10 @@ const CURRICULUM_DATA = [
               "question": "Sara has 30 sheets, her brother has 5. Adam says 'Sara has 25 times as many.' What was Adam's error?",
               "questionAr": "مع سارة 30 ورقة ومع أخيها 5. قال آدم: 'مع سارة 25 ضعفاً.' ما خطأه؟",
               "options": [
-                "He subtracted (30 - 5 = 25) instead of dividing (30 ÷ 5 = 6)",
                 "He should have multiplied 30 × 5",
-                "Calculation mistake",
-                "No mistake"
+                "No mistake",
+                "He subtracted (30 - 5 = 25) instead of dividing (30 ÷ 5 = 6)",
+                "Calculation mistake"
               ],
               "answer": "He subtracted (30 - 5 = 25) instead of dividing (30 ÷ 5 = 6)",
               "explanation": "'How many times as many' requires division, not subtraction.",
@@ -1034,8 +1034,8 @@ const CURRICULUM_DATA = [
               "options": [
                 "548",
                 "538",
-                "558",
-                "648"
+                "648",
+                "558"
               ],
               "answer": "548",
               "explanation": "2+6=8, 3+1=4, 1+4=5 -> 548.",
@@ -1089,10 +1089,10 @@ const CURRICULUM_DATA = [
               "question": "Calculate: 6,149 + 2,854 = ___",
               "questionAr": "احسب: 6,149 + 2,854 = ___",
               "options": [
+                "8,903",
                 "9,003",
-                "8,993",
                 "9,013",
-                "8,903"
+                "8,993"
               ],
               "answer": "9,003",
               "explanation": "9+4=13, 1+4+5=10, 1+1+8=10, 1+6+2=9 -> 9,003.",
@@ -1129,9 +1129,9 @@ const CURRICULUM_DATA = [
               "question": "Calculate: 874 - 531 = ___",
               "questionAr": "احسب: 874 - 531 = ___",
               "options": [
-                "343",
-                "341",
                 "353",
+                "341",
+                "343",
                 "243"
               ],
               "answer": "343",
@@ -1185,9 +1185,9 @@ const CURRICULUM_DATA = [
               "question": "Calculate: 937 - 784 = ___",
               "questionAr": "احسب: 937 - 784 = ___",
               "options": [
-                "153",
                 "253",
                 "143",
+                "153",
                 "163"
               ],
               "answer": "153",
@@ -1225,10 +1225,10 @@ const CURRICULUM_DATA = [
               "question": "Calculate: 503 - 185 = ___",
               "questionAr": "احسب: 503 - 185 = ___",
               "options": [
-                "318",
+                "312",
                 "418",
                 "328",
-                "312"
+                "318"
               ],
               "answer": "318",
               "explanation": "13-5=8, 9-8=1, 4-1=3 -> 318.",
@@ -1282,9 +1282,9 @@ const CURRICULUM_DATA = [
               "questionAr": "احسب: 1,005 - 394 = ___",
               "options": [
                 "611",
+                "701",
                 "711",
-                "601",
-                "701"
+                "601"
               ],
               "answer": "611",
               "explanation": "5-4=1, 10-9=1, 9-3=6 -> 611.",
@@ -1312,8 +1312,8 @@ const CURRICULUM_DATA = [
               "question": "You buy shoes for 246 EGP and a bag for 485 EGP. What is the total cost?",
               "questionAr": "اشتريت حذاءً بـ 246 جنيهاً وحقيبة بـ 485 جنيهاً. ما التكلفة الكلية؟",
               "options": [
-                "731 EGP",
                 "721 EGP",
+                "731 EGP",
                 "741 EGP",
                 "631 EGP"
               ],
@@ -1350,10 +1350,10 @@ const CURRICULUM_DATA = [
               "question": "You bought a meal for 124 EGP and paid with a 200 EGP note. How much change do you receive?",
               "questionAr": "اشتريت وجبة بـ 124 جنيهاً ودفعت ورقة 200 جنيه. كم الباقي لك؟",
               "options": [
-                "76 EGP",
-                "86 EGP",
                 "66 EGP",
-                "74 EGP"
+                "86 EGP",
+                "74 EGP",
+                "76 EGP"
               ],
               "answer": "76 EGP",
               "explanation": "200 - 124 = 76 EGP.",
@@ -1400,10 +1400,10 @@ const CURRICULUM_DATA = [
               "question": "How many meters are in 2 kilometers? (2 km = ___ m)",
               "questionAr": "كم متراً في 2 كيلومتر؟ (2 كم = ___ م)",
               "options": [
-                "2,000 m",
                 "200 m",
-                "20 m",
-                "20,000 m"
+                "20,000 m",
+                "2,000 m",
+                "20 m"
               ],
               "answer": "2,000 m",
               "explanation": "2 × 1,000 = 2,000 m.",
@@ -1448,10 +1448,10 @@ const CURRICULUM_DATA = [
               "question": "Write 1,080 m in kilometers and meters:",
               "questionAr": "اكتب 1,080 م بالكيلومتر والمتر:",
               "options": [
-                "1 km 80 m",
-                "1 km 800 m",
                 "10 km 80 m",
-                "1 km 8 m"
+                "1 km 8 m",
+                "1 km 80 m",
+                "1 km 800 m"
               ],
               "answer": "1 km 80 m",
               "explanation": "1,080 m = 1 km and 80 m (hundreds digit is 0).",
@@ -1491,10 +1491,10 @@ const CURRICULUM_DATA = [
               "question": "Which is the correct order of length units from smallest to largest?",
               "questionAr": "ما الترتيب الصحيح لوحدات الطول من الأصغر إلى الأكبر؟",
               "options": [
-                "mm, cm, m, km",
-                "cm, mm, m, km",
                 "km, m, cm, mm",
-                "m, cm, mm, km"
+                "mm, cm, m, km",
+                "m, cm, mm, km",
+                "cm, mm, m, km"
               ],
               "answer": "mm, cm, m, km",
               "explanation": "mm < cm < m < km.",
@@ -1529,10 +1529,10 @@ const CURRICULUM_DATA = [
               "question": "Which unit is best to measure the route walked on a one-hour field trip?",
               "questionAr": "ما الوحدة الأنسب لقياس طول مسار رحلة مشياً لمدة ساعة؟",
               "options": [
+                "Grams (g)",
                 "Kilometers (km)",
                 "Millimeters (mm)",
-                "Centimeters (cm)",
-                "Grams (g)"
+                "Centimeters (cm)"
               ],
               "answer": "Kilometers (km)",
               "explanation": "Long outdoor walking distances are measured in kilometers (km).",
@@ -1583,10 +1583,10 @@ const CURRICULUM_DATA = [
               "question": "What number is represented by these tally marks: 卌 卌 ||| ?",
               "questionAr": "ما العدد الذي تمثله هذه العلامات التكرارية: 卌 卌 ||| ؟",
               "options": [
-                "13",
-                "12",
                 "15",
-                "8"
+                "8",
+                "12",
+                "13"
               ],
               "answer": "13",
               "explanation": "5 + 5 + 3 = 13.",
@@ -1621,10 +1621,10 @@ const CURRICULUM_DATA = [
               "question": "A survey counted 14 cars, 6 buses, and 8 bicycles (Total = 28). How many full bundles of 5 can you make?",
               "questionAr": "حصر مروري: 14 سيارة، 6 حافلات، 8 دراجات (المجموع 28). كم حزمة خماسية كاملة (卌) يمكن تكوينها؟",
               "options": [
-                "5 full bundles (with 3 remaining)",
                 "4 bundles",
+                "28 bundles",
                 "6 bundles",
-                "28 bundles"
+                "5 full bundles (with 3 remaining)"
               ],
               "answer": "5 full bundles (with 3 remaining)",
               "explanation": "28 ÷ 5 = 5 bundles (25) with 3 remainder.",
@@ -1673,10 +1673,10 @@ const CURRICULUM_DATA = [
               "question": "In this bar graph with scale of 2, what is the value of 'Blue'?",
               "questionAr": "في هذا الرسم البياني بمقياس 2، ما قيمة عمود اللون الأزرق؟",
               "options": [
-                "10",
                 "8",
                 "12",
-                "5"
+                "5",
+                "10"
               ],
               "answer": "10",
               "explanation": "The Blue bar reaches the 10 line on the vertical axis.",
@@ -1742,8 +1742,8 @@ const CURRICULUM_DATA = [
               "questionAr": "في مقياس عد بـ 2، ينتهي عمود 'الرسم' في المنتصف بين 6 و 8. ما قيمته؟",
               "options": [
                 "7",
-                "6.5",
                 "8",
+                "6.5",
                 "9"
               ],
               "answer": "7",
@@ -1772,10 +1772,10 @@ const CURRICULUM_DATA = [
               "question": "What number MUST the vertical scale of a bar graph start with at the bottom?",
               "questionAr": "ما العدد الذي يجب أن يبدأ به المقياس الرأسي في الأسفل؟",
               "options": [
-                "0",
-                "1",
                 "The smallest data number",
-                "Any number"
+                "0",
+                "Any number",
+                "1"
               ],
               "answer": "0",
               "explanation": "The lowest scale mark must always be 0.",
@@ -1823,10 +1823,10 @@ const CURRICULUM_DATA = [
               "question": "Smarty wrote the scale: 0, 2, 5, 8, 10. Why is this incorrect?",
               "questionAr": "كتب سمارتي المقياس: 0، 2، 5، 8، 10. لماذا هذا خطأ؟",
               "options": [
-                "The intervals between marks are not equal",
-                "It starts at 0",
                 "Numbers are too small",
-                "No error"
+                "The intervals between marks are not equal",
+                "No error",
+                "It starts at 0"
               ],
               "answer": "The intervals between marks are not equal",
               "explanation": "A scale must increase by constant steps (e.g. 2, 4, 6, 8...).",
@@ -1855,8 +1855,8 @@ const CURRICULUM_DATA = [
               "questionAr": "في جدول: فصل 1 به 12 وفصل 2 به 15 لاعب كرة قدم. ما المجموع؟",
               "options": [
                 "27 players (12 + 15)",
-                "25 players",
                 "28 players",
+                "25 players",
                 "3 players"
               ],
               "answer": "27 players (12 + 15)",
@@ -1893,9 +1893,9 @@ const CURRICULUM_DATA = [
               "questionAr": "مجموع طلاب فصل 1 وفصل 2 هو 50. إذا كان فصل 1 به 28، فكم طالباً في فصل 2؟",
               "options": [
                 "22 students (50 - 28)",
+                "24 students",
                 "28 students",
-                "32 students",
-                "24 students"
+                "32 students"
               ],
               "answer": "22 students (50 - 28)",
               "explanation": "50 - 28 = 22 students.",
@@ -1934,10 +1934,10 @@ const CURRICULUM_DATA = [
               "question": "Calculate using mental math: 13 + 20 = ___",
               "questionAr": "احسب ذهنياً: 13 + 20 = ___",
               "options": [
-                "33",
-                "23",
                 "30",
-                "35"
+                "35",
+                "33",
+                "23"
               ],
               "answer": "33",
               "explanation": "13 + 20 = 33.",
@@ -1972,10 +1972,10 @@ const CURRICULUM_DATA = [
               "question": "Calculate mentally using 'make a ten': 87 + 8 = ___",
               "questionAr": "احسب ذهنياً باستراتيجية تكوين العشرة: 87 + 8 = ___",
               "options": [
-                "95 (87 + 3 = 90, 90 + 5 = 95)",
-                "94",
+                "97",
                 "96",
-                "97"
+                "95 (87 + 3 = 90, 90 + 5 = 95)",
+                "94"
               ],
               "answer": "95 (87 + 3 = 90, 90 + 5 = 95)",
               "explanation": "87 + 3 = 90, 90 + 5 = 95.",
@@ -2003,10 +2003,10 @@ const CURRICULUM_DATA = [
               "question": "Calculate using mental math: 83 - 20 = ___",
               "questionAr": "احسب ذهنياً: 83 - 20 = ___",
               "options": [
-                "63",
                 "53",
-                "73",
-                "60"
+                "60",
+                "63",
+                "73"
               ],
               "answer": "63",
               "explanation": "83 - 20 = 63.",
@@ -2041,8 +2041,8 @@ const CURRICULUM_DATA = [
               "question": "Calculate mentally: 100 - 42 = ___",
               "questionAr": "احسب ذهنياً: 100 - 42 = ___",
               "options": [
-                "58",
                 "68",
+                "58",
                 "48",
                 "52"
               ],
@@ -2083,10 +2083,10 @@ const CURRICULUM_DATA = [
               "question": "What is 17 ÷ 3?",
               "questionAr": "ما ناتج 17 ÷ 3؟",
               "options": [
-                "5 remainder 2",
                 "5 remainder 1",
+                "4 remainder 5",
                 "6 remainder 1",
-                "4 remainder 5"
+                "5 remainder 2"
               ],
               "answer": "5 remainder 2",
               "explanation": "3 × 5 = 15. 17 - 15 = 2. Answer: 5 remainder 2.",
@@ -2129,10 +2129,10 @@ const CURRICULUM_DATA = [
               "question": "What is the remainder when 50 is divided by 6?",
               "questionAr": "ما هو باقي قسمة العدد 50 على 6؟",
               "options": [
-                "2 (6 × 8 = 48, 50 - 48 = 2)",
-                "4",
+                "3",
                 "1",
-                "3"
+                "2 (6 × 8 = 48, 50 - 48 = 2)",
+                "4"
               ],
               "answer": "2 (6 × 8 = 48, 50 - 48 = 2)",
               "explanation": "6 × 8 = 48. Remainder is 50 - 48 = 2.",
@@ -2160,10 +2160,10 @@ const CURRICULUM_DATA = [
               "question": "To check if 15 ÷ 4 = 3 remainder 3 is correct, which formula do you use?",
               "questionAr": "للتحقق من صحة 15 ÷ 4 = 3 والباقي 3، أي علاقة تستخدم؟",
               "options": [
-                "(4 × 3) + 3 = 12 + 3 = 15 ✔",
-                "4 + 3 + 3 = 10",
                 "15 - 4 - 3 = 8",
-                "4 × 3 × 3 = 36"
+                "(4 × 3) + 3 = 12 + 3 = 15 ✔",
+                "4 × 3 × 3 = 36",
+                "4 + 3 + 3 = 10"
               ],
               "answer": "(4 × 3) + 3 = 12 + 3 = 15 ✔",
               "explanation": "Divisor × Quotient + Remainder = 4 × 3 + 3 = 15.",
@@ -2208,10 +2208,10 @@ const CURRICULUM_DATA = [
               "question": "When a mystery number is divided by 7, the quotient is 5 and remainder is 4. What is the number?",
               "questionAr": "عدد إذا قُسم على 7، كان الناتج 5 والباقي 4. فما هو العدد؟",
               "options": [
+                "33",
                 "39 (7 × 5 + 4)",
-                "35",
                 "41",
-                "33"
+                "35"
               ],
               "answer": "39 (7 × 5 + 4)",
               "explanation": "(7 × 5) + 4 = 35 + 4 = 39.",
@@ -2239,10 +2239,10 @@ const CURRICULUM_DATA = [
               "question": "Share 37 candies equally among 5 people. What is each person's share and what is left over?",
               "questionAr": "وزع 37 قطعة حلوى بالتساوي على 5 أفراد. ما نصيب كل فرد وما المتبقي؟",
               "options": [
-                "7 candies each, 2 candies left over",
-                "7 candies each, 1 candy left over",
+                "8 candies each, 0 left over",
                 "6 candies each, 7 left over",
-                "8 candies each, 0 left over"
+                "7 candies each, 1 candy left over",
+                "7 candies each, 2 candies left over"
               ],
               "answer": "7 candies each, 2 candies left over",
               "explanation": "37 ÷ 5 = 7 remainder 2 candies.",
@@ -2277,10 +2277,10 @@ const CURRICULUM_DATA = [
               "question": "56 sheets of colored paper are shared equally among 6 children. What is the mathematical sentence?",
               "questionAr": "تم توزيع 56 ورقة ألوان على 6 أطفال بالتساوي. ما الجملة الرياضية؟",
               "options": [
-                "56 ÷ 6 = 9 remainder 2",
+                "56 ÷ 6 = 10 remainder 4",
                 "56 ÷ 6 = 8 remainder 8",
-                "56 ÷ 6 = 9 remainder 0",
-                "56 ÷ 6 = 10 remainder 4"
+                "56 ÷ 6 = 9 remainder 2",
+                "56 ÷ 6 = 9 remainder 0"
               ],
               "answer": "56 ÷ 6 = 9 remainder 2",
               "explanation": "6 × 9 = 54, 56 - 54 = 2.",
@@ -2309,9 +2309,9 @@ const CURRICULUM_DATA = [
               "questionAr": "هناك 43 تلميذاً، والمقعد يسع 5 تلاميذ. كم مقعداً نحتاج لجلوس جميع التلاميذ؟",
               "options": [
                 "9 benches (8 + 1 = 9)",
-                "8 benches",
                 "7 benches",
-                "10 benches"
+                "10 benches",
+                "8 benches"
               ],
               "answer": "9 benches (8 + 1 = 9)",
               "explanation": "43 ÷ 5 = 8 remainder 3. The 3 remaining children need another bench, so 8 + 1 = 9 benches.",
@@ -2347,9 +2347,9 @@ const CURRICULUM_DATA = [
               "questionAr": "مع بائعة ورد 38 وردة، تضع 6 في كل باقة. كم باقة كاملة تستطيع تكوينها؟",
               "options": [
                 "6 bouquets (ignore remainder 2)",
-                "7 bouquets",
+                "8 bouquets",
                 "5 bouquets",
-                "8 bouquets"
+                "7 bouquets"
               ],
               "answer": "6 bouquets (ignore remainder 2)",
               "explanation": "38 ÷ 6 = 6 remainder 2. She can only make 6 complete bouquets.",
@@ -2396,9 +2396,9 @@ const CURRICULUM_DATA = [
               "question": "How many 10,000s make 100,000?",
               "questionAr": "كم 10,000 نحتاج لتكوين 100,000؟",
               "options": [
+                "1,000",
                 "10",
                 "100",
-                "1,000",
                 "5"
               ],
               "answer": "10",
@@ -2439,10 +2439,10 @@ const CURRICULUM_DATA = [
               "question": "In 426,703, what is the place value and value of digit 2?",
               "questionAr": "في العدد 426,703، ما هي القيمة المكانية وقيمة الرقم 2؟",
               "options": [
-                "Ten Thousands, Value: 20,000",
-                "Thousands, Value: 2,000",
                 "Hundred Thousands, Value: 200,000",
-                "Hundreds, Value: 200"
+                "Hundreds, Value: 200",
+                "Thousands, Value: 2,000",
+                "Ten Thousands, Value: 20,000"
               ],
               "answer": "Ten Thousands, Value: 20,000",
               "explanation": "Digit 2 is in Ten Thousands place (2 × 10,000 = 20,000).",
@@ -2470,10 +2470,10 @@ const CURRICULUM_DATA = [
               "question": "On a number line stepping by 10,000, what number follows 40,000?",
               "questionAr": "على خط أعداد بمقدار 10,000، ما العدد الذي يلي 40,000؟",
               "options": [
-                "50,000",
                 "41,000",
+                "40,100",
                 "60,000",
-                "40,100"
+                "50,000"
               ],
               "answer": "50,000",
               "explanation": "40,000 + 10,000 = 50,000.",
@@ -2528,10 +2528,10 @@ const CURRICULUM_DATA = [
               "question": "Calculate: 100,000 - 30,000 = ___",
               "questionAr": "احسب: 100,000 - 30,000 = ___",
               "options": [
-                "70,000",
+                "7,000",
                 "80,000",
-                "60,000",
-                "7,000"
+                "70,000",
+                "60,000"
               ],
               "answer": "70,000",
               "explanation": "100,000 - 30,000 = 70,000.",
@@ -2565,10 +2565,10 @@ const CURRICULUM_DATA = [
               "question": "Compare: 542,000 ___ 538,000",
               "questionAr": "قارن: 542,000 ___ 538,000",
               "options": [
-                ">",
-                "<",
                 "=",
-                "+"
+                "<",
+                "+",
+                ">"
               ],
               "answer": ">",
               "explanation": "In ten thousands place: 4 > 3, so 542,000 > 538,000.",
@@ -2609,10 +2609,10 @@ const CURRICULUM_DATA = [
               "question": "Compare: 60,000 + 4,000 ___ 64,000",
               "questionAr": "قارن: 60,000 + 4,000 ___ 64,000",
               "options": [
-                "=",
+                "+",
                 ">",
-                "<",
-                "+"
+                "=",
+                "<"
               ],
               "answer": "=",
               "explanation": "60,000 + 4,000 = 64,000, which equals 64,000.",
@@ -2640,10 +2640,10 @@ const CURRICULUM_DATA = [
               "question": "What is 350 × 10?",
               "questionAr": "ما حاصل 350 × 10؟",
               "options": [
-                "3,500",
                 "350",
-                "35,000",
-                "3,050"
+                "3,500",
+                "3,050",
+                "35,000"
               ],
               "answer": "3,500",
               "explanation": "350 × 10 = 3,500.",
@@ -2678,10 +2678,10 @@ const CURRICULUM_DATA = [
               "question": "What is 52 × 100?",
               "questionAr": "ما حاصل 52 × 100؟",
               "options": [
-                "5,200",
                 "520",
-                "52,000",
-                "502"
+                "5,200",
+                "502",
+                "52,000"
               ],
               "answer": "5,200",
               "explanation": "52 × 100 = 5,200.",
@@ -2720,10 +2720,10 @@ const CURRICULUM_DATA = [
               "question": "Calculate: 20 × 4 = ___",
               "questionAr": "احسب: 20 × 4 = ___",
               "options": [
-                "80",
-                "8",
                 "800",
-                "24"
+                "80",
+                "24",
+                "8"
               ],
               "answer": "80",
               "explanation": "2 × 4 = 8, so 20 × 4 = 80.",
@@ -2758,10 +2758,10 @@ const CURRICULUM_DATA = [
               "question": "Calculate: 60 × 7 = ___",
               "questionAr": "احسب: 60 × 7 = ___",
               "options": [
-                "420",
                 "42",
+                "490",
                 "4,200",
-                "490"
+                "420"
               ],
               "answer": "420",
               "explanation": "6 × 7 = 42, so 60 × 7 = 420.",
@@ -2789,10 +2789,10 @@ const CURRICULUM_DATA = [
               "question": "Calculate using vertical method: 26 × 3 = ___",
               "questionAr": "احسب بالطريقة الرأسية: 26 × 3 = ___",
               "options": [
+                "72",
                 "78",
                 "68",
-                "88",
-                "72"
+                "88"
               ],
               "answer": "78",
               "explanation": "3 × 6 = 18 (write 8, carry 1). 3 × 2 = 6 + 1 = 7 -> 78.",
@@ -2827,10 +2827,10 @@ const CURRICULUM_DATA = [
               "question": "Calculate: 76 × 8 = ___",
               "questionAr": "احسب: 76 × 8 = ___",
               "options": [
-                "608",
+                "568",
                 "598",
-                "618",
-                "568"
+                "608",
+                "618"
               ],
               "answer": "608",
               "explanation": "8 × 6 = 48 (carry 4). 8 × 7 = 56 + 4 = 60 -> 608.",
@@ -2858,9 +2858,9 @@ const CURRICULUM_DATA = [
               "question": "Calculate: 213 × 3 = ___",
               "questionAr": "احسب: 213 × 3 = ___",
               "options": [
+                "649",
                 "639",
                 "629",
-                "649",
                 "539"
               ],
               "answer": "639",
@@ -2896,10 +2896,10 @@ const CURRICULUM_DATA = [
               "question": "Calculate: 405 × 6 = ___",
               "questionAr": "احسب: 405 × 6 = ___",
               "options": [
-                "2,430",
+                "2,030",
                 "2,400",
                 "2,435",
-                "2,030"
+                "2,430"
               ],
               "answer": "2,430",
               "explanation": "6 × 5 = 30 (carry 3). 6 × 0 + 3 = 3. 6 × 4 = 24 -> 2,430.",
@@ -2937,10 +2937,10 @@ const CURRICULUM_DATA = [
               "question": "Calculate using clever ways: 40 × 2 × 3 = ___",
               "questionAr": "احسب بطريقة ذكية: 40 × 2 × 3 = ___",
               "options": [
-                "240",
                 "120",
-                "280",
-                "200"
+                "200",
+                "240",
+                "280"
               ],
               "answer": "240",
               "explanation": "(40 × 2) = 80, 80 × 3 = 240.",
@@ -2995,10 +2995,10 @@ const CURRICULUM_DATA = [
               "question": "Calculate mentally using the associative property: 5 × 19 × 2 = ___",
               "questionAr": "احسب ذهنياً بخاصية الدمج: 5 × 19 × 2 = ___",
               "options": [
-                "190",
+                "200",
                 "180",
-                "195",
-                "200"
+                "190",
+                "195"
               ],
               "answer": "190",
               "explanation": "5 × 2 = 10, then 10 × 19 = 190.",
@@ -3027,9 +3027,9 @@ const CURRICULUM_DATA = [
               "questionAr": "هناك 5 حافلات، يركب في كل منها 43 راكباً. كم إجمالي عدد الركاب؟",
               "options": [
                 "215 people (5 × 43)",
-                "205 people",
+                "48 people",
                 "225 people",
-                "48 people"
+                "205 people"
               ],
               "answer": "215 people (5 × 43)",
               "explanation": "5 × 43 = 215 people.",
@@ -3064,8 +3064,8 @@ const CURRICULUM_DATA = [
               "question": "A cake costs 138 EGP. There are 3 cakes in one box. If you buy 2 boxes, how much do you pay?",
               "questionAr": "ثمن الكعكة 138 جنيهاً، والعلبة بها 3 كعكات. إذا اشتريت علبتين، كم تدفع؟",
               "options": [
-                "828 EGP (138 × 6)",
                 "414 EGP",
+                "828 EGP (138 × 6)",
                 "818 EGP",
                 "838 EGP"
               ],
@@ -3079,7 +3079,7 @@ const CURRICULUM_DATA = [
       }
     ]
   }
-];
+];;
 
 if (typeof window !== 'undefined') {
   window.CURRICULUM_P3 = CURRICULUM_DATA;
