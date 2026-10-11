@@ -84,11 +84,14 @@ class MasteryApp {
     this.selectedManageAvatar = '🦁';
     this.selectedManageGrade = 'p3';
     this.state = this.loadState();
-    this.currentGrade = this.state.grade || 'p3';
+    this.currentGrade = this.state.grade || 'p1';
+    this.currentSubject = this.state.subject || 'english';
     this.currentChapter = null;
     this.currentLesson = null;
     this.activeQuestionList = [];
     this.currentQuestionIdx = 0;
+    this.activeVocabList = [];
+    this.currentVocabIdx = 0;
     this.isTargetedPractice = false;
     this.confetti = null;
     this.aiChatHistories = {};
@@ -112,9 +115,11 @@ class MasteryApp {
       childName: name,
       avatar: avatar,
       grade: grade, // 'p1' | 'p3'
+      subject: 'english', // 'english' | 'math'
       stars: 0,
       streak: 0,
       answers: {}, // { [qId]: { correct: bool, attempts: int, wrongCount: int } }
+      masteredVocab: {}, // { [word]: bool }
       completedLessons: {}, // { [lessonId]: bool }
       completedChapters: {}, // { [chapterId]: bool }
       lastLesson: null,
@@ -131,10 +136,12 @@ class MasteryApp {
       name: name,
       childName: name,
       avatar: p.avatar || '🦁',
-      grade: p.grade || 'p3',
+      grade: p.grade || 'p1',
+      subject: p.subject || 'english',
       stars: typeof p.stars === 'number' ? p.stars : 0,
       streak: typeof p.streak === 'number' ? p.streak : 0,
       answers: p.answers || {},
+      masteredVocab: p.masteredVocab || {},
       completedLessons: p.completedLessons || {},
       completedChapters: p.completedChapters || {},
       lastLesson: p.lastLesson || null,
@@ -246,11 +253,34 @@ class MasteryApp {
 
   // --- Dual-Grade (Primary 1 vs Primary 3) System ---
   getActiveCurriculum(grade = null) {
-    const g = grade || this.currentGrade || (this.state && this.state.grade) || 'p3';
+    if (this.currentSubject === 'english') {
+      return window.CURRICULUM_ENGLISH_P1 || [];
+    }
+    const g = grade || this.currentGrade || (this.state && this.state.grade) || 'p1';
     if (g === 'p3') {
       return window.CURRICULUM_P3 || window.CURRICULUM_DATA || [];
     }
     return window.CURRICULUM_P1 || [];
+  }
+
+  switchSubject(newSubject) {
+    if (newSubject !== 'english' && newSubject !== 'math') return;
+    this.currentSubject = newSubject;
+    this.state.subject = newSubject;
+    this.saveState();
+    this.updateSubjectToggleUi();
+    this.updateHeaderStats();
+    this.renderRoadmap();
+    this.renderParentDashboard();
+
+    if (window.soundManager) window.soundManager.click();
+  }
+
+  updateSubjectToggleUi() {
+    const engBtn = document.getElementById('btn-subject-english');
+    const mathBtn = document.getElementById('btn-subject-math');
+    if (engBtn) engBtn.classList.toggle('active', this.currentSubject === 'english');
+    if (mathBtn) mathBtn.classList.toggle('active', this.currentSubject === 'math');
   }
 
   switchGrade(newGrade) {
@@ -287,6 +317,7 @@ class MasteryApp {
     }
 
     this.bindNavigation();
+    this.updateSubjectToggleUi();
     this.updateHeaderStats();
     this.renderRoadmap();
     this.renderParentDashboard();
@@ -721,7 +752,12 @@ class MasteryApp {
 
   // --- Calculation Helpers ---
   getLessonQuestions(lesson) {
-    return [...lesson.tiers.t1, ...lesson.tiers.t2, ...lesson.tiers.t3];
+    if (!lesson) return [];
+    if (Array.isArray(lesson.questions)) return lesson.questions;
+    const t1 = (lesson.tiers && lesson.tiers.t1) || [];
+    const t2 = (lesson.tiers && lesson.tiers.t2) || [];
+    const t3 = (lesson.tiers && lesson.tiers.t3) || [];
+    return [...t1, ...t2, ...t3];
   }
 
   getLessonMastery(lesson) {
@@ -868,10 +904,13 @@ class MasteryApp {
     document.getElementById('overall-progress-bar').style.width = `${overall}%`;
     document.getElementById('overall-progress-label').textContent = `${overall}% Complete`;
 
-    // Dynamic hero banner title & description per grade
+    // Dynamic hero banner title & description per subject & grade
     const heroTitleEl = document.getElementById('hero-title');
     const heroDescEl = document.getElementById('hero-desc');
-    if (this.currentGrade === 'p1') {
+    if (this.currentSubject === 'english') {
+      if (heroTitleEl) heroTitleEl.innerHTML = `مغامرة اللغة الإنجليزية (Connect 1 - أولى ابتدائي) 🎒🔤`;
+      if (heroDescEl) heroDescEl.innerHTML = `كتاب الوزارة الرسمي للترم الأول (صـ 7 إلى 126). تعلم وحفظ الكلمات بالصوت والصورة، وتدرب على التمييز الصوتي والاستماع السريع لعمر 6 سنوات! 🐱👋`;
+    } else if (this.currentGrade === 'p1') {
       if (heroTitleEl) heroTitleEl.innerHTML = `مغامرة أبطال الرياضيات (الصف الأول الابتدائي) 🎒🎨`;
       if (heroDescEl) heroDescEl.innerHTML = `استكشف الأعداد حتى 10، الجمع والطرح، ومقارنة الأطوال بالرسومات والألوان التفاعلية المصممة خصيصاً لعمر 6 سنوات! 🐱🐶`;
     } else {
@@ -880,6 +919,8 @@ class MasteryApp {
     }
 
     const activeCurriculum = this.getActiveCurriculum();
+    const isEnglish = this.currentSubject === 'english';
+
     container.innerHTML = activeCurriculum.map(ch => {
       const chMastery = this.getChapterMastery(ch);
       const isMastered = chMastery === 100;
@@ -889,17 +930,34 @@ class MasteryApp {
           ? `<span class="badge-status badge-progress">⚡ In Progress (${chMastery}%)</span>`
           : `<span class="badge-status badge-locked">🌱 Ready to start</span>`;
 
+      const unitBadgeLabel = isEnglish ? `Unit ${ch.number}` : `Chapter ${ch.number}`;
+      const pagesLabel = ch.bookPages 
+        ? `📖 صـ ${ch.bookPages} في كتاب الوزارة` 
+        : `📖 صـ ${ch.lessons[0].bookPage} - ${ch.lessons[ch.lessons.length-1].bookPage}`;
+
+      // Calculate total vocab in this unit
+      let totalVocab = 0;
+      ch.lessons.forEach(l => {
+        if (Array.isArray(l.vocab)) totalVocab += l.vocab.length;
+      });
+
+      const flashcardsBtnHtml = (isEnglish && totalVocab > 0)
+        ? `<button type="button" class="btn-unit-flashcards" onclick="app.openVocabModal('${ch.id}')">🎴 كروت الكلمات الناطقة (${totalVocab} كلمة) 🔊</button>`
+        : '';
+
       return `
         <div class="chapter-card ${isMastered ? 'chapter-card-mastered' : ''}" style="border-top-color: ${ch.color}">
           <div class="ch-card-header">
-            <div class="ch-badge" style="background: ${ch.color}">${ch.icon} Chapter ${ch.number}</div>
+            <div class="ch-badge" style="background: ${ch.color}">${ch.icon} ${unitBadgeLabel}</div>
             ${statusBadge}
           </div>
           <h3 class="ch-title">${ch.title}</h3>
           <h4 class="ch-title-ar">${ch.titleAr}</h4>
-          <p class="ch-desc">${ch.lessons.length} Lessons matching Ministry Textbook (Book Pages ${ch.lessons[0].bookPage} - ${ch.lessons[ch.lessons.length-1].bookPage})</p>
+          <p class="ch-desc">${ch.lessons.length} Lessons • <span class="book-page-badge">${pagesLabel}</span></p>
 
-          <div class="ch-lessons-list" style="max-height: 280px; overflow-y: auto;">
+          ${flashcardsBtnHtml}
+
+          <div class="ch-lessons-list" style="max-height: 280px; overflow-y: auto; margin-top: 10px;">
             ${ch.lessons.map(l => {
               const lMastery = this.getLessonMastery(l);
               const lDone = lMastery === 100;
@@ -932,7 +990,7 @@ class MasteryApp {
               <div class="ch-mastery-bar-fill" style="width: ${chMastery}%; background: ${ch.color}"></div>
             </div>
             <button class="btn-primary-action" onclick="app.startChapterDrill('${ch.id}')" style="background: ${ch.color}">
-              ${isMastered ? '🔄 Practice Chapter Again' : `🚀 Test Chapter ${ch.number} (${chMastery}%)`}
+              ${isMastered ? '🔄 Practice Unit Again' : `🚀 Test ${unitBadgeLabel} (${chMastery}%)`}
             </button>
           </div>
         </div>
@@ -1162,6 +1220,16 @@ class MasteryApp {
     if (v.type === 'number_bond') return window.QuestionVisuals.renderNumberBond(v.whole, v.part1, v.part2, v.missing || 'part2');
     if (v.type === 'spatial_scene') return window.QuestionVisuals.renderSpatialScene(v.position, v.targetEmoji || '🐱', v.baseEmoji || '📦');
     if (v.type === 'length_comp') return window.QuestionVisuals.renderLengthComparison(v.item1Emoji || '✏️', v.len1, v.item2Emoji || '🖍️', v.len2);
+    if (v.type === 'vocab_card') {
+      const cleanWord = (v.label || q.answer || '').replace(/[\u{1F300}-\u{1F9FF}]/gu, '').trim();
+      return `
+        <div class="vocab-question-visual animate-pop" onclick="window.soundManager.speak('${this.escapeHtml(cleanWord)}')">
+          <div class="vocab-visual-emoji">${v.emoji || '🌟'}</div>
+          <div class="vocab-visual-label">${v.label || ''}</div>
+          <button type="button" class="btn-vocab-speaker">🔊 استمع للنطق</button>
+        </div>
+      `;
+    }
     return '';
   }
 
@@ -1303,9 +1371,17 @@ class MasteryApp {
 
         <div class="q-main-question">
           <div class="q-text-en" id="q-words-container" dir="ltr">${interactiveQuestionHtml}</div>
-          <div class="q-text-ar" id="q-text-ar" dir="rtl" style="display: ${this.showArabic ? 'block' : 'none'};">
-            ${q.questionAr || q.hintAr}
+          <div class="q-text-ar" id="q-text-ar" dir="rtl" style="display: ${(this.showArabic || this.currentSubject === 'english') ? 'block' : 'none'};">
+            ${q.questionAr || q.hintAr || ''}
           </div>
+          ${q.audioListen ? `
+            <div style="display:flex; justify-content:center; margin-top:10px;">
+              <button type="button" class="btn-fc-audio" style="max-width:280px; background:#EFF6FF; border-color:#93C5FD; color:#1D4ED8; font-size:15px;" onclick="window.soundManager.speak('${this.escapeHtml(q.audioListen)}')">
+                <span>🎧</span>
+                <span>استمع للصوت (Listen)</span>
+              </button>
+            </div>
+          ` : ''}
         </div>
 
         ${inputControlsHtml}
@@ -1332,6 +1408,15 @@ class MasteryApp {
       <!-- Floating Word Bubble Tooltip -->
       <div id="word-bubble-tooltip" class="word-tooltip-bubble" style="display: none;"></div>
     `;
+
+    // Connect 1 audio-first auto play for pre-literacy children
+    if (q.audioListen && this.currentSubject === 'english') {
+      setTimeout(() => {
+        if (window.soundManager && !window.soundManager.muted) {
+          window.soundManager.speak(q.audioListen);
+        }
+      }, 400);
+    }
 
     // Attach inline widget if applicable
     if (widgetHtml) {
@@ -2791,6 +2876,144 @@ class MasteryApp {
     }
     if (zoomResetBtn) {
       zoomResetBtn.textContent = '100%';
+    }
+  }
+
+  // --- Feature: Vocabulary Flashcards & Memorization Deck (Connect 1) ---
+  openVocabModal(unitId = null) {
+    const curriculum = window.CURRICULUM_ENGLISH_P1 || [];
+    let list = [];
+    let title = "كروت الكلمات الناطقة (Connect 1)";
+
+    if (unitId) {
+      const u = curriculum.find(c => c.id === unitId);
+      if (u) {
+        title = `الوحدة ${u.number}: ${u.titleAr || u.title}`;
+        u.lessons.forEach(l => {
+          if (Array.isArray(l.vocab)) {
+            l.vocab.forEach(v => list.push({ ...v, lessonTitle: l.titleAr || l.title, unitNum: u.number }));
+          }
+        });
+      }
+    } else {
+      curriculum.forEach(u => {
+        u.lessons.forEach(l => {
+          if (Array.isArray(l.vocab)) {
+            l.vocab.forEach(v => list.push({ ...v, lessonTitle: l.titleAr || l.title, unitNum: u.number }));
+          }
+        });
+      });
+    }
+
+    if (list.length === 0) {
+      alert("لا توجد كلمات في هذه الوحدة حالياً.");
+      return;
+    }
+
+    this.activeVocabList = list;
+    this.currentVocabIdx = 0;
+
+    const modal = document.getElementById('vocab-flashcards-modal');
+    const titleEl = document.getElementById('vocab-deck-title');
+    if (titleEl) titleEl.textContent = title;
+    if (modal) modal.style.display = 'flex';
+
+    this.renderCurrentFlashcard();
+    if (window.soundManager) window.soundManager.click();
+  }
+
+  closeVocabModal() {
+    const modal = document.getElementById('vocab-flashcards-modal');
+    if (modal) modal.style.display = 'none';
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    if (window.soundManager) window.soundManager.click();
+  }
+
+  renderCurrentFlashcard() {
+    if (!this.activeVocabList || this.activeVocabList.length === 0) return;
+    const v = this.activeVocabList[this.currentVocabIdx];
+    const total = this.activeVocabList.length;
+
+    const progressEl = document.getElementById('vocab-deck-progress');
+    const emojiEl = document.getElementById('fc-emoji');
+    const wordEnEl = document.getElementById('fc-word-en');
+    const wordArEl = document.getElementById('fc-word-ar');
+    const promptEl = document.getElementById('fc-prompt-sound');
+    const cardBox = document.getElementById('flashcard-card-box');
+    const memBtn = document.getElementById('btn-fc-memorize');
+    const memLabel = document.getElementById('fc-memorize-label');
+    const starIcon = document.getElementById('fc-star-icon');
+
+    if (progressEl) progressEl.textContent = `الكلمة ${this.currentVocabIdx + 1} من ${total} • ${v.lessonTitle || ''}`;
+    if (emojiEl) emojiEl.textContent = v.emoji || '🌟';
+    if (wordEnEl) wordEnEl.textContent = v.word || '';
+    if (wordArEl) wordArEl.textContent = v.wordAr || '';
+    if (promptEl) promptEl.textContent = v.sound || (v.word + ' - ' + v.wordAr);
+
+    const isMem = !!(this.state.masteredVocab && this.state.masteredVocab[v.word]);
+    if (cardBox) cardBox.classList.toggle('memorized', isMem);
+    if (memBtn) memBtn.classList.toggle('is-done', isMem);
+    if (memLabel) memLabel.textContent = isMem ? 'أتقنتها بامتياز! ✔' : 'حفظتها! (+1 ⭐)';
+    if (starIcon) starIcon.textContent = isMem ? '🌟' : '⭐';
+
+    // Auto pronounce English word with small delay
+    setTimeout(() => {
+      this.speakCurrentVocabEn();
+    }, 250);
+  }
+
+  speakCurrentVocabEn() {
+    if (!this.activeVocabList || this.activeVocabList.length === 0) return;
+    const v = this.activeVocabList[this.currentVocabIdx];
+    if (v && v.word && window.soundManager) {
+      window.soundManager.speak(v.word);
+    }
+  }
+
+  speakCurrentVocabAr() {
+    if (!this.activeVocabList || this.activeVocabList.length === 0) return;
+    const v = this.activeVocabList[this.currentVocabIdx];
+    if (v && window.soundManager) {
+      const textToSpeak = v.sound || `${v.word} يعني ${v.wordAr}`;
+      window.soundManager.speak(textToSpeak);
+    }
+  }
+
+  markCurrentVocabMemorized() {
+    if (!this.activeVocabList || this.activeVocabList.length === 0) return;
+    const v = this.activeVocabList[this.currentVocabIdx];
+    if (!this.state.masteredVocab) this.state.masteredVocab = {};
+
+    const alreadyDone = !!this.state.masteredVocab[v.word];
+    if (!alreadyDone) {
+      this.state.masteredVocab[v.word] = true;
+      this.state.stars += 1;
+      this.saveState();
+      this.updateHeaderStats();
+      if (this.confetti) this.confetti.fire(1200);
+      if (window.soundManager) window.soundManager.starEarned();
+    }
+
+    this.renderCurrentFlashcard();
+  }
+
+  nextFlashcard() {
+    if (!this.activeVocabList || this.activeVocabList.length === 0) return;
+    if (this.currentVocabIdx < this.activeVocabList.length - 1) {
+      this.currentVocabIdx++;
+      this.renderCurrentFlashcard();
+    } else {
+      if (this.confetti) this.confetti.fire(2000);
+      if (window.soundManager) window.soundManager.levelUp();
+      alert("🎉 رائع جداً يا بطل! أنهيت استعراض جميع كلمات هذه الوحدة!");
+    }
+  }
+
+  prevFlashcard() {
+    if (!this.activeVocabList || this.activeVocabList.length === 0) return;
+    if (this.currentVocabIdx > 0) {
+      this.currentVocabIdx--;
+      this.renderCurrentFlashcard();
     }
   }
 }
