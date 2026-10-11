@@ -1219,7 +1219,14 @@ class MasteryApp {
     if (v.type === 'cute_counters') return window.QuestionVisuals.renderCuteCounters(v.count, v.emoji || '🍎', v.maxPerRow || 5);
     if (v.type === 'number_bond') return window.QuestionVisuals.renderNumberBond(v.whole, v.part1, v.part2, v.missing || 'part2');
     if (v.type === 'spatial_scene') return window.QuestionVisuals.renderSpatialScene(v.position, v.targetEmoji || '🐱', v.baseEmoji || '📦');
-    if (v.type === 'length_comp') return window.QuestionVisuals.renderLengthComparison(v.item1Emoji || '✏️', v.len1, v.item2Emoji || '🖍️', v.len2);
+    if (v.emoji) {
+      const soundText = q.audioListen || q.question;
+      return `
+        <div class="picture-question-visual animate-pop" onclick="window.soundManager.speak('${this.escapeHtml(soundText)}')">
+          <div class="picture-visual-emoji">${v.emoji}</div>
+        </div>
+      `;
+    }
     if (v.type === 'listen_card' || (this.currentSubject === 'english' && q.type === 'listen_tap')) {
       const soundText = q.audioListen || q.question;
       return `
@@ -1331,16 +1338,36 @@ class MasteryApp {
       if (!q._displayOptions) {
         q._displayOptions = [...q.options].sort(() => 0.5 - Math.random());
       }
-      inputControlsHtml = `
-        <div class="q-options-grid">
-          ${q._displayOptions.map(opt => `
-            <button class="btn-option" onclick="app.handleAnswer('${this.escapeHtml(opt)}')">
-              <span class="opt-bullet">○</span>
-              <span class="opt-label">${opt}</span>
-            </button>
-          `).join('')}
-        </div>
-      `;
+
+      const isEnglish = this.currentSubject === 'english';
+      const hasEmojiOptions = isEnglish && q._displayOptions.some(opt => /[\u{1F300}-\u{1F9FF}\u2600-\u27bf]/u.test(opt));
+
+      if (hasEmojiOptions) {
+        inputControlsHtml = `
+          <div class="q-options-grid picture-tiles-grid">
+            ${q._displayOptions.map(opt => {
+              const emojiMatch = opt.match(/([\u{1F300}-\u{1F9FF}\u2600-\u27bf\u{1FA00}-\u{1FAFF}]+)/u);
+              const emojiDisplay = emojiMatch ? emojiMatch[1] : opt;
+              return `
+                <button type="button" class="btn-option btn-picture-tile" data-opt="${this.escapeHtml(opt)}" onclick="app.handleAnswer('${this.escapeHtml(opt)}')">
+                  <span class="opt-picture-emoji">${emojiDisplay}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        `;
+      } else {
+        inputControlsHtml = `
+          <div class="q-options-grid">
+            ${q._displayOptions.map(opt => `
+              <button class="btn-option" data-opt="${this.escapeHtml(opt)}" onclick="app.handleAnswer('${this.escapeHtml(opt)}')">
+                <span class="opt-bullet">○</span>
+                <span class="opt-label">${opt}</span>
+              </button>
+            `).join('')}
+          </div>
+        `;
+      }
     }
 
     // Format question into interactive clickable words
@@ -1639,7 +1666,8 @@ class MasteryApp {
       btn.disabled = true;
       const label = btn.querySelector('.opt-label');
       const text = label ? label.textContent.trim() : btn.textContent.trim();
-      if (text === String(selectedOpt).trim()) {
+      const dataOpt = btn.getAttribute('data-opt');
+      if ((dataOpt && dataOpt === String(selectedOpt).trim()) || text === String(selectedOpt).trim()) {
         btn.classList.add('opt-selected-current');
       }
     });
