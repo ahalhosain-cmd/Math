@@ -1200,17 +1200,19 @@ class MasteryApp {
 
     // Top progress
     document.getElementById('quiz-progress-fill').style.width = `${progressPct}%`;
-    document.getElementById('quiz-counter-text').textContent = `Question ${qNum} of ${total}`;
+    document.getElementById('quiz-counter-text').textContent = `${qNum} / ${total}`;
 
-    // Header title
+    // Header title (Compact & clean)
     const headerTitle = document.getElementById('quiz-context-title');
     if (headerTitle) {
       if (this.isTargetedPractice) {
-        headerTitle.innerHTML = `🎯 Targeted Weakness Drill`;
+        headerTitle.innerHTML = `🎯 تدريب مكثف`;
       } else if (this.currentLesson) {
-        headerTitle.innerHTML = `${this.currentChapter.icon} <strong>${this.currentChapter.title}</strong> &gt; ${this.currentLesson.title} <button type="button" class="btn-book-preview-pill" onclick="app.openCurrentLessonBookPage()" title="انقر لمطالعة صفحة كتاب الوزارة الرسمية لهذا الدرس"><span>📖</span> صفحة الكتاب (صـ ${this.currentLesson.bookPage})</button>`;
+        const cleanLesson = this.currentLesson.title.replace(/^Lesson \d+:\s*/, '');
+        headerTitle.innerHTML = `<span class="quiz-lesson-tag">${this.currentChapter.icon} ${cleanLesson}</span>`;
+        headerTitle.title = `${this.currentChapter.title} - ${this.currentLesson.title}`;
       } else if (this.currentChapter) {
-        headerTitle.innerHTML = `${this.currentChapter.icon} <strong>Chapter ${this.currentChapter.number} Mastery Challenge</strong>`;
+        headerTitle.innerHTML = `<span>${this.currentChapter.icon} الوحدة ${this.currentChapter.number}</span>`;
       }
     }
 

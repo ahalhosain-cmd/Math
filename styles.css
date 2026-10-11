@@ -50,77 +50,80 @@ body {
 /* Header & Top Bar - Ultra Compact Mode */
 .top-navbar {
   background: #FFFFFF;
-  border-bottom: 2px solid var(--border);
-  padding: 4px 16px;
+  border-bottom: 1.5px solid #E2E8F0;
+  padding: 3px 12px;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .nav-container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: nowrap;
-  gap: 10px;
+  gap: 8px;
 }
 
 .brand-section {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .brand-icon {
-  font-size: 18px;
+  font-size: 14px;
   background: linear-gradient(135deg, #6366F1, #8B5CF6);
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 6px;
   color: white;
-  box-shadow: 0 2px 6px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 1px 4px rgba(99, 102, 241, 0.2);
   flex-shrink: 0;
 }
 
 .brand-text h1 {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 800;
   color: #1E1B4B;
-  line-height: 1.1;
+  margin: 0;
+  line-height: 1;
   white-space: nowrap;
 }
 
 .brand-text span {
-  display: none; /* Hide subtitle to keep header ultra-compact */
+  display: none !important;
 }
 
 .nav-tabs {
   display: flex;
-  gap: 4px;
+  gap: 3px;
   background: #F1F5F9;
-  padding: 3px;
-  border-radius: 10px;
+  padding: 2px 4px;
+  border-radius: 8px;
+  flex-shrink: 1;
 }
 
 .nav-tab-btn {
   border: none;
   background: transparent;
-  padding: 5px 12px;
-  border-radius: 8px;
-  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--gray);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   white-space: nowrap;
 }
 
@@ -133,32 +136,52 @@ body {
 .user-quick-stats {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
 }
 
 .stat-chip {
   background: #F8FAFC;
   border: 1px solid var(--border);
-  padding: 4px 10px;
-  border-radius: 14px;
-  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
   font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   white-space: nowrap;
+}
+
+.btn-profile-chip {
+  cursor: pointer;
+  background: #EFF6FF;
+  border-color: #BFDBFE;
+  color: #1D4ED8;
+  max-width: 110px;
+}
+
+#display-child-name {
+  max-width: 65px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.btn-grade-chip, #btn-grade-toggle, #stat-mastery {
+  display: none !important;
 }
 
 .btn-icon-toggle {
   background: #F1F5F9;
   border: none;
-  padding: 4px 10px;
-  border-radius: 14px;
+  padding: 3px 8px;
+  border-radius: 10px;
   font-size: 12px;
-  font-weight: 600;
   cursor: pointer;
-  color: var(--dark);
-  white-space: nowrap;
 }
 
 /* App Main Body */
@@ -470,18 +493,32 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding: 4px 0;
 }
 
 .quiz-context {
-  font-size: 16px;
-  color: var(--dark);
+  font-size: 13px;
+  font-weight: 700;
+  color: #1E293B;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 
 .quiz-counter {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--gray);
+  font-size: 12px;
+  font-weight: 800;
+  color: #475569;
+  background: #F1F5F9;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .quiz-progress-track {
@@ -3433,66 +3470,63 @@ body {
    ============================================================ */
 @media (max-width: 768px) {
   .top-navbar {
-    padding: 8px 12px;
+    padding: 3px 8px;
   }
 
   .nav-container {
-    gap: 8px;
+    gap: 6px;
     justify-content: space-between;
+    flex-wrap: nowrap;
   }
 
   .brand-section {
-    gap: 8px;
+    gap: 5px;
+    flex-shrink: 0;
   }
 
   .brand-icon {
-    width: 36px;
-    height: 36px;
-    font-size: 20px;
-    border-radius: 10px;
+    width: 22px;
+    height: 22px;
+    font-size: 13px;
+    border-radius: 5px;
   }
 
   .brand-text h1 {
-    font-size: 15px;
+    font-size: 12px;
   }
 
   .brand-text span {
-    display: none; /* Hide lengthy subtitle on mobile to avoid clutter */
+    display: none !important;
   }
 
   .nav-tabs {
-    width: 100%;
-    justify-content: space-around;
-    padding: 3px;
-    order: 3;
-    overflow-x: auto;
+    width: auto;
+    justify-content: center;
+    padding: 2px 3px;
+    order: 0;
+    gap: 2px;
   }
 
   .nav-tab-btn {
-    padding: 6px 10px;
-    font-size: 12px;
-    flex: 1;
+    padding: 3px 6px;
+    font-size: 11px;
+    flex: initial;
     justify-content: center;
   }
 
   .user-quick-stats {
-    gap: 6px;
-    flex-wrap: wrap;
+    gap: 4px;
+    flex-wrap: nowrap;
   }
 
   .stat-chip {
-    padding: 4px 8px;
-    font-size: 12px;
-    border-radius: 14px;
-  }
-
-  .btn-ask-emma-nav {
-    padding: 5px 10px;
+    padding: 2px 6px;
     font-size: 11px;
+    border-radius: 10px;
   }
 
   .btn-icon-toggle {
-    padding: 4px 8px;
+    padding: 3px 6px;
     font-size: 11px;
   }
 
@@ -4314,23 +4348,24 @@ body {
 .btn-quiz-back-menu {
   background: #EFF6FF;
   color: #1D4ED8;
-  border: 2px solid #3B82F6;
-  padding: 8px 18px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 800;
+  border: 1.5px solid #3B82F6;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.15);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.1);
 }
 .btn-quiz-back-menu:hover {
-  background: #3B82F6;
+  background: #2563EB;
   color: #FFFFFF;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
 }
 
 /* --- Neutral Option Selection (Hide correctness until summary) --- */

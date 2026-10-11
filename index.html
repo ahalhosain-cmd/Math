@@ -18,35 +18,32 @@
       <div class="brand-section">
         <div class="brand-icon">📐</div>
         <div class="brand-text">
-          <h1>Primary 3 Math Mastery</h1>
-          <span>100% Term 1 Curriculum Verification</span>
+          <h1>Math</h1>
         </div>
       </div>
 
       <nav class="nav-tabs">
-        <button class="nav-tab-btn active" data-tab="roadmap">
-          📚 <span>قائمة الدروس</span>
+        <button class="nav-tab-btn active" data-tab="roadmap" title="قائمة الدروس">
+          📚 <span>الدروس</span>
         </button>
-        <button class="nav-tab-btn" data-tab="dashboard">
-          📊 <span>لوحة المتابعة</span>
+        <button class="nav-tab-btn" data-tab="dashboard" title="لوحة المتابعة">
+          📊 <span>المتابعة</span>
         </button>
-        <button class="nav-tab-btn" data-tab="exam">
-          📝 <span>امتحان الشهر</span>
+        <button class="nav-tab-btn" data-tab="exam" title="امتحان الشهر">
+          📝 <span>الامتحان</span>
         </button>
       </nav>
 
       <div class="user-quick-stats">
         <div class="stat-chip" id="stat-stars">⭐ 0</div>
-        <div class="stat-chip" id="stat-mastery">🎯 0%</div>
-        <button class="stat-chip btn-grade-chip grade-p1" id="btn-grade-toggle" onclick="app.toggleGradeSelector()" title="تبديل الصف الدراسي (Switch Grade)">
-          🎒 <span>Primary 1 (أولى)</span> ▾
-        </button>
-        <button class="stat-chip btn-profile-chip" id="user-name-tag" onclick="app.openProfilesModal()" title="تبديل أو تعديل البطل (Switch or Edit Champion)">
+        <button class="stat-chip btn-profile-chip" id="user-name-tag" onclick="app.openProfilesModal()" title="تبديل أو تعديل البطل">
           <span id="display-child-avatar">🚀</span>
           <span id="display-child-name">Champion</span>
-          <span class="profile-switch-badge">تبديل ▾</span>
+          <span class="profile-switch-badge">▾</span>
         </button>
-        <button class="btn-icon-toggle" id="btn-sound-toggle">🔊 صوت</button>
+        <button class="btn-icon-toggle" id="btn-sound-toggle" title="الصوت">🔊</button>
+        <div id="stat-mastery" style="display: none;">0%</div>
+        <button id="btn-grade-toggle" style="display: none;" onclick="app.toggleGradeSelector()"></button>
       </div>
     </div>
   </header>
@@ -87,16 +84,14 @@
     <section class="tab-view" id="view-quiz">
       <div class="quiz-wrapper">
         <div class="quiz-header-bar">
+          <button class="btn-quiz-back-menu" onclick="app.switchTab('roadmap')" title="العودة إلى قائمة الدروس">
+            🔙 <span>قائمة الدروس</span>
+          </button>
           <div class="quiz-context" id="quiz-context-title">
             <!-- Chapter > Lesson Title -->
           </div>
-          <div class="quiz-header-right">
-            <button class="btn-quiz-back-menu" onclick="app.switchTab('roadmap')" title="العودة إلى قائمة الدروس">
-              🔙 <span>العودة لقائمة الدروس</span>
-            </button>
-            <div class="quiz-counter" id="quiz-counter-text">
-              Question 1 of 5
-            </div>
+          <div class="quiz-counter" id="quiz-counter-text">
+            1 / 3
           </div>
         </div>
 
