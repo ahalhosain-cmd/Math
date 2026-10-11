@@ -2764,12 +2764,12 @@ class MasteryApp {
   }
 
   // --- Feature: Official Ministry Textbook Page Viewer ---
-  // --- Feature: Official Ministry Textbook Page Viewer ---
   openBookPageModal(bookPageNumber, lessonTitle) {
-    const pageNum = parseInt(bookPageNumber) || (this.currentLesson ? this.currentLesson.bookPage : (this.currentGrade === 'p1' ? 6 : 8));
+    const isEng = this.currentSubject === 'english';
     const isP1 = this.currentGrade === 'p1';
-    const maxPages = isP1 ? 98 : 121;
-    // Verified 1-to-1 direct mapping in Ministry textbook: PDF Page = Book Page
+    const defaultPage = isEng ? (this.currentLesson ? this.currentLesson.bookPage : 8) : (isP1 ? 6 : 8);
+    const pageNum = parseInt(bookPageNumber) || (this.currentLesson ? this.currentLesson.bookPage : defaultPage);
+    const maxPages = isEng ? 128 : (isP1 ? 98 : 121);
     const pdfPage = Math.min(maxPages, Math.max(1, pageNum));
 
     this.currentBookPrintedPage = pdfPage;
@@ -2786,17 +2786,26 @@ class MasteryApp {
     const canvasEl = document.getElementById('book-image-canvas');
     const zoomResetBtn = document.getElementById('book-zoom-reset-btn');
 
-    const gradeLabel = isP1 ? 'الصف الأول الابتدائي (Primary 1)' : 'الصف الثالث الابتدائي (Primary 3)';
+    let gradeLabel = 'الصف الثالث الابتدائي (Primary 3 Math)';
+    let bookFolder = 'book_pages';
+    if (isEng) {
+      gradeLabel = 'كتاب الإنجليزي Connect 1 (أولى ابتدائي)';
+      bookFolder = 'book_pages_eng_p1';
+    } else if (isP1) {
+      gradeLabel = 'الصف الأول الابتدائي (Primary 1 Math)';
+      bookFolder = 'book_pages_p1';
+    }
+
     const titleText = lessonTitle || (this.currentLesson ? (this.currentLesson.titleAr || this.currentLesson.title) : `كتاب الوزارة الرسمي • ${gradeLabel}`);
     if (titleEl) titleEl.textContent = titleText;
     if (subTitleEl) {
-      const chText = this.currentChapter ? `الفصل ${this.currentChapter.number}` : gradeLabel;
-      subTitleEl.textContent = `${chText} • صفحة ${pdfPage} من كتاب الوزارة الرسمي`;
+      const chText = this.currentChapter ? (isEng ? `الوحدة ${this.currentChapter.number}: ${this.currentChapter.titleAr || this.currentChapter.title}` : `الفصل ${this.currentChapter.number}`) : gradeLabel;
+      subTitleEl.textContent = `${chText} • صفحة ${pdfPage} من كتاب الوزارة الرسمي (${maxPages} صفحة)`;
     }
     if (indicatorEl) indicatorEl.textContent = `صـ ${pdfPage}`;
 
     if (imgEl) {
-      imgEl.src = isP1 ? `book_pages_p1/page_${pdfPage}.jpg` : `book_pages/page_${pdfPage}.jpg`;
+      imgEl.src = `${bookFolder}/page_${pdfPage}.jpg`;
       imgEl.alt = `كتاب الوزارة صفحة ${pdfPage}`;
     }
 
@@ -2812,7 +2821,8 @@ class MasteryApp {
   }
 
   openCurrentLessonBookPage() {
-    const pageNum = this.currentLesson ? this.currentLesson.bookPage : 8;
+    const isEng = this.currentSubject === 'english';
+    const pageNum = this.currentLesson ? this.currentLesson.bookPage : (isEng ? 8 : 8);
     const title = this.currentLesson ? (this.currentLesson.titleAr || this.currentLesson.title) : null;
     this.openBookPageModal(pageNum, title);
   }
@@ -2831,7 +2841,9 @@ class MasteryApp {
   }
 
   nextBookPage() {
-    const maxPages = this.currentGrade === 'p1' ? 98 : 121;
+    const isEng = this.currentSubject === 'english';
+    const isP1 = this.currentGrade === 'p1';
+    const maxPages = isEng ? 128 : (isP1 ? 98 : 121);
     if (!this.currentBookPdfPage || this.currentBookPdfPage >= maxPages) return;
     this.currentBookPdfPage++;
     this.currentBookPrintedPage = this.currentBookPdfPage;
@@ -2842,12 +2854,22 @@ class MasteryApp {
     const imgEl = document.getElementById('book-page-img');
     const indicatorEl = document.getElementById('book-page-indicator');
     const subTitleEl = document.getElementById('book-modal-subtitle');
+    const isEng = this.currentSubject === 'english';
     const isP1 = this.currentGrade === 'p1';
-    const gradeLabel = isP1 ? 'الصف الأول الابتدائي' : 'الصف الثالث الابتدائي';
-    const maxPages = isP1 ? 98 : 121;
+    const maxPages = isEng ? 128 : (isP1 ? 98 : 121);
+
+    let gradeLabel = 'الصف الثالث الابتدائي';
+    let bookFolder = 'book_pages';
+    if (isEng) {
+      gradeLabel = 'كتاب الإنجليزي Connect 1 (أولى ابتدائي)';
+      bookFolder = 'book_pages_eng_p1';
+    } else if (isP1) {
+      gradeLabel = 'الصف الأول الابتدائي';
+      bookFolder = 'book_pages_p1';
+    }
 
     if (imgEl) {
-      imgEl.src = isP1 ? `book_pages_p1/page_${this.currentBookPdfPage}.jpg` : `book_pages/page_${this.currentBookPdfPage}.jpg`;
+      imgEl.src = `${bookFolder}/page_${this.currentBookPdfPage}.jpg`;
     }
     if (indicatorEl) {
       indicatorEl.textContent = `صـ ${this.currentBookPrintedPage}`;
