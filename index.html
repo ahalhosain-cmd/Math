@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>Primary 3 Math Mastery (100% Term 1 Curriculum)</title>
-  <link rel="stylesheet" href="styles.css?v=2027_40">
+  <link rel="stylesheet" href="styles.css?v=2027_45">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌟</text></svg>">
 </head>
 <body>
@@ -15,23 +15,21 @@
   <!-- Self-contained Confetti Canvas -->
   <canvas id="confetti-canvas"></canvas>
 
-  <!-- Top Navigation Bar -->
+  <!-- Top Navigation Bar: Child profile (avatar + name) and Stars ONLY -->
   <header class="top-navbar">
     <div class="nav-container">
-      <button class="btn-nav-home" onclick="app.switchTab('roadmap')" title="الصفحة الرئيسية">
-        🏠 <span>الرئيسية</span>
+      <button class="stat-chip btn-profile-chip" id="user-name-tag" onclick="app.openProfilesModal()" title="اختيار أو تعديل البطل">
+        <span id="display-child-avatar">🦁</span>
+        <span id="display-child-name">Champion</span>
       </button>
 
-      <div class="user-quick-stats">
-        <div class="stat-chip" id="stat-stars">⭐ 0</div>
-        <button class="stat-chip btn-profile-chip" id="user-name-tag" onclick="app.openProfilesModal()" title="تبديل أو تعديل البطل">
-          <span id="display-child-avatar">🚀</span>
-          <span id="display-child-name">Champion</span>
-        </button>
-        <button class="btn-icon-toggle" id="btn-sound-toggle" title="الصوت">🔊</button>
-        <div id="stat-mastery" style="display: none;">0%</div>
-        <button id="btn-grade-toggle" style="display: none;" onclick="app.toggleGradeSelector()"></button>
-      </div>
+      <div class="stat-chip" id="stat-stars">⭐ 0</div>
+
+      <button class="btn-nav-home" id="btn-nav-home" onclick="app.switchTab('roadmap')" title="الصفحة الرئيسية" style="display: none;">
+        🏠 <span>الرئيسية</span>
+      </button>
+      <div id="stat-mastery" style="display: none;">0%</div>
+      <button id="btn-grade-toggle" style="display: none;" onclick="app.toggleGradeSelector()"></button>
     </div>
   </header>
 
@@ -42,7 +40,12 @@
     <section class="tab-view active" id="view-roadmap">
       <div class="hero-banner">
         <div class="hero-content">
-          <h2 id="hero-title">مرحباً بك في رحلة الرياضيات الممتعة! 🚀</h2>
+          <div class="hero-header-row">
+            <h2 id="hero-title">مرحباً بك في رحلة الرياضيات الممتعة! 🚀</h2>
+            <button type="button" class="btn-sound-hero" id="btn-sound-toggle" title="الصوت">
+              🔊 <span>تشغيل الصوت</span>
+            </button>
+          </div>
           <p id="hero-desc">
             تعلم واكتشف مهارات الرياضيات الرائعة خطوة بخطوة بالصور التفاعلية والأنشطة المشوقة!
           </p>
@@ -403,7 +406,7 @@
           </div>
         </div>
 
-        <div class="profile-form-group">
+        <div class="profile-form-group" style="display: none;">
           <label class="form-label">اختر الصف الدراسي (Choose Grade):</label>
           <div class="grade-picker-grid" id="welcome-grade-picker">
             <button type="button" class="grade-opt active" data-grade="p1" onclick="app.selectWelcomeGrade('p1')">
@@ -474,7 +477,7 @@
             <label class="form-label" for="manage-profile-input-name">اسم البطل:</label>
             <input type="text" id="manage-profile-input-name" class="profile-text-input" placeholder="اسم البطل (مثال: عمر، مريم...)" maxlength="25">
           </div>
-          <div class="profile-form-group">
+          <div class="profile-form-group" style="display: none;">
             <label class="form-label">الصف الدراسي (Grade):</label>
             <div class="grade-picker-grid" id="manage-grade-picker">
               <button type="button" class="grade-opt active" data-grade="p1" onclick="app.selectManageGrade('p1')">
@@ -525,13 +528,13 @@
   </div>
 
   <!-- Scripts -->
-  <script src="audio_system.js?v=2027_40"></script>
-  <script src="math_dictionary.js?v=2027_40"></script>
-  <script src="question_visuals.js?v=2027_40"></script>
-  <script src="gemini_tutor.js?v=2027_40"></script>
-  <script src="curriculum_p1.js?v=2027_40"></script>
-  <script src="curriculum_data.js?v=2027_40"></script>
-  <script src="interactive_widgets.js?v=2027_40"></script>
-  <script src="app.js?v=2027_40"></script>
+  <script src="audio_system.js?v=2027_45"></script>
+  <script src="math_dictionary.js?v=2027_45"></script>
+  <script src="question_visuals.js?v=2027_45"></script>
+  <script src="gemini_tutor.js?v=2027_45"></script>
+  <script src="curriculum_p1.js?v=2027_45"></script>
+  <script src="curriculum_data.js?v=2027_45"></script>
+  <script src="interactive_widgets.js?v=2027_45"></script>
+  <script src="app.js?v=2027_45"></script>
 </body>
 </html>

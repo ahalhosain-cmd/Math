@@ -444,35 +444,24 @@ class MasteryApp {
 
     container.innerHTML = data.profiles.map(p => {
       const isActive = p.id === this.state.id;
-      const completedLessonsCount = Object.keys(p.completedLessons || {}).length;
-      const correctAnswersCount = Object.values(p.answers || {}).filter(a => a && a.correct).length;
-      const totalCurriculumQuestions = getProfileTotalQuestions(p.grade || 'p1');
-      const masteryPct = totalCurriculumQuestions > 0 ? Math.round((correctAnswersCount / totalCurriculumQuestions) * 100) : 0;
-
-      const gradeLabel = p.grade === 'p3' ? '📐 الصف الثالث الابتدائي (ثالثة)' : '🎒 الصف الأول الابتدائي (أولى)';
-      const gradeBadgeClass = p.grade === 'p3' ? 'badge-grade-p3' : 'badge-grade-p1';
 
       return `
         <div class="profile-item-card ${isActive ? 'is-active-child' : ''}" onclick="app.switchProfile('${p.id}')" title="انقر للدخول بحساب ${this.escapeHtml(p.name || p.childName || 'البطل')}">
           <div class="profile-card-left">
-            <div class="profile-card-avatar">${p.avatar || '🚀'}</div>
+            <div class="profile-card-avatar">${p.avatar || '🦁'}</div>
             <div class="profile-card-info">
               <h4>
                 <span>${this.escapeHtml(p.name || p.childName || 'Champion')}</span>
                 ${isActive ? '<span class="badge-active-tag">🌟 البطل الحالي</span>' : ''}
               </h4>
               <div class="profile-card-stats" style="margin-top: 4px;">
-                <span class="${gradeBadgeClass}">${gradeLabel}</span>
-                <span>•</span>
                 <span>⭐ ${p.stars || 0} نجمة</span>
-                <span>•</span>
-                <span>🎯 ${masteryPct}% إتقان</span>
               </div>
             </div>
           </div>
           <div class="profile-card-actions" onclick="event.stopPropagation()">
             <button type="button" class="btn-select-profile" onclick="app.switchProfile('${p.id}')">
-              ${isActive ? '✔ متابعة' : '▶ اختيار والبدء'}
+              ${isActive ? '✔ متابعة' : '▶ اختيار'}
             </button>
             <button type="button" class="btn-edit-profile-icon" onclick="app.toggleAddProfileForm(true, '${p.id}')" title="تعديل الاسم أو الشخصية">
               ✏️
@@ -806,7 +795,7 @@ class MasteryApp {
     if (soundBtn) {
       soundBtn.onclick = () => {
         window.soundManager.muted = !window.soundManager.muted;
-        soundBtn.textContent = window.soundManager.muted ? '🔇 Sound Off' : '🔊 Sound On';
+        soundBtn.innerHTML = window.soundManager.muted ? '🔇 <span>الصوت متوقف</span>' : '🔊 <span>تشغيل الصوت</span>';
       };
     }
 
@@ -829,6 +818,12 @@ class MasteryApp {
 
     const targetView = document.getElementById(`view-${tabName}`);
     if (targetView) targetView.classList.add('active');
+
+    // Show Home button only when outside the home/roadmap page
+    const homeBtn = document.getElementById('btn-nav-home');
+    if (homeBtn) {
+      homeBtn.style.display = (tabName === 'roadmap') ? 'none' : 'inline-flex';
+    }
 
     if (tabName === 'roadmap') this.renderRoadmap();
     if (tabName === 'dashboard') this.renderParentDashboard();
