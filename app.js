@@ -1247,13 +1247,17 @@ class MasteryApp {
       inputControlsHtml = `
         <div class="q-complete-box">
           <div class="input-display-row">
-            <input type="text" id="complete-input-field" class="complete-input" placeholder="اكتب الناتج هنا..." autocomplete="off" />
-            <button class="btn-submit-answer" onclick="app.submitCompleteAnswer()">Check (تحقق) ✔</button>
+            <input type="text" id="complete-input-field" class="complete-input" placeholder="...اكتب الناتج هنا" autocomplete="off" />
           </div>
           <div class="onscreen-numpad">
             ${[1,2,3,4,5,6,7,8,9,0].map(n => `<button type="button" class="btn-num-key" onclick="app.pressKey('${n}')">${n}</button>`).join('')}
             <button type="button" class="btn-num-key btn-key-comma" onclick="app.pressKey(',')">,</button>
             <button type="button" class="btn-num-key btn-key-del" onclick="app.pressKey('del')">⌫ Del</button>
+          </div>
+          <div class="submit-action-wrap">
+            <button type="button" class="btn-submit-answer" onclick="app.submitCompleteAnswer()">
+              تحقق من الإجابة (Check Answer) ✔
+            </button>
           </div>
         </div>
       `;
@@ -1569,6 +1573,13 @@ class MasteryApp {
     if (completeInput) {
       completeInput.disabled = true;
       completeInput.classList.add('opt-selected-current');
+      const submitBtn = document.querySelector('.btn-submit-answer');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.6';
+        submitBtn.style.cursor = 'default';
+      }
+      document.querySelectorAll('.btn-num-key').forEach(k => k.disabled = true);
     }
 
     if (window.soundManager) window.soundManager.click();
