@@ -1579,20 +1579,16 @@ class MasteryApp {
 
     if (window.soundManager) window.soundManager.click();
 
-    // Feedback: Recorded neutrally, answer will be summarized at end of lesson
+    // Feedback: Show only the clean Next button (no long text)
     const feedbackBox = document.getElementById('q-feedback-box');
     feedbackBox.style.display = 'block';
     feedbackBox.className = 'q-feedback-box feedback-recorded animate-pop';
 
     const isLastQ = this.currentQuestionIdx >= this.activeQuestionList.length - 1;
     feedbackBox.innerHTML = `
-      <div class="feedback-title">✨ تم تسجيل إجابتك بنجاح يا بطل! 🎯</div>
-      <div style="font-size: 14px; opacity: 0.95; margin-top: 6px; line-height: 1.5;">
-        Answer saved! واصل التحدي، وستظهر النتيجة والحلول النموذجية لكل الأسئلة بعد إنهاء أسئلة هذا الدرس.
-      </div>
-      <div class="feedback-actions" style="margin-top: 14px;">
+      <div class="feedback-actions" style="display: flex; justify-content: center; margin: 12px 0;">
         <button class="btn-next-action" onclick="app.nextQuestion()">
-          ${isLastQ ? 'إنهاء الدرس وعرض النتيجة والحلول النموذجية 🏁' : 'السؤال التالي (Next Question) ➜'}
+          ${isLastQ ? 'إنهاء (Finish) 🏁' : 'التالي (Next) ➜'}
         </button>
       </div>
     `;
