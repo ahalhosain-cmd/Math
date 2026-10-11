@@ -730,14 +730,13 @@ class MasteryApp {
             </div>
             <h3 class="resume-title">
               ${this.escapeHtml(lesson.titleAr || lesson.title)}
-              <span class="resume-title-en">(${this.escapeHtml(lesson.title)})</span>
             </h3>
             <div class="resume-meta">
-              <span>الفصل ${ch.number}: ${this.escapeHtml(ch.titleAr)}</span>
+              <span>${this.currentSubject === 'english' ? 'الوحدة' : 'الفصل'} ${ch.number}: ${this.escapeHtml(ch.titleAr || ch.title)}</span>
               <span class="meta-sep">•</span>
-              <span>نسبة الإنجاز: <strong>${lMastery}%</strong></span>
+              <span>الإنجاز: <strong>${lMastery}%</strong></span>
               <span class="meta-sep">•</span>
-              <span>📖 صـ ${lesson.bookPage} في كتاب الوزارة</span>
+              <span>📖 صـ ${lesson.bookPage}</span>
             </div>
           </div>
         </div>
@@ -902,20 +901,20 @@ class MasteryApp {
 
     const overall = this.getOverallMastery();
     document.getElementById('overall-progress-bar').style.width = `${overall}%`;
-    document.getElementById('overall-progress-label').textContent = `${overall}% Complete`;
+    document.getElementById('overall-progress-label').textContent = `${overall}% مكتمل 🌟`;
 
     // Dynamic hero banner title & description per subject & grade
     const heroTitleEl = document.getElementById('hero-title');
     const heroDescEl = document.getElementById('hero-desc');
     if (this.currentSubject === 'english') {
-      if (heroTitleEl) heroTitleEl.innerHTML = `مغامرة اللغة الإنجليزية (Connect 1 - أولى ابتدائي) 🎒🔤`;
-      if (heroDescEl) heroDescEl.innerHTML = `كتاب الوزارة الرسمي للترم الأول (صـ 7 إلى 126). تعلم وحفظ الكلمات بالصوت والصورة، وتدرب على التمييز الصوتي والاستماع السريع لعمر 6 سنوات! 🐱👋`;
+      if (heroTitleEl) heroTitleEl.innerHTML = `مغامرة الإنجليزي (Connect 1) 🎒🔤`;
+      if (heroDescEl) heroDescEl.innerHTML = `استمع لكلمات كتاب الوزارة ورددها واجمع النجوم يا بطل! 🌟`;
     } else if (this.currentGrade === 'p1') {
-      if (heroTitleEl) heroTitleEl.innerHTML = `مغامرة أبطال الرياضيات (الصف الأول الابتدائي) 🎒🎨`;
-      if (heroDescEl) heroDescEl.innerHTML = `استكشف الأعداد حتى 10، الجمع والطرح، ومقارنة الأطوال بالرسومات والألوان التفاعلية المصممة خصيصاً لعمر 6 سنوات! 🐱🐶`;
+      if (heroTitleEl) heroTitleEl.innerHTML = `مغامرة الرياضيات الممتعة (أولى ابتدائي) 🎒🎨`;
+      if (heroDescEl) heroDescEl.innerHTML = `اكتشف الأعداد والأنشطة الممتعة واجمع النجوم خطوة بخطوة! ⭐`;
     } else {
-      if (heroTitleEl) heroTitleEl.innerHTML = `Welcome to the Grade 3 Math Quest! 🚀`;
-      if (heroDescEl) heroDescEl.innerHTML = `Master all 10 chapters step-by-step from the official Primary 3 Term 1 curriculum. Complete all verification levels to reach <strong>100% Mastery</strong> and earn your Official Math Honor Certificate!`;
+      if (heroTitleEl) heroTitleEl.innerHTML = `مغامرة الرياضيات الذكية (ثالثة ابتدائي) 🚀📐`;
+      if (heroDescEl) heroDescEl.innerHTML = `تعلم الضرب والقسمة والأشكال الهندسية وكن بطل الرياضيات الأول! 🏆`;
     }
 
     const activeCurriculum = this.getActiveCurriculum();
@@ -1016,27 +1015,27 @@ class MasteryApp {
         weakContainer.innerHTML = `
           <div class="all-clean-notice">
             <div class="notice-icon">🎉</div>
-            <h4>Superb! No Weak Spots Found!</h4>
-            <p>Your child has successfully mastered all attempted concepts with 100% accuracy.</p>
+            <h4>ممتاز جداً! لا توجد أي نقاط ضعف حالياً</h4>
+            <p>طفلك أتقن كافة المفاهيم والدروس التي تدرب عليها بنسبة 100%.</p>
           </div>
         `;
       } else {
         weakContainer.innerHTML = `
           <div class="weakness-header-box">
             <div>
-              <strong>${weakList.length} Concepts</strong> require extra attention or review.
+              <strong>يوجد ${weakList.length} مفاهيم</strong> تحتاج إلى تركيز ومراجعة مع الطفل.
             </div>
             <button class="btn-drill-weakness" onclick="app.startWeaknessPractice()">
-              🎯 Start Targeted Drill on Weak Topics
+              🎯 بدء تدريب مكثف على هذه النقاط الآن
             </button>
           </div>
           <div class="weak-items-grid">
             ${weakList.slice(0, 6).map(item => `
               <div class="weak-item-card">
-                <div class="weak-badge">${item.chapter.icon} Ch ${item.chapter.number}: ${item.lesson.title}</div>
-                <div class="weak-q-text">${item.question.question}</div>
+                <div class="weak-badge">${item.chapter.icon} ${item.chapter.titleAr || item.chapter.title}: ${item.lesson.titleAr || item.lesson.title}</div>
+                <div class="weak-q-text">${item.question.questionAr || item.question.question}</div>
                 <div class="weak-diagnostic-tip">
-                  💡 <strong>Tip for Parent:</strong> ${item.lesson.conceptSummary}
+                  💡 <strong>نصيحة لولي الأمر:</strong> ${item.lesson.conceptSummaryAr || item.lesson.conceptSummary || item.lesson.titleAr || 'مراجعة الدرس بهدوء وتكرار حل الأمثلة بالصور.'}
                 </div>
               </div>
             `).join('')}
@@ -1048,24 +1047,28 @@ class MasteryApp {
     // Breakdown table
     const tableBody = document.getElementById('dash-breakdown-body');
     const activeCurriculum = this.getActiveCurriculum();
+    const isEng = this.currentSubject === 'english';
     if (tableBody) {
       tableBody.innerHTML = activeCurriculum.map(ch => {
+        const unitTitle = isEng ? `الوحدة ${ch.number}` : `الفصل ${ch.number}`;
         return ch.lessons.map(l => {
           const mastery = this.getLessonMastery(l);
           const totalQ = this.getLessonQuestions(l).length;
           let badge = '';
-          if (mastery === 100) badge = `<span class="badge-status badge-success">🌟 Mastered 100%</span>`;
-          else if (mastery > 0) badge = `<span class="badge-status badge-progress">⚠️ Needs Review (${mastery}%)</span>`;
-          else badge = `<span class="badge-status badge-locked">⏳ Not Started</span>`;
+          if (mastery === 100) badge = `<span class="badge-status badge-success">🌟 متقن 100%</span>`;
+          else if (mastery > 0) badge = `<span class="badge-status badge-progress">⚠️ يحتاج مراجعة (${mastery}%)</span>`;
+          else badge = `<span class="badge-status badge-locked">⏳ لم يبدأ بعد</span>`;
+
+          const lessonName = l.titleAr || l.title;
 
           return `
             <tr>
-              <td><strong>Ch ${ch.number}</strong></td>
+              <td><strong>${ch.icon} ${unitTitle}</strong></td>
               <td>
-                <strong>${l.title}</strong><br>
-                <small style="color:#64748B;">${l.titleAr || ''} • 📖 Book Page ${l.bookPage}</small>
+                <strong>${lessonName}</strong><br>
+                <small style="color:#64748B;">📖 صـ ${l.bookPage} في كتاب الوزارة</small>
               </td>
-              <td>${totalQ} Checks</td>
+              <td>${totalQ} تمارين</td>
               <td>
                 <div class="table-progress-bar">
                   <div class="table-progress-fill" style="width:${mastery}%"></div>
@@ -1075,7 +1078,7 @@ class MasteryApp {
               <td>
                 <div style="display:flex; align-items:center; gap:8px;">
                   ${badge}
-                  <button class="btn-step" title="Practice this lesson" onclick="app.startLesson('${ch.id}', '${l.id}')">▶</button>
+                  <button class="btn-step" title="تدريب على هذا الدرس" onclick="app.startLesson('${ch.id}', '${l.id}')">▶</button>
                 </div>
               </td>
             </tr>
@@ -1087,25 +1090,29 @@ class MasteryApp {
     // Dynamic dashboard grade subtitle
     const dashGradeSubtitle = document.getElementById('dash-grade-subtitle');
     if (dashGradeSubtitle) {
-      dashGradeSubtitle.textContent = this.currentGrade === 'p1' ? 'Primary 1 - Term 1 MOETE (الصف الأول الابتدائي)' : 'Primary 3 - Term 1 MOETE (الصف الثالث الابتدائي)';
+      if (this.currentSubject === 'english') {
+        dashGradeSubtitle.textContent = 'منهج Connect 1 • الصف الأول الابتدائي (كتاب الوزارة الرسمي)';
+      } else {
+        dashGradeSubtitle.textContent = this.currentGrade === 'p1' ? 'منهج الرياضيات • الصف الأول الابتدائي' : 'منهج الرياضيات • الصف الثالث الابتدائي';
+      }
     }
 
     // Certificate preview state
     const certCard = document.getElementById('cert-action-card');
-    const gradeTitle = this.currentGrade === 'p1' ? 'Grade 1' : 'Grade 3';
+    const certMsg = document.getElementById('cert-status-msg');
     if (certCard) {
       if (overall === 100) {
         certCard.classList.remove('cert-locked');
         certCard.classList.add('cert-unlocked');
-        document.getElementById('cert-status-msg').innerHTML = `
-          <strong>🎊 Congratulations!</strong> 100% Mastery has been achieved across all ${activeCurriculum.length} Chapters!
+        if (certMsg) certMsg.innerHTML = `
+          <strong>🎊 ألف مبروك!</strong> أتقن طفلك المنهج بنسبة 100% وأصبح مؤهلاً لاستلام وطباعة شهادة التفوق والتقدير الرسمية!
         `;
         document.getElementById('btn-view-cert').disabled = false;
       } else {
         certCard.classList.add('cert-locked');
         certCard.classList.remove('cert-unlocked');
-        document.getElementById('cert-status-msg').innerHTML = `
-          Reach <strong>100% Overall Mastery</strong> to unlock the Official ${gradeTitle} Math Honor Certificate! (${100 - overall}% remaining).
+        if (certMsg) certMsg.innerHTML = `
+          حقق نسبة إتقان <strong>100%</strong> في كافة الدروس لفتح وطباعة شهادة التقدير الرسمية باسم البطل! (المتبقي: ${100 - overall}%).
         `;
         document.getElementById('btn-view-cert').disabled = true;
       }

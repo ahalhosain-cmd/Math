@@ -11,7 +11,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>Primary 1 & 3 Learning Hub - Math & English Connect 1</title>
-  <link rel="stylesheet" href="styles.css?v=2027_78">
+  <link rel="stylesheet" href="styles.css?v=2027_79">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌟</text></svg>">
 </head>
 <body>
@@ -45,24 +45,26 @@
       <div class="hero-banner">
         <div class="hero-content">
           <div class="hero-header-row">
-            <h2 id="hero-title">مرحباً بك في رحلة الرياضيات الممتعة! 🚀</h2>
+            <h2 id="hero-title">مرحباً بك يا بطل! 🚀</h2>
             <button type="button" class="btn-sound-hero" id="btn-sound-toggle" title="الصوت">
-              🔊 <span>تشغيل الصوت</span>
+              🔊 <span>الصوت</span>
             </button>
           </div>
           <p id="hero-desc">
-            تعلم واكتشف مهارات الرياضيات الرائعة خطوة بخطوة بالصور التفاعلية والأنشطة المشوقة!
+            اختر درسك اليوم، استمع واجمع النجوم لتكون البطل الأول! ⭐
           </p>
         </div>
         <div class="hero-progress-box">
           <div class="progress-header">
-            <span>Overall Curriculum Mastery</span>
-            <span id="overall-progress-label">0% Complete</span>
+            <span>مستوى إتقان المنهج 🌟</span>
+            <span id="overall-progress-label">0% مكتمل</span>
           </div>
           <div class="main-bar-track">
             <div class="main-bar-fill" id="overall-progress-bar" style="width: 0%;"></div>
           </div>
         </div>
+      </div>
+
       <!-- Subject Switcher Bar (Connect 1 vs Math) -->
       <div class="subject-switcher-container">
         <div class="subject-toggle-pill">
@@ -94,7 +96,7 @@
             </div>
           </button>
           <button type="button" class="nav-tab-btn home-nav-btn" data-tab="dashboard" onclick="app.switchTab('dashboard')">
-            <span class="home-nav-icon">📊</span>
+            <span class="home-nav-icon">👨‍👩‍👧</span>
             <div class="home-nav-info">
               <strong>لوحة المتابعة</strong>
               <small>تقرير ولي الأمر ونقاط القوة</small>
@@ -103,8 +105,8 @@
           <button type="button" class="nav-tab-btn home-nav-btn" data-tab="exam" onclick="app.switchTab('exam')">
             <span class="home-nav-icon">📝</span>
             <div class="home-nav-info">
-              <strong>امتحان الشهر</strong>
-              <small>نماذج امتحانات الوزارة التجريبية</small>
+              <strong>امتحان تجريبي</strong>
+              <small>نماذج امتحانات الوزارة</small>
             </div>
           </button>
         </div>
@@ -146,8 +148,8 @@
       <div class="parent-dash-grid">
         <!-- Left Column: Circular Mastery Gauge -->
         <div class="dash-gauge-card">
-          <h3>Total Curriculum Mastery</h3>
-          <p id="dash-grade-subtitle" style="font-size: 13px; color: var(--gray); margin-top: 4px;">Primary 3 - Term 1 MOETE</p>
+          <h3>📊 نسبة إتقان المنهج الإجمالية</h3>
+          <p id="dash-grade-subtitle" style="font-size: 13px; color: var(--gray); margin-top: 4px;">كتاب الوزارة الرسمي</p>
 
           <div class="gauge-svg-wrap">
             <svg class="gauge-svg" width="160" height="160" viewBox="0 0 120 120">
@@ -156,21 +158,21 @@
             </svg>
             <div class="gauge-center-text">
               <span class="gauge-num" id="dash-gauge-text">0%</span>
-              <span class="gauge-label">MASTERED</span>
+              <span class="gauge-label">مُتْقَن</span>
             </div>
           </div>
 
           <div class="dash-summary-details">
-            <p>Target: <strong>100% Comprehensive Understanding</strong></p>
-            <p id="dash-summary-desc" style="margin-top: 6px;">Evaluation across all official textbook chapters, core lessons, and multi-tier verification checks.</p>
+            <p>الهدف الأساسي: <strong>فهم واستيعاب شامل 100%</strong></p>
+            <p id="dash-summary-desc" style="margin-top: 6px;">تقييم دقيق لمستوى الطفل عبر كافة وحدات كتاب الوزارة والمهارات الأساسية وتدريبات التمييز الصوتي والحساب.</p>
           </div>
         </div>
 
         <!-- Right Column: Weakness Diagnosis & Action Plan -->
         <div class="dash-weakness-section">
-          <h3>🩺 Learning Diagnosis & Action Plan</h3>
+          <h3>🩺 تقرير المتابعة وخطة التطوير</h3>
           <p style="font-size: 13px; color: var(--gray); margin-bottom: 16px;">
-            Identifies specific topics where the child made mistakes, with targeted teaching tips.
+            تحديد فوري للمفاهيم التي أخطأ فيها الطفل لمساعدتك على مراجعتها معه بكل سهولة.
           </p>
 
           <div id="dash-weakness-list">
@@ -181,15 +183,15 @@
 
       <!-- Curriculum Breakdown Table -->
       <div class="curriculum-breakdown-card">
-        <h3 style="margin-bottom: 16px;">📋 Chapter-by-Chapter Mastery Breakdown</h3>
+        <h3 style="margin-bottom: 16px;">📋 جدول متابعة الدروس والوحدات بالتفصيل</h3>
         <table class="breakdown-table">
           <thead>
             <tr>
-              <th>Chapter</th>
-              <th>Lesson & Topic</th>
-              <th>Standards Checked</th>
-              <th>Current Mastery</th>
-              <th>Status</th>
+              <th>الوحدة / الفصل</th>
+              <th>الدرس والموضوع</th>
+              <th>التمارين</th>
+              <th>نسبة الإتقان</th>
+              <th>الحالة والمتابعة</th>
             </tr>
           </thead>
           <tbody id="dash-breakdown-body">
@@ -202,17 +204,17 @@
       <div class="cert-action-card cert-locked" id="cert-action-card">
         <div class="cert-badge-preview">🎓</div>
         <div class="cert-info">
-          <h3>Primary 3 Mathematics Honor Certificate</h3>
-          <p id="cert-status-msg">Reach 100% Overall Mastery to unlock the Official Grade 3 Math Honor Certificate!</p>
+          <h3>شهادة التفوق والتميز الرسمية</h3>
+          <p id="cert-status-msg">حقق إتقان 100% لفتح وطباعة شهادة التقدير الرسمية باسم البطل!</p>
         </div>
         <button class="btn-cert" id="btn-view-cert" disabled onclick="app.showCertificate()">
-          🏆 View & Print Certificate
+          🏆 عرض وطباعة الشهادة
         </button>
       </div>
 
-      <div>
+      <div style="margin-top: 20px;">
         <button class="btn-reset-danger" onclick="app.resetAllProgress()">
-          ⚠️ Reset Child Progress (Start Over)
+          ⚠️ إعادة ضبط تقدم الطفل (البدء من جديد)
         </button>
       </div>
     </section>
@@ -595,14 +597,14 @@
   </div>
 
   <!-- Scripts -->
-  <script src="audio_system.js?v=2027_78"></script>
-  <script src="math_dictionary.js?v=2027_78"></script>
-  <script src="question_visuals.js?v=2027_78"></script>
-  <script src="gemini_tutor.js?v=2027_78"></script>
-  <script src="curriculum_english_p1.js?v=2027_78"></script>
-  <script src="curriculum_p1.js?v=2027_78"></script>
-  <script src="curriculum_data.js?v=2027_78"></script>
-  <script src="interactive_widgets.js?v=2027_78"></script>
-  <script src="app.js?v=2027_78"></script>
+  <script src="audio_system.js?v=2027_79"></script>
+  <script src="math_dictionary.js?v=2027_79"></script>
+  <script src="question_visuals.js?v=2027_79"></script>
+  <script src="gemini_tutor.js?v=2027_79"></script>
+  <script src="curriculum_english_p1.js?v=2027_79"></script>
+  <script src="curriculum_p1.js?v=2027_79"></script>
+  <script src="curriculum_data.js?v=2027_79"></script>
+  <script src="interactive_widgets.js?v=2027_79"></script>
+  <script src="app.js?v=2027_79"></script>
 </body>
 </html>
