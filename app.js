@@ -79,12 +79,12 @@ class MasteryApp {
   constructor() {
     this.profilesStorageKey = 'primary3_math_profiles_v2';
     this.storageKey = 'primary3_math_mastery_v1'; // legacy fallback
-    this.selectedWelcomeAvatar = '🚀';
-    this.selectedWelcomeGrade = 'p1';
-    this.selectedManageAvatar = '🚀';
-    this.selectedManageGrade = 'p1';
+    this.selectedWelcomeAvatar = '🦁';
+    this.selectedWelcomeGrade = 'p3';
+    this.selectedManageAvatar = '🦁';
+    this.selectedManageGrade = 'p3';
     this.state = this.loadState();
-    this.currentGrade = this.state.grade || 'p1';
+    this.currentGrade = this.state.grade || 'p3';
     this.currentChapter = null;
     this.currentLesson = null;
     this.activeQuestionList = [];
@@ -130,8 +130,8 @@ class MasteryApp {
       id: p.id || ('prof_' + Date.now()),
       name: name,
       childName: name,
-      avatar: p.avatar || '🚀',
-      grade: p.grade || 'p1',
+      avatar: p.avatar || '🦁',
+      grade: p.grade || 'p3',
       stars: typeof p.stars === 'number' ? p.stars : 0,
       streak: typeof p.streak === 'number' ? p.streak : 0,
       answers: p.answers || {},
@@ -215,10 +215,10 @@ class MasteryApp {
         this.saveProfilesData(data);
       }
       const validated = this.ensureStateSchema(active);
-      this.currentGrade = validated.grade || 'p1';
+      this.currentGrade = validated.grade || 'p3';
       return validated;
     }
-    return this.createEmptyProfileState("Champion", "🚀", "p1");
+    return this.createEmptyProfileState("Champion", "🦁", "p3");
   }
 
   saveState() {
@@ -246,7 +246,7 @@ class MasteryApp {
 
   // --- Dual-Grade (Primary 1 vs Primary 3) System ---
   getActiveCurriculum(grade = null) {
-    const g = grade || this.currentGrade || (this.state && this.state.grade) || 'p1';
+    const g = grade || this.currentGrade || (this.state && this.state.grade) || 'p3';
     if (g === 'p3') {
       return window.CURRICULUM_P3 || window.CURRICULUM_DATA || [];
     }
@@ -307,20 +307,20 @@ class MasteryApp {
   showWelcomeModal() {
     const modal = document.getElementById('welcome-profile-modal');
     if (!modal) return;
-    this.selectedWelcomeAvatar = '🚀';
-    this.selectedWelcomeGrade = 'p1';
+    this.selectedWelcomeAvatar = '🦁';
+    this.selectedWelcomeGrade = 'p3';
 
     const gradePicker = document.getElementById('welcome-grade-picker');
     if (gradePicker) {
       gradePicker.querySelectorAll('.grade-opt').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-grade') === 'p1');
+        btn.classList.toggle('active', btn.getAttribute('data-grade') === 'p3');
       });
     }
 
     const picker = document.getElementById('welcome-avatar-picker');
     if (picker) {
       picker.querySelectorAll('.avatar-opt').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-avatar') === '🚀');
+        btn.classList.toggle('active', btn.getAttribute('data-avatar') === '🦁');
       });
     }
 
@@ -369,8 +369,8 @@ class MasteryApp {
       id: 'prof_' + Date.now(),
       name: name,
       childName: name,
-      avatar: this.selectedWelcomeAvatar || '🚀',
-      grade: this.selectedWelcomeGrade || 'p1',
+      avatar: this.selectedWelcomeAvatar || '🦁',
+      grade: this.selectedWelcomeGrade || 'p3',
       stars: 0,
       streak: 0,
       answers: {},
@@ -388,7 +388,7 @@ class MasteryApp {
     this.saveProfilesData(data);
 
     this.state = this.ensureStateSchema(newProfile);
-    this.currentGrade = this.state.grade || 'p1';
+    this.currentGrade = this.state.grade || 'p3';
     this.saveState();
 
     const modal = document.getElementById('welcome-profile-modal');
@@ -485,7 +485,7 @@ class MasteryApp {
     data.activeProfileId = target.id;
     this.saveProfilesData(data);
     this.state = this.ensureStateSchema(target);
-    this.currentGrade = this.state.grade || 'p1';
+    this.currentGrade = this.state.grade || 'p3';
 
     this.closeProfilesModal();
     this.updateHeaderStats();
@@ -520,8 +520,8 @@ class MasteryApp {
             nameInput.value = existing.name || existing.childName || '';
             setTimeout(() => nameInput.focus(), 150);
           }
-          this.selectedManageAvatar = existing.avatar || '🚀';
-          this.selectedManageGrade = existing.grade || 'p1';
+          this.selectedManageAvatar = existing.avatar || '🦁';
+          this.selectedManageGrade = existing.grade || 'p3';
         }
       } else {
         if (formTitle) formTitle.textContent = '➕ إضافة بطل جديد (Add New Champion)';
@@ -530,8 +530,8 @@ class MasteryApp {
           nameInput.value = '';
           setTimeout(() => nameInput.focus(), 150);
         }
-        this.selectedManageAvatar = '🚀';
-        this.selectedManageGrade = this.currentGrade || 'p1';
+        this.selectedManageAvatar = '🦁';
+        this.selectedManageGrade = this.currentGrade || 'p3';
       }
 
       const gradePicker = document.getElementById('manage-grade-picker');
@@ -590,9 +590,9 @@ class MasteryApp {
     }
 
     const data = this.getProfilesData();
-    const avatar = this.selectedManageAvatar || '🚀';
+    const avatar = this.selectedManageAvatar || '🦁';
 
-    const grade = this.selectedManageGrade || 'p1';
+    const grade = this.selectedManageGrade || 'p3';
 
     if (editingId) {
       const target = data.profiles.find(p => p.id === editingId);
@@ -630,7 +630,7 @@ class MasteryApp {
       data.profiles.push(newProf);
       data.activeProfileId = newProf.id;
       this.state = this.ensureStateSchema(newProf);
-      this.currentGrade = this.state.grade || 'p1';
+      this.currentGrade = this.state.grade || 'p3';
     }
 
     this.saveProfilesData(data);
@@ -660,7 +660,7 @@ class MasteryApp {
       if (data.activeProfileId) {
         this.state = this.ensureStateSchema(data.profiles[0]);
       } else {
-        this.state = this.createEmptyProfileState("Champion", "🚀");
+        this.state = this.createEmptyProfileState("Champion", "🦁", "p3");
       }
     }
 
